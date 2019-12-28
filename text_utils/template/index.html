@@ -1,0 +1,73 @@
+<!-- 
+  Project - Text_Utils
+  Coder - Siddhant Shah
+-->
+
+{% extends 'master.html' %}
+{% block content %}
+    <div class='container'>
+
+      <!-- Displaying textarea and inputing user's choice -->
+      <div class="row">
+        <div class="col">
+          <h3>Text Utilities</h3>
+          <form action='' method='post'>
+            {% csrf_token %}
+            
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Enter your text </label>
+              <textarea class="form-control" id="content" name="content" rows="5"></textarea>
+            </div>
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="radio" name="option" id="exampleRadios1" value="remove_punc" checked />
+              <label class="form-check-label" for="exampleRadios1"> Remove Punctuations </label>
+            </div>
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="radio" name="option" id="exampleRadios2" value="count_words" />
+              <label class="form-check-label" for="exampleRadios1"> Count Words </label>
+            </div>
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="radio" name="option" id="exampleRadios3" value="title_case" />
+              <label class="form-check-label" for="exampleRadios1"> Title Case </label>
+            </div>
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="radio" name="option" id="exampleRadios4" value="upper_case" />
+              <label class="form-check-label" for="exampleRadios1"> Upper Case</label>
+            </div>
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="radio" name="option" id="exampleRadios5" value="one_para" />
+              <label class="form-check-label" for="exampleRadios1"> One para </label>
+            </div>
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="radio" name="option" id="exampleRadios6" value="extra_space_remover" />
+              <label class="form-check-label" for="exampleRadios1"> Extra Space Remover </label>
+            </div>
+            <button type="submit" class="btn btn-dark mt-3">Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Displaying results -->
+      <div class="row my-5">
+        <div class="col">
+
+          <!-- to be displayed if any dictionary with key result is returned from views.py -->
+          {% if result %}
+              <h5>OUTPUT:</h5>
+              <pre>{{ result }}</pre>
+          {% endif %}
+
+          <!-- to be displayed if any message is returned from views.py -->
+          {% if messages %}
+            <h5>OUTPUT:</h5>
+            <pre>{{ result }}</pre>
+
+            {% for message in messages %}
+              {{message}}
+              <br />
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+{% endblock %}
