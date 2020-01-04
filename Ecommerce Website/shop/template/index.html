@@ -1,0 +1,426 @@
+{% extends 'master.html' %}
+
+{% block css %}
+<style>
+  .col-md-3 {
+    display: inline-block;
+    margin-left: -4px;
+  }
+
+  .card-text-bottom {
+    height: 15%;
+    align-items: baseline;
+    vertical-align: bottom;
+  }
+
+  .card-text-top {
+    height: 85%;
+  }
+
+  .card-body {
+    height: 250px;
+  }
+
+  .carousel-indicators li {
+    background-color: #999;
+  }
+
+  .carousel-indicators .active {
+    background-color: rgb(53, 53, 53);
+  }
+
+  .carousel-indicators {
+    bottom: -10px;
+  }
+
+  .card .card-img-top {
+    max-height: 325px;
+  }
+
+  .card .card-text {
+    font-size: 14px;
+    text-align: justify;
+    color: dimgray
+  }
+
+  .carousel-control.left {
+    left: 0;
+    margin-left: 0;
+  }
+
+  .carousel-control-prev {
+    position: absolute;
+    left: -75px;
+    width: 8%;
+    /* change this value to required width */
+    font-size: 20px;
+  }
+
+  .carousel-control-next {
+    position: absolute;
+    right: -75px;
+    width: 8%;
+    /* change this value to required width */
+    font-size: 20px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Discounted Item Carousel  -->
+<!-- <div class='container my-3'>
+  <div class='row my-3'>
+    <h3>Discounted Products</h3>
+    <div id='carousel_discounedItem' class='carousel slide' data-ride='carousel'>
+      <!-- Indicators for Discounted Carousel STARTs --
+      <ol class="carousel-indicators">
+        
+        {% for i in range_slides_discountItems %}
+        <li data-target="#carousel_discounedItem" class="indicators-colors" data-slide-to="{{i}}"></li>
+        {% endfor %}
+      </ol>
+      <!-- Indicators for Discounted Carousel ENDs --
+
+      <!-- Slides for Discounted Carousel STARTs --
+      <div class='container carousel-inner  no-padding'>
+          <div class='carousel-item active' id="discounedItemSlide{{0}}">
+          {% for prod in disc_product_list %}
+              <div class="col-md-3" style="width:100%">
+                <div class="card" style="width: 17rem;">
+                  <img src="{{prod.image.url}}" class="card-img-top" alt="{{prod.name}}" />
+                  <div class="card-body" style="height: 250px;">
+                    <div class="card-text-top">
+                    <h6 class="card-title" id="namepr{{prod.id}}">
+                      {% if prod.name|length < 20 %}
+                        {{prod.name}}
+                      {% else %}
+                        {{prod.name|slice:"0:17"}}...
+                      {% endif %}
+                    </h6>
+                    <p class="card-text">
+                      {% if prod.desc|length < 100 %}
+                        {{prod.desc}}
+                      {% else %}
+                        {{prod.desc|slice:"0:97"}}...
+                      {% endif %}
+                      <br />
+                      <span style="color: red;"  id="discountpr{{prod.id}}"></span>>Discount = {{prod.discount}}%</span>
+                      <br />
+                      Price = <span style="text-decoration: line-through;" id="ratepr{{prod.id}}"></span>>  ${{prod.price}}</span>  ${{prod.discounted_price}}
+                    </p>
+                  </div>
+                  <div class="card-text-bottom">
+                    <span id="sppr{{prod.id}}" class="spr">
+                      <button id="pr{{prod.id}}" class="btn btn- secondary Add-to-cart">
+                        Add to Cart
+                      </button>
+                    </span>
+                    <a href="product?id={{prod.id}}"><button class="btn btn-secondary mx-1">Quick View</button></a>
+                  </div>
+                    
+                  </div>
+                </div>
+              </div>
+              {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+              </div><div id='discounedItemSlide{{forloop.counter}}' class='carousel-item'>
+              {% endif %}
+          {% endfor %}
+          </div>
+      </div>
+      <!-- Slides for Discounted Carousel ENDs --
+
+      <!-- Icons for Discounted Carousel STARTSs --
+      <a class="carousel-control-prev" href="#carousel_discounedItem" data-slide="prev" role="button">
+        <span class="carousel-control-prev-icon" style="background-color:dimgrey" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class='carousel-control-next' href="#carousel_discounedItem" data-slide="next" role ="button">
+        <span class="carousel-control-next-icon" style="background-color:dimgray" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+      <!-- Icons for Discounted Carousel ENDs --
+    </div>
+  </div>
+  
+</div> -->
+<!-- Discounted Item Carousel  -->
+
+<!-- Categorised Item Carousel  -->
+<div class='container my-3'>
+  {% for product, range in all_products %}
+  <h3> Genre: {{product.first.category}}({{product|length}})</h3>
+  <div class='row my-3'>
+    <div id='carousel_categorised_product{{forloop.counter}}' class='carousel slide' data-ride='carousel'>
+
+      <!-- Indicators for Categorised Items Carousel STARTs -->
+      <ol class="carousel-indicators">
+        {% for i in range %}
+        <li data-target="#carousel_categorised_product{{forloop.parentloop.counter}}" data-slide-to="{{i}}"></li>
+        {% endfor %}
+      </ol>
+      <!-- Indicators for Categorised Items Carousel ENDs -->
+
+      <!-- Slides for Categorised Items Carousel STARTs -->
+      <div class='container carousel-inner  no-padding'>
+        <div id="categorised_product_slide{{0}}" class='carousel-item active'>
+          <div clas="row"></div>
+          {% for prod in product %}
+          <div style="display: inline-block;">
+            <div class="card" style="width: 17rem;">
+              <img src="{{prod.image.url}}" class="card-img-top" id="imagepr{{prod.id}}" alt="{{prod.name}}" />
+              <div class="card-body" style="height: 250px;">
+                <div class="card-text-top">
+                  <h6 id="namepr{{prod.id}}" title="{{prod.name}}" class="card-title">
+                    {% if prod.name|length < 20 %}
+                    {{prod.name}}
+                    {% else %}
+                    {{prod.name|slice:"0:30"}}...
+                    {% endif %}
+                  </h6>
+                  <p class="card-text" style="font-size:14px; text-align: justify; color:dimgray" id="descpr{{prod.id}}" title="{{prod.desc}}" >
+                    {% if prod.desc|length < 100 %}
+                    {{prod.desc}}
+                    {% else %}
+                    {{prod.desc|slice:"0:97"}}...
+                    {% endif %}
+                    <br />
+                    <span style="color: red;">Discount = <span
+                        id="discountpr{{prod.id}}">{{prod.discount}}</span>%</span>
+                    <br />
+                    Price = $<span id="pricepr{{prod.id}}">{{prod.price}}</span>
+                  </p>
+                </div>
+                <div class="card-text-bottom">
+                  <span id="sppr{{prod.id}}" class="sppr">
+                    <button id="pr{{prod.id}}" class="btn btn-secondary Add-to-cart">
+                      Add to Cart
+                    </button>
+                  </span>
+                  <a href="product?id={{prod.id}}"><button class="btn btn-secondary mx-1">View Book</button></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+        </div>
+        <div id='carousel_categorised_product{{forloop.counter}}' class='carousel-item'>
+          {% endif %}
+
+          {% endfor %}
+
+        </div>
+      </div>
+      <!-- Slides for Categorised Items Carousel ENDs -->
+
+      <!-- Icons for Categorised Items Carousel STARTSs -->
+      <a class="carousel-control-prev" href="#carousel_categorised_product{{forloop.counter}}" data-slide="prev"
+        role="button">
+        <span class="carousel-control-prev-icon" style="background-color:dimgrey" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class='carousel-control-next' href="#carousel_categorised_product{{forloop.counter}}" data-slide="next"
+        role="button">
+        <span class="carousel-control-next-icon" style="background-color:dimgray" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+      <!-- Icons for Categorised Items Carousel ENDs -->
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Categorised Item Carousel  -->
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+  if (localStorage.getItem('cart') == null) {
+    var cart = {};
+    updateLocalStorageWithCart(cart);
+  }
+  else {
+    add_cart_button();
+    popoverUpdate_cart();
+  }
+
+  // updating total items added to cart and displaying in cart popover
+  function cart_items() {
+    document.getElementById('cart').innerHTML = numberOfItemsInCard();
+    popoverUpdate_cart();
+  }
+
+  //function that will be executed when any element with class 'cart' is clicked
+  $('.sppr').on('click', 'button.Add-to-cart', function () {
+    prod_id = this.id.toString(); // fetching id of button that was clicked
+    cart = fetchCart()
+
+    if (cart[prod_id] == null) {  // checking if cart dictionary has any key with same value as id of button clicked.
+      discount = parseFloat(document.getElementById('discount' + prod_id).innerHTML);
+      price = document.getElementById('price' + prod_id).innerHTML;
+      name = document.getElementById("name" + prod_id).title;
+      desc = document.getElementById("desc" + prod_id).title;
+      image = document.getElementById("image" + prod_id).src;
+      qnty = 1
+
+      //cart[prod_id] = {'name': name.trim(), 'qnty': qnty, 'price': price, 'discount': discount}
+      cart[prod_id] = [name.trim(), qnty, price, discount, image, desc]
+    }
+    else {
+      cart[prod_id][1] = cart[prod_id][1] + 1;  // if match is found then value of the key with button id is increased by 1
+    }
+
+    updateLocalStorageWithCart(cart)  // updating the cart dictionary at local server
+
+    add_cart_button()
+
+    popoverUpdate_cart(); // updating the ordered quantity in the popup cart
+  })
+
+  //function to execute when minus button is clicked
+  $('.sppr').on('click', 'button.minus', function () {
+
+    prod_id = this.id.toString().slice(5);   // fetching id of the clicked element and then using slice function to get desired part of the id
+
+    cart = fetchCart()
+
+    cart[prod_id][1] = cart[prod_id][1] - 1;    // decreasing the ordered quantity of the product in the cart by 1
+    cart[prod_id][1] = Math.max(0, cart[prod_id][1]);   // making sure user cant reduce the ordered quantity less the 0
+
+    document.getElementById('val' + prod_id).innerHTML = cart[prod_id][1];   // updating the ordered quantity in the product description
+
+    if (cart[prod_id][1] == 0) {
+      document.getElementById('sp' + prod_id).innerHTML = "<button id='" + prod_id + "' class='btn btn-secondary Add-to-cart'>Add to cart</button>"
+      delete cart[prod_id];
+    }
+
+    updateLocalStorageWithCart(cart)   // updating cart dictionary in the local storage
+
+    popoverUpdate_cart();   // updating the ordered quantity in the popup cart
+  });
+
+  //function to execute when plus button is clicked
+  $('.sppr').on('click', 'button.plus', function () {
+    prod_id = this.id.toString().slice(4);   // fetching id of the clicked element and then using slice function to get desired part of the id
+
+    cart = fetchCart()
+    cart[prod_id][1] = cart[prod_id][1] + 1;    // increasing the ordered quantity of the product in the cart by 1
+    updateLocalStorageWithCart(cart)   // updating cart dictionary in the local storage
+
+    document.getElementById('val' + prod_id).innerHTML = cart[prod_id][1]   // updating the ordered quantity in the product description
+
+    popoverUpdate_cart();   // updating the ordered quantity in the popup cart
+  });
+
+  //function to execute when plus button is clicked
+  $('.pop-pr').on('click', 'button.pop-plus', function () {
+    prod_id = this.id.toString().slice(4);   // fetching id of the clicked element and then using slice function to get desired part of the id
+    cart[prod_id][1] = cart[prod_id][1] + 1;    // increasing the ordered quantity of the product in the cart by 1
+    localStorage.setItem('cart', JSON.stringify(cart))   // updating cart dictionary in the local storage
+    document.getElementById('val' + prod_id).innerHTML = cart[prod_id][1]   // updating the ordered quantity in the product description
+
+    popoverUpdate_cart();   // updating the ordered quantity in the popup cart
+  });
+
+
+  // function to display products in cart popover
+  function popoverUpdate_cart() {
+    document.getElementById('cart').innerHTML = numberOfItemsInCard();
+    cart = fetchCart()
+    items_in_cart = numberOfItemsInCard()
+
+    if (items_in_cart == 0) {
+      document.getElementById('popcart').setAttribute('title', "<h6>There are no items in your cart</h6>");
+      document.getElementById('popcart').setAttribute('data-content', "");
+    }
+    else {
+      var popStr = "<div class='popover-div'>";
+      var i = 1
+
+      for (item in cart) {
+        if(cart[item][0].length > 20){
+            var name = cart[item][0].slice(0, 20) + "...";
+        }
+        else{
+            var name = cart[item][0];
+        }
+
+        var prod_id = cart[item].slice(0, 2);
+
+        popStr = popStr + "<div class='row mx=2 my-2'><div class='col-md-2'>" +
+            "<a href='product?id="+prod_id+"'><img src='" + cart[item][4] + "' width='25' height='35' /> </a></div><div class='col-md-10'>" +
+            name + "<br />" +
+            cart[item][1] +
+            " pcs. @ $" +
+            cart[item][3] + " - " +
+            " Discount " +
+            cart[item][2] + "%" +
+            " <br /></div></div>";
+
+        i = i + 1;
+      }
+      popStr = popStr + "<div class='mt-3' style='text-align:center'><a href='checkout'><button class='btn btn-primary'>Checkout</button></a>&emsp;<button class='btn btn-primary' onClick='cartClear()'>Clear Cart</button></div>"
+      popSts = popStr + "</div>"
+      document.getElementById('popcart').setAttribute('title', "<h6>There are " + numberOfItemsInCard() + " items in your cart</h6>");
+      document.getElementById('popcart').setAttribute('data-content', popStr);
+    }
+    $('#popcart').popover('show');
+  }
+
+
+  // function that returns items in cart
+  function numberOfItemsInCard() {
+    var items_in_cart = 0;
+    if (localStorage.getItem('cart') == null) {
+      return 0;
+    }
+    else {
+      cart = fetchCart();
+      for (item in cart) {
+        items_in_cart = items_in_cart + cart[item][1];
+      }
+      return items_in_cart;
+    }
+  }
+
+
+  //function that returns the cart
+  function fetchCart() {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    return cart;
+  }
+
+
+  //function that add plus and minus button and is called from main function when Add to cart is clicked
+  function add_cart_button() {
+    cart = fetchCart()
+    for (item in cart) {
+      document.getElementById("sp" + item).innerHTML = "<button id='minus" + item + "' class='btn btn-outline-secondary minus'> - </button>" +
+        "<span id='val" + item + "' class='mx-2'>" + cart[item][1] + "</span>" +
+        "<button id='plus" + item + "' class='btn btn-outline-secondary plus'> + </button>"
+    }
+  }
+
+
+  // updating localStorage with cart
+  function updateLocalStorageWithCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
+
+
+  // clearing cart
+  function cartClear() {
+    cart = JSON.parse(localStorage.getItem('cart'))
+    for (item in cart) {
+      document.getElementById('sp' + item).innerHTML = "<button id='" + item + "' class='btn btn-secondary Add-to-cart'>Add to cart</button>"
+    }
+    localStorage.clear()
+    cart = {}
+    updateLocalStorageWithCart(cart)
+    popoverUpdate_cart()
+  }
+
+</script>
+{% endblock %}

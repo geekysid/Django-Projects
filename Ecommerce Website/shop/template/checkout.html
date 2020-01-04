@@ -1,0 +1,321 @@
+{% extends 'master.html' %}
+{% block content %}
+<div class='conatiner'>
+    <div class='row my-2'>
+        <div class='col-md-2 my-2'></div>
+        <div class='col-md-8 my-2'>
+            <div class="accordion" id="accordionExample">
+                <!-- CART REVIEW -->
+                <div class="card">
+                    <div class="card-header" id="headingOne" style="text-align: center ;">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                                aria-expanded="true" aria-controls="collapseOne">
+                                <b>CART REVIEW</b>
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                        data-parent="#accordionExample">
+                        <div class="card-body">
+                            <div class="conatiner" style="font-size:14px; color:dimgray; text-align:justify">
+                                <ul class="list-unstyled">
+                                    <div>
+                                        <div class="row">
+                                            <div class='col-md-7' style="text-align:center; color:black">
+                                                <h6 class="">Product Name</h6>
+                                            </div>
+                                            <div class="col-md-1" style="text-align:center; color:black" id="">
+                                                <h6>Price</h6>
+                                            </div>
+                                            <div class="col-md-1" style="text-align:center; color:black" id="">
+                                                <h6>Discount</h6>
+                                            </div>
+                                            <div class="col-md-2" style="text-align:center; color:black; vertical-align: middle;">
+                                                <h6>Remove/Add</h6>
+                                            </div>
+                                            <div class="col-md-1" style="text-align:center; color:black" id="">
+                                                <h6>Total</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="cartItem" class="cartItem">
+                                    </div>
+                                    <div>
+                                        <div class="row">
+                                            <div class='col-md-12' style="text-align:right; color:black">
+                                                <b class="">Total: $<span id="cartTotal">0.00</span></b>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SHIPING ADDRESS  -->
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                                    data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    SHIPING ADDRESS
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                            data-parent="#accordionExample">
+                            <div class="card-body">
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                                squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck
+                                quinoa
+                                nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
+                                single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
+                                beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                vice
+                                lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you
+                                probably haven't heard of them accusamus labore sustainable VHS.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Mode -->
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                                    data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    PAYMENT MODE
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                            data-parent="#accordionExample">
+                            <div class="card-body">
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad
+                                squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck
+                                quinoa
+                                nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid
+                                single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
+                                beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                vice
+                                lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you
+                                probably haven't heard of them accusamus labore sustainable VHS.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-2 my-2'></div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block js %}
+
+    <script>
+        updateCheckputAccordian()
+        popoverUpdate_cart()
+        
+        // update Checkout accordian
+        function updateCheckputAccordian(){
+
+            cart = JSON.parse(localStorage.getItem('cart'));
+            chkout_str = "";
+            cartTotal = 0.0;
+
+            for (item in cart){
+                if(cart[item][5].length > 500){
+                    var desc = cart[item][5].slice(0, 300) + "...";
+                }
+                else{
+                    var desc = cart[item][5];
+                }
+                
+                var prod_id = cart[item].slice(0, 2);
+
+                chkout_str = chkout_str +  `<div class="row my-2" style="font-size:12px" >
+                                                <div class="col-md-7">
+                                                    <li class="media">
+                                                        <a href="product?id=`+prod_id+`"><img src="`+ cart[item][4] +`" width="70px" height="100px" class="mr-3" alt="..." /></a>
+                                                        <div class="media-body">
+                                                            <b><span class="" style="font-size:13px" id="name`+ item +`">
+                                                                `+ cart[item][0] +`
+                                                            </span></b>
+                                                            <br />
+                                                            <span class="" id="">`+ desc +`</span>
+                                                        </div>
+                                                    </li>
+                                                </div>
+                                                <div class="col-md-1" style="text-align:center;" id="">
+                                                    $<span class="price`+ item +`" id="price`+ item +`">`+ cart[item][2] +`</span>
+                                                </div>
+                                                <div class="col-md-1" style="text-align:center;" id="">
+                                                    <span class="discount`+ item +`" id="discount`+ item +`">`+ cart[item][3] +`</span>%
+                                                </div>
+                                                <div class="col-md-2 butClick" style="text-align:center; vertical-align: middle;">
+                                                    <button class="btn btn-border-secondary plus" id="plus`+ item +`"> + </button>&emsp;
+                                                    <span class="" id="val`+ item +`"> `+ cart[item][1] +` </span>&emsp;
+                                                    <button class="btn btn-border-secondary minus" id="minus`+ item +`"> - </button>
+                                                </div>
+                                                <div class="col-md-1" style="text-align:center;" id="">
+                                                    $<span class="" id="total`+ item +`">`+ (cart[item][2]-(cart[item][2]*cart[item][3]/100))*cart[item][1] +`</span>
+                                                </div>
+                                            </div>
+                                            <hr />`;
+                cartTotal = cartTotal + (cart[item][2]-(cart[item][2]*cart[item][3]/100))*cart[item][1];
+            }
+        
+            document.getElementById('cartItem').innerHTML = chkout_str;
+
+            updateCartTotalLocalStorage(cartTotal);
+        }
+
+
+        $('.cartItem').on('click', 'button.plus', function(){
+                    
+            prod_id = this.id.toString().slice(4);   // fetching id of the clicked element and then using slice function to get desired part of the id
+            
+            cart = fetchCart()
+
+            cart[prod_id][1] = cart[prod_id][1] + 1;    // decreasing the ordered quantity of the product in the cart by 1
+            document.getElementById('val' + prod_id).innerHTML = cart[prod_id][1];   // updating the ordered quantity in the product description
+
+            updateLocalStorageWithCart(cart)   // updating cart dictionary in the local storage
+
+            popoverUpdate_cart();   // updating the ordered quantity in the popup cart
+
+            discount = parseFloat(document.getElementById('discount'+prod_id).innerHTML)
+            price = parseFloat(document.getElementById('price'+prod_id).innerHTML)
+            document.getElementById('total'+prod_id).innerHTML = (price-(price*discount/100))*cart[prod_id][1]
+
+            cartTotal = parseFloat(localStorage.getItem('cartTotal'))
+            change_cartTotal = price-(price*discount/100)
+            updateCartTotalLocalStorage(cartTotal+change_cartTotal)
+        })
+
+
+        $('.cartItem').on('click', 'button.minus', function(){
+                    
+            prod_id = this.id.toString().slice(5);   // fetching id of the clicked element and then using slice function to get desired part of the id
+            
+            cart = fetchCart()
+
+            cart[prod_id][1] = cart[prod_id][1] - 1;    // decreasing the ordered quantity of the product in the cart by 1
+            cart[prod_id][1] = Math.max(0, cart[prod_id][1]);   // making sure user cant reduce the ordered quantity less the 0
+            console.log(cart[prod_id][1])
+            document.getElementById('val' + prod_id).innerHTML = cart[prod_id][1];   // updating the ordered quantity in the product description
+
+            if (cart[prod_id][1] == 0) {
+                delete cart[prod_id];
+            }
+
+            updateLocalStorageWithCart(cart)   // updating cart dictionary in the local storage
+
+            popoverUpdate_cart();   // updating the ordered quantity in the popup cart
+
+            discount = parseFloat(document.getElementById('discount'+prod_id).innerHTML)
+            price = parseFloat(document.getElementById('price'+prod_id).innerHTML)
+            document.getElementById('total'+prod_id).innerHTML = (price-(price*discount/100))*cart[prod_id][1]
+
+            cartTotal = parseFloat(localStorage.getItem('cartTotal'))
+            change_cartTotal = price-(price*discount/100)
+            updateCartTotalLocalStorage(cartTotal-change_cartTotal)
+        })
+
+
+        function updateCartTotalLocalStorage(cartTotal){
+            localStorage.setItem('cartTotal', cartTotal)
+            document.getElementById('cartTotal').innerHTML = cartTotal
+        }
+
+        
+        // function to display products in cart popover
+        function popoverUpdate_cart() {
+            document.getElementById('cart').innerHTML = numberOfItemsInCard();
+            cart = fetchCart()
+            items_in_cart = numberOfItemsInCard()
+
+            if (items_in_cart == 0) {
+                document.getElementById('popcart').setAttribute('title', "<h6>There are no items in your cart</h6>");
+                document.getElementById('popcart').setAttribute('data-content', "");
+            }
+            else {
+                var popStr = "<div class='popover-div'>";
+                var i = 1
+
+                for (item in cart) {
+                    if(cart[item][0].length > 20){
+                        var name = cart[item][0].slice(0, 20) + "...";
+                    }
+                    else{
+                        var name = cart[item][0];
+                    }
+
+                    var prod_id = cart[item].slice(0, 2);
+
+                    popStr = popStr + "<div class='row mx=2 my-2'><div class='col-md-2'>" +
+                        "<a href='product?id="+prod_id+"'><img src='" + cart[item][4] + "' width='25' height='35' /> </a></div><div class='col-md-10'>" +
+                        name + "<br />" +
+                        cart[item][1] +
+                        " pcs. @ $" +
+                        cart[item][3] + " - " +
+                        " Discount " +
+                        cart[item][2] + "%" +
+                        " <br /></div></div>";
+
+                    i = i + 1;
+                }
+                popStr = popStr + "<div class='mt-3' style='text-align:center'><button class='btn btn-primary' onClick='cartClear()'>Clear Cart</button></div>"
+                popSts = popStr + "</div>"
+                document.getElementById('popcart').setAttribute('title', "<h6>There are " + numberOfItemsInCard() + " items in your cart</h6>");
+                document.getElementById('popcart').setAttribute('data-content', popStr);
+            }
+            $('#popcart').popover('show');
+        }
+
+
+        // function that returns items in cart
+        function numberOfItemsInCard() {
+            var items_in_cart = 0;
+            if (localStorage.getItem('cart') == null) {
+                return 0;
+            }
+            else {
+                cart = fetchCart();
+                for (item in cart) {
+                    items_in_cart = items_in_cart + cart[item][1];
+                }
+                return items_in_cart;
+            }
+        }
+
+
+        //function that returns the cart
+        function fetchCart() {
+            cart = JSON.parse(localStorage.getItem('cart'));
+            return cart;
+        }
+
+
+        // updating localStorage with cart
+        function updateLocalStorageWithCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+
+        // clearing cart
+        function cartClear() {
+            cart = JSON.parse(localStorage.getItem('cart'))
+
+            localStorage.clear()
+            cart = {}
+            popoverUpdate_cart()
+            window.location.replace("index.html");
+        }
+
+    </script>
+
+    {% endblock %}
