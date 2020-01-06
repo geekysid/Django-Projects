@@ -278,12 +278,6 @@
 
     if (document.getElementById('successAlert') != null) {
         cartClear()
-        alert("success")
-
-        suc_var = document.getElementById(successAlert).title
-        suc_list = suc_var.split(" ")
-
-        window.location("orders?orderid="+getList[0]+"&emailadd="+getList[1])
     }
     
 
@@ -313,7 +307,7 @@
                 var desc = cart[item][5];
             }
 
-            var prod_id = cart[item].slice(0, 2);
+            var prod_id = item.slice(2, );
 
             chkout_str = chkout_str + `<div class="row my-2" style="font-size:12px" >
                                                     <div class="col-md-7">
@@ -452,16 +446,16 @@
                     var name = cart[item][0];
                 }
 
-                var prod_id = cart[item].slice(0, 2);
+                var prod_id = item.slice(2, );
 
                 popStr = popStr + "<div class='row mx=2 my-2'><div class='col-md-2'>" +
                     "<a href='product?id=" + prod_id + "'><img src='" + cart[item][4] + "' width='25' height='35' /> </a></div><div class='col-md-10'>" +
                     name + "<br />" +
                     cart[item][1] +
                     " pcs. @ $" +
-                    cart[item][3] + " - " +
+                    cart[item][2] + " - " +
                     " Discount " +
-                    cart[item][2] + "%" +
+                    cart[item][3] + "%" +
                     " <br /></div></div>";
 
                 i = i + 1;

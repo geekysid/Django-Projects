@@ -87,9 +87,24 @@ def checkout(request):
 
 
 def product(request):
-    if request.method == "GET":
-        id = request.GET["id"]
-    return HttpResponse("ProductId : " + id)
+    if request.method == "GET" and 'id' in request.GET:
+        id = request.GET.get("id", '')
+
+        if id.strip().isnumeric:
+
+            try:
+                product = Products.objects.get(id=id)
+                if product != None:
+                    return render(request, 'product.html', {"product": product, "validity": "true"})
+                else:
+                    return render(request, 'product.html', {"error": "Invaild Product", "validity": "false"})
+            except Products.DoesNotExist:
+                return render(request, 'product.html', {"error": "Invaild Product", "validity": "false"})
+
+        else:
+            return render(request, 'product.html', {"error": "Invaild Product", "validity": "false"})
+    else:
+        return render(request, 'product.html')
 
 
 def orders(request):

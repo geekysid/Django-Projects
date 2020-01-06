@@ -260,16 +260,16 @@
                 var name = cart[item][0];
             }
 
-            var prod_id = cart[item].slice(0, 2);
+            var prod_id = item.slice(2, );
 
             popStr = popStr + "<div class='row mx=2 my-2'><div class='col-md-2'>" +
-                "<a href='product?id="+prod_id+"'><img src='" + cart[item][4] + "' width='25' height='35' /> </a></div><div class='col-md-10'>" +
+                "<a href='product?id=" + prod_id + "'><img src='" + cart[item][4] + "' width='25' height='35' /> </a></div><div class='col-md-10'>" +
                 name + "<br />" +
                 cart[item][1] +
                 " pcs. @ $" +
-                cart[item][3] + " - " +
+                cart[item][2] + " - " +
                 " Discount " +
-                cart[item][2] + "%" +
+                cart[item][3] + "%" +
                 " <br /></div></div>";
 
             i = i + 1;
