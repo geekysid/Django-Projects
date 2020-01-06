@@ -262,7 +262,6 @@
 
 
     $('#add_to_cart_div').on('click','button#add_to_cart', function() {
-        console.log('clicked')
         cart = fetchCart()
         prod_id = document.getElementById('namepr').title
         
@@ -281,7 +280,6 @@
             updateLocalStorageWithCart(cart)
             popoverUpdate_cart()
             update_adtocartButton()
-            console.log(cart)
 
         }
     })
@@ -357,6 +355,7 @@
     function popoverUpdate_cart() {
         document.getElementById('cart').innerHTML = numberOfItemsInCard();
         cart = fetchCart()
+
         items_in_cart = numberOfItemsInCard()
 
         if (items_in_cart == 0) {
@@ -433,7 +432,9 @@
 
         localStorage.clear()
         cart = {}
+        updateLocalStorageWithCart(cart)
         popoverUpdate_cart()
+        update_adtocartButton()
     }
 
 </script>

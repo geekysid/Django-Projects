@@ -237,7 +237,6 @@
 
 {% block js %}
 <script>
-  console.log(fetchCart())
   if (localStorage.getItem('cart') == null) {
     var cart = {};
     updateLocalStorageWithCart(cart);
