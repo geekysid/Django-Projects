@@ -1,0 +1,295 @@
+{% extends 'master.html' %}
+{% block css %}
+<style>
+    body {
+        height: 100%;
+        min-height:100%
+    }
+</style>
+{% endblock %}
+{% block content %}
+{% if checkoutStatus == 'success' %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert" id='successAlert'>
+        <strong>Success: </strong> Your order was succesfully placed. Your <strong>Order Number is {{orderid}}</strong>. Please user this and your email to track the status of your order.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+    </div>
+{% endif %}
+    <div class="container mt-4" style=" color: dimgrey; font-size:14px">
+        <!-- Message -->
+        <div class="row my-2 text-center">
+            <div class="col-md-12" style="font-size: 16px">
+                <strong>Please enter your email and order number to check status</strong>
+            </div>
+        </div>
+        <!-- Asking for email and address -->
+        <div class="row my-3">
+            <div class="col-md-12 d-flex justify-content-center">
+                        
+                {% if checkoutStatus == 'success' %}
+                <form class="form-inline" method="post" action=""> {% csrf_token %}
+                    <div class="form-group mb-2">
+                      <label for="emailid" class="sr-only">Email</label>
+                      
+                      <input type="email" class="form-control" id="emailadd" name="emailadd" value="{{emailadd}}" required>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                      <label for="number" class="sr-only">Order Id</label>
+                      <input type="number" class="form-control" id="orderid" name="orderid" value="{{orderid}}" required>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-1">
+                        <button type="submit" class="btn btn-outline-secondary mb-2">Check Status</button>
+                    </div>
+                </form>
+
+                {% else %}
+                <form class="form-inline" method="post" action=""> {% csrf_token %}
+                    <div class="form-group mb-2">
+                      <label for="emailid" class="sr-only">Email</label>
+                      <input type="email" class="form-control" id="emailadd" name="emailadd" placeholder="email@example.com" required>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                      <label for="number" class="sr-only">Order Id</label>
+                      <input type="number" class="form-control" id="orderid" name="orderid" placeholder="Order Number" required>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-1">
+                        <button type="submit" class="btn btn-outline-secondary mb-2">Check Status</button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Displaying result -->
+        
+        {% if order_obj %}
+        <div class="accordion" id="accordionExample">
+            <!-- Order Status -->
+            <div class="card" style=" color: dimgrey; font-size:14px">
+                <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne" style=" color: #666666;">
+                            <b>Status for Order # {{order_obj}}</b>
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                    data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="conatiner" style="font-size:14px; color:dimgray; text-align:justify">
+                            {% if not ord_status_error %}
+                                <ul class="list-unstyled">
+                                    <div class="row">
+                                        <div class='col-md-2' style="text-align:center;">
+                                            <strong class="">Order Number</strong>
+                                        </div>
+                                        <div class="col-md-2" style="text-align:center;">
+                                            <strong>Status Date</strong>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>Order Status</strong>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <strong>Remark</strong>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    {% for status in ord_stat_obj %}
+                                    <div class="row mb-3">
+                                        <div class='col-md-2' style="text-align:center;">{{status.order.order_id}}</div>
+                                        <div class="col-md-2" style="text-align:center;">{{status.timestamp}}</div>
+                                        <div class="col-md-3">{{status.status_desc}}</div>
+                                        <div class="col-md-5">{{status.remark}}</div>
+                                    </div>
+                                    {% if not forloop.counter.last %}
+                                    <hr />
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ ord_status_error }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Order Details -->
+            <div class="card" style=" color: dimgrey; font-size:14px">
+                <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne" style="color: #666666;">
+                            <b>Details for Order # {{order_obj}}</b>
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                    data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="conatiner" style="font-size:14px; color:dimgray; text-align:justify">
+                            {% if not prod_details_error %}
+                            <ul class="list-unstyled">
+                                <div class="row">
+                                    <div class='col-md-6' style="text-align:center;">
+                                        <h6 class="">Product Name</h6>
+                                    </div>
+                                    <div class="col-md-1" style="text-align:center;">
+                                        <h6>Price</h6>
+                                    </div>
+                                    <div class="col-md-2" style="text-align:center;">
+                                        <h6>Discount</h6>
+                                    </div>
+                                    <div class="col-md-2"style="text-align:center;">
+                                        <h6>Quantity</h6>
+                                    </div>
+                                    <div class="col-md-1" style="text-align:center;">
+                                        <h6>Total</h6>
+                                    </div>
+                                </div>
+                                <hr />
+                                {% for product in ord_prod_obj %}
+                                <div class="row my-2">
+                                    <div class="col-md-6">
+                                        <li class="media">
+                                            <a href="product?id={{product.product.product_id}}"><img src="{{product.image}}" width="70px"  height="100px" class="mr-3" alt="..." /></a>
+                                            <div class="media-body">
+                                                <b>{{product.product.name}}</b>
+                                                <br />
+                                                {{product.product.desc}}
+                                            </div>
+                                        </li>
+                                    </div>
+                                    <div class="col-md-1" style="text-align:center;">
+                                        ${{product.price}}
+                                    </div>
+                                    <div class="col-md-2" style="text-align:center;">
+                                        {{product.discount}}%
+                                    </div>
+                                    <div class="col-md-2 butClick" style="text-align:center;">
+                                        {{product.quantity}}
+                                    </div>
+                                    <div class="col-md-1" style="text-align:center;">
+                                        ${{ product.total }}
+                                    </div>
+                                </div>
+                                <hr />
+                                {% if not forloop.counter.last %}
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ prod_details_error }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+            {% if order_error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ order_error }}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    
+    // updating total items added to cart and displaying in cart popover
+    function cart_items() {
+      document.getElementById('cart').innerHTML = numberOfItemsInCard();
+      popoverUpdate_cart();
+    }
+
+    if (document.getElementById('successAlert') != null) {
+        cartClear()
+    }
+    popoverUpdate_cart()
+    
+    //function that returns the cart
+    function fetchCart() {
+        cart = JSON.parse(localStorage.getItem('cart'));
+        return cart;
+    }
+
+
+    // function that returns items in cart
+    function numberOfItemsInCard() {
+        var items_in_cart = 0;
+        if (localStorage.getItem('cart') == null) {
+            return 0;
+        }
+        else {
+            cart = fetchCart();
+            for (item in cart) {
+                items_in_cart = items_in_cart + cart[item][1];
+            }
+            return items_in_cart;
+        }
+    }
+
+
+    // function to display products in cart popover
+    function popoverUpdate_cart() {
+        document.getElementById('cart').innerHTML = numberOfItemsInCard();
+        cart = fetchCart()
+        items_in_cart = numberOfItemsInCard()
+
+        if (items_in_cart == 0) {
+        document.getElementById('popcart').setAttribute('title', "<h6>There are no items in your cart</h6>");
+        document.getElementById('popcart').setAttribute('data-content', "");
+        }
+        else {
+        var popStr = "<div class='popover-div'>";
+        var i = 1
+
+        for (item in cart) {
+            if(cart[item][0].length > 20){
+                var name = cart[item][0].slice(0, 20) + "...";
+            }
+            else{
+                var name = cart[item][0];
+            }
+
+            var prod_id = cart[item].slice(0, 2);
+
+            popStr = popStr + "<div class='row mx=2 my-2'><div class='col-md-2'>" +
+                "<a href='product?id="+prod_id+"'><img src='" + cart[item][4] + "' width='25' height='35' /> </a></div><div class='col-md-10'>" +
+                name + "<br />" +
+                cart[item][1] +
+                " pcs. @ $" +
+                cart[item][3] + " - " +
+                " Discount " +
+                cart[item][2] + "%" +
+                " <br /></div></div>";
+
+            i = i + 1;
+        }
+        popStr = popStr + "<div class='mt-3' style='text-align:center'><a href='checkout'><button class='btn btn-primary'>Checkout</button></a>&emsp;<button class='btn btn-primary' onClick='cartClear()'>Clear Cart</button></div>"
+        popSts = popStr + "</div>"
+        document.getElementById('popcart').setAttribute('title', "<h6>There are " + numberOfItemsInCard() + " items in your cart</h6>");
+        document.getElementById('popcart').setAttribute('data-content', popStr);
+        }
+        $('#popcart').popover('show');
+    }
+
+    // clearing cart
+    function cartClear() {
+        cart = JSON.parse(localStorage.getItem('cart'))
+
+        localStorage.clear()
+        cart = {}
+        popoverUpdate_cart()
+    }
+
+</script>
+{% endblock %}
