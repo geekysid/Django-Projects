@@ -66,7 +66,7 @@ def checkout(request):
                 #cart_dict Format: {'pr12': [name, qnty, price, discount, image, desc]
                 for item in cart_dict:
                     product = Products.objects.get(id=int(item[2:]))    # fetching product object for each item customer wants to save it in order_product table
-                    order_product = Ordered_Product(order=order, product=product, quantity=cart_dict[item][1], discount=cart_dict[item][3], price=int(cart_dict[item][2]), image=cart_dict[item][4])
+                    order_product = Ordered_Product(order=order, product=product, quantity=cart_dict[item][1], discount=cart_dict[item][3], price=float(cart_dict[item][2]), image=cart_dict[item][4])
                     order_product.save()
 
                 # Setting status of the order as 'Order Placed' in Order_Status Table
@@ -143,6 +143,7 @@ def orders_fetchData(order_id, email):
         order_obj = None
 
     if order_obj:
+        print(order_obj)
         try:
             ord_prod_obj = Ordered_Product.objects.filter(order=order_obj)
         except Ordered_Product.DoesNotExist:
@@ -152,24 +153,24 @@ def orders_fetchData(order_id, email):
             for prod_obj in ord_prod_obj:
                 prod_obj.total = (prod_obj.price * prod_obj.quantity) - (prod_obj.price * prod_obj.quantity * prod_obj.discount) / 100
         else:
-            prod_details_error = "Unable to fetch order details. Please contact customer care."
+            prod_details_error = f"Unable to fetch order details. Please contact customer care. Order Number {order_obj.order_id}"
         
-        try:
+        try:    
             ord_stat_obj = Order_Status.objects.filter(order=order_obj)
         except Order_Status.DoesNotExist:
             ord_stat_obj= None
 
         if not ord_stat_obj:
-            ord_status_error = "Unable to fetch order status. Please contact customer care."
+            ord_status_error = f"Unable to fetch order status. Please contact customer care.  Order Number {order_obj.order_id}"
         
         if ord_stat_obj and ord_prod_obj:
             return {'order_obj': order_obj, 'ord_prod_obj': ord_prod_obj, 'ord_stat_obj': list(ord_stat_obj)}
         
         elif (not ord_stat_obj) and ord_prod_obj:
-            return {'order_obj': order_obj, 'ord_status_error': ord_status_error, 'ord_stat_obj': list(ord_stat_obj)}
+            return {'order_obj': order_obj, 'ord_status_error': ord_status_error, 'ord_stat_obj': list(ord_stat_obj), 'ord_prod_obj': ord_prod_obj}
         
         elif ord_stat_obj and not ord_prod_obj:
-            return {'order_obj': order_obj, 'ord_prod_obj': ord_prod_obj, 'prod_details_error': prod_details_error}
+            return {'order_obj': order_obj, 'ord_prod_obj': ord_prod_obj, 'prod_details_error': prod_details_error, 'ord_stat_obj': list(ord_stat_obj)}
 
         else:
             return {'order_obj': order_obj, 'ord_status_error': ord_status_error, 'prod_details_error': prod_details_error}

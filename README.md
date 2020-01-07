@@ -1,13 +1,27 @@
 
-<p style="text-align: center;"><img src="https://user-images.githubusercontent.com/59141234/71919259-3fa1ef80-31aa-11ea-9679-4dc9a3f2836b.png" height="150px" />
-<p style="font-size:25px; text-align: center;"><b>Django Projects</b><br />
-<span style="font-size:16px;">Projects developed on Django framework of Python</span></p>
-
-<p style="text-align: center;">
-    <a href="https://github.com/siddhantshah1986/Django-Projects">Project Page</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://github.com/siddhantshah1986/Django-Projects/issues">Report Bug</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://github.com/siddhantshah1986/Django-Projects/issues">Request Feature</a>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/59141234/71919259-3fa1ef80-31aa-11ea-9679-4dc9a3f2836b.png" height="150px" />
+</p>
+<h3 align="center">
+    Django Projects
+</h3>
+<p align="center">
+    Projects developed on Django framework of Python
+    <br />
+    <a href="https://github.com/siddhantshah1986/Django-Projects">
+        Project Page
+    </a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="https://github.com/siddhantshah1986/Django-Projects/issues">
+        Report Bug
+    </a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a href="https://github.com/siddhantshah1986/Django-Projects/issues">
+        Request Feature
+    </a>
 </p>
 
-
+<!-- Table of Content -->
 ## Table of contents
 
 > * [Synopsis](#synopsis)
@@ -20,26 +34,26 @@
 > * [About Coder](#about-me)
 > * [Disclaimer](#Disclaimer)
 
-
+<!-- Synopsis -->
 ## Synopsis
-<p style="text-align: justify">
+<p align="justify">
 In this repository I will share code for few projects which I have developed on Django Framework. Some of the projects that I will be working on are as mentioned below:
 </p>
 
-- [Text Utility]("https://github.com/siddhantshah1986/Django-Projects/tree/master/Text_Utilities" "") - Done
-- [Ecommerce Website]("https://github.com/siddhantshah1986/Django-Projects/tree/master/Ecommerce%20Website" "") - Work in Progress
+- [Text Utility](https://github.com/siddhantshah1986/Django-Projects/tree/master/Text_Utilities) - Done
+- [Ecommerce Website](https://github.com/siddhantshah1986/Django-Projects/tree/master/Ecommerce%20Website) - Work in Progress
 - Weather Application - By January End
 - Personal Blogging - By February Mid
 - Resume Website - My Feruary End
 - Accounting Application - By March End
 - Application that pulls products from different Ecommerce website and copares their prices - By April
 
-
+<!-- Tools I have used for this project -->
 ## Tools
 * Visual Studio Code
 * Terminal (mac)
 
-
+<!-- Skill that will be required -->
 ## Skills
 Skill I will be using in these projects:
 - *Python*
@@ -49,7 +63,7 @@ Skill I will be using in these projects:
 - *Bootstrap*
 - *MySQL/SQLite*
 
-
+<!-- Pre-requisites and installation required before working on this project -->
 ## Pre-requisites/Installation
 We need to install a few software in our system before we can work with Django. I have used a mac terminal for installing these tools.
 
@@ -79,25 +93,33 @@ We need to install a few software in our system before we can work with Django. 
 
     `pip3 install mysqlclient`
 
-
+<!-- Asking for Contributions and Issues -->
 ## Contributing / Reporting issues
 
 Contributions, issues and feature request are welcome
 
-Please feel free to check [issue page]("https://github.com/siddhantshah1986/Hackerrank-Solutions/issues" "")
+Please feel free to check [issue page](https://github.com/siddhantshah1986/Python-Basics/issues)
 
+<!-- Asking for Supports -->
 ## Show Your Support
 
 Please give this project a :star: if you liked this project.
 
+<!-- Displaying message about me -->
 ## About Me
 
-<img style="float: left;" src="https://user-images.githubusercontent.com/59141234/71884248-f330c280-315d-11ea-8070-721f57a476bb.jpg" width="125px">
+<img align="left" src="https://user-images.githubusercontent.com/59141234/71932585-18f1b200-31c6-11ea-9e2a-50bce063de57.png" width="125px">
 
-<p style="text-align: justify">
-Electrical and Instrumentation Engineer as per degree and Software Engineer by Profession. I am a self-taught coder who has worked on languages like, HTML, Javascript, PHP, Asp.net, and Python. After working for years in a couple of IT companies (One of which was India's best IT Company - WIPRO), I took a break off for the IT World for 4 years to take care of Family Business. During these 4 years, I built an ERP with Billing Software for my own company from scratch on the asp.net platform. Not that I have sold my family business, looking to re-start my IT career as a Python Developer.
+<p align="justify">
+    Electrical and Instrumentation Engineer by eductaion and Software Engineer by profession. I am a self-taught coder who has worked on languages like, HTML, Javascript, PHP, Asp.net, and Python. After working for years in a couple of IT companies (One of which was India's best IT Company - WIPRO), I took a break off for the IT World for 4 years to take care of Family Business. During these 4 years, I built an ERP with Billing Software for my own company from scratch on the asp.net platform. Now that I have sold my family business, looking to re-start my IT career as a Python Developer.
 </p>
 
 > **Siddhant Shah** - Software Engineer
 
->[GitHub]("https://gist.github.com/siddhantshah1986" "Siddhant Git Hub")&emsp;&emsp;[Website]("https://gist.github.com/siddhantshah1986" "Siddhant Website")&emsp;&emsp;[Email Me]("siddhant.shah.1986@gmail.com" "Siddhant Mail")&emsp;&emsp;[My Resume]("siddhant.shah.1986@gmail.com" "Siddhant Resume")
+>[GitHub](https://gist.github.com/siddhantshah1986 "Siddhant Git Hub")
+&emsp;&emsp;
+[Website](https://gist.github.com/siddhantshah1986 "Siddhant Website")
+&emsp;&emsp;
+[Mail Me](mailto:siddhant.shah.1986@gmail.com "siddhant.shah.1986@gmail.com")
+&emsp;&emsp;
+[My Resume](mailto:siddhant.shah.1986@gmail.com "siddhant.shah.1986@gmail.com")
