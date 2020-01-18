@@ -1,0 +1,356 @@
+{% extends 'master.html' %}
+{% load static %}
+{% block content %}
+
+<!-- ALERT MESSAGES once order os placed -->
+{% if errorMessage %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>ERROR: </strong> {{errorMessage}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endif %}
+{% if succuessMessage %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <script>cartClear()</script>
+        <strong >Success: </strong> Your order was succesfully placed.
+        Please
+        <strong>
+            <a href='orders?orderid={{orderid}}&emailadd={{emailadd}}' id='successAlert' title="{{orderid}} {{emailadd}}">Click here</a>
+        </strong>
+        to go to your order page.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endif %}
+
+<div class='conatiner'>
+    <div class='row my-2'>
+        <div class='col-md-2 my-2'></div>
+        <div class='col-md-8 my-2'>
+            <div class="accordion" id="accordionExample">
+
+                <!-- CART REVIEW -->
+                <div class="card">
+                    <div class="card-header" id="headingOne" style="text-align: center ;">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                                aria-expanded="true" aria-controls="collapseOne">
+                                <b>CART REVIEW</b>
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                        data-parent="#accordionExample">
+                        <div class="card-body">
+                            <div class="conatiner" style="font-size:14px; color:dimgray; text-align:justify">
+                                <ul class="list-unstyled">
+                                    <!-- cart header -->
+                                    <div>
+                                        <div class="row">
+                                            <div class='col-md-7' style="text-align:center; color:black">
+                                                <h6 class="">Product Name</h6>
+                                            </div>
+                                            <div class="col-md-1" style="text-align:center; color:black" id="">
+                                                <h6>Price</h6>
+                                            </div>
+                                            <div class="col-md-1" style="text-align:center; color:black" id="">
+                                                <h6>Discount</h6>
+                                            </div>
+                                            <div class="col-md-2"
+                                                style="text-align:center; color:black; vertical-align: middle;">
+                                                <h6>Quantity</h6>
+                                            </div>
+                                            <div class="col-md-1" style="text-align:center; color:black" id="">
+                                                <h6>Total</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- cart details updated by js function updateCheckputAccordian() -->
+                                    <div id="cartItem" class="sppr">
+                                    </div>
+                                    <div>
+                                        <div class="row">
+                                            <div class='col-md-12' style="text-align:right; color:black">
+                                                <b class="">Total: $<span id="cartTotal">0.00</span></b>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SHIPING ADDRESS & PAYMENT  -->
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-header" id="headingTwo" style="text-align: center ;">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                                    data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <b>SHIPING ADDRESS</b>
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse show align-items-center" aria-labelledby="headingTwo"
+                            data-parent="#accordionExample">
+                            <div class="row">
+                                <div class="col-2"></div>
+                                <div class="col-8 align-items-center">
+                                    <div class="card-body">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4">
+                                                <label class="sr-only" for="name">Name</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">Name</div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="inputName"
+                                                        name="inputName" minlength="2" placeholder="Name of recipients"
+                                                        required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="sr-only" for="Inoutname">Email</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">Email</div>
+                                                    </div>
+                                                    <input type="email" class="form-control" id="inputEmail"
+                                                        name="inputEmail" placeholder="Email Address" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label class="sr-only" for="Inoutname">Mobile</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">Mobile</div>
+                                                    </div>
+                                                    <input type="number" class="form-control" id="inputPhone"
+                                                        name="inputPhone" min="1000000000" max="9999999999"
+                                                        placeholder="Contact Number" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label class="sr-only" for="Inoutname">Address</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">Address</div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="inputAddress"
+                                                        name="inputAddress" maxlength="200" minlength="20"
+                                                        placeholder="Delivery Address" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-3">
+                                                <label class="sr-only" for="Inoutname">Landmark</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">Landmark</div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="inputLandmark"
+                                                        name="inputLandmark" maxlength="50" minlength="5"
+                                                        placeholder="Landmark" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="sr-only" for="Inoutname">City</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">City</div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="inputCity"
+                                                        name="inputCity" maxlength="50" minlength="5" placeholder="City"
+                                                        required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="sr-only" for="Inoutname">State</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">State</div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="inputState"
+                                                        name="inputState" maxlength="50" minlength="2"
+                                                        placeholder="State" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label class="sr-only" for="Inoutname">Zip</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">Zip</div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="inputPinCode"
+                                                        name="inputPinCode" maxlength="6" minlength="6" size="6"
+                                                        placeholder="Pincode" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label class="sr-only" for="Inoutname">Message To Us</label>
+                                                <div class="input-group mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">Message To Us</div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="inputMessage"
+                                                        name="inputMessage" placeholder="Any message To Us">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-3">
+                                                <label class="sr-only" for="Inoutname">Payment Mode</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">Payment Mode</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" id="paymentradioCredit" name="paymentradio"
+                                                        class="custom-control-input" value="creditCard" disabled>
+                                                    <label class="custom-control-label" for="paymentMode">Credit/Debit
+                                                        Card
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" id="paymentradioNet" name="paymentradio"
+                                                        class="custom-control-input" value="netbanking" disabled>
+                                                    <label class="custom-control-label" for="customRadioInline3">Net
+                                                        Banking</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" id="paymentradioCOD" name="paymentradio"
+                                                        class="custom-control-input" value="cod" checked>
+                                                    <label class="custom-control-label" for="customRadioInline4">Cash On
+                                                        Delievry</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row mt-4">
+                                            <div class="col" style="text-align: center;">
+                                                <button type="submit" class="btn btn-primary">Place my Order</button>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" id="cartitemhidden" name="cartitemhidden" value=""
+                                            class="custom-control-label" for="customRadioInline4">
+                                    </div>
+                                </div>
+                                <div class="col-2"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class='col-md-2 my-2'></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'shop/js/javascript.js' %}"></script> 
+<script>
+
+    if(localStorage.getItem('cart') == '{}'){
+        window.location.replace("index");
+    }
+    //alert box if order failes or success
+    $('.alert').alert()
+
+    if (document.getElementById('successAlert') != null) {
+        cartClear()
+    }
+    
+    updateCheckputAccordian()
+    popoverUpdate_cart()
+
+    //function that sets the valeu attribute of an hidden input which will sent to database using POST method.
+    function update_CartItemHiddenInput() {
+        cart = JSON.stringify(fetchCart())
+        document.getElementById('cartitemhidden').value = cart
+    }
+
+    // update Checkout accordian
+    function updateCheckputAccordian() {
+
+        cart = JSON.parse(localStorage.getItem('cart'));
+        chkout_str = "";
+        cartTotal = 0.0;
+
+        for (item in cart) {
+            if (cart[item][5].length > 500) {
+                var desc = cart[item][5].slice(0, 300) + "...";
+            }
+            else {
+                var desc = cart[item][5];
+            }
+
+            var prod_id = item.slice(2, );
+
+            chkout_str = chkout_str + `<div class="row my-2" style="font-size:12px" >
+                                                    <div class="col-md-7">
+                                                        <li class="media">
+                                                            <a href="product?id=`+ prod_id + `"><img src="` + cart[item][4] + `" width="70px" id="image` + item + `" height="100px" class="mr-3" alt="..." /></a>
+                                                            <div class="media-body">
+                                                                <b><span class="" style="font-size:13px" id="name`+ item + `">
+                                                                    `+ cart[item][0] + `
+                                                                </span></b>
+                                                                <br />
+                                                                <span class="" id="desc`+ item + `" title="` + desc + `">` + desc + `</span>
+                                                            </div>
+                                                        </li>
+                                                    </div>
+                                                    <div class="col-md-1" style="text-align:center;" id="">
+                                                        $<span class="price`+ item + `" id="price` + item + `">` + cart[item][2] + `</span>
+                                                    </div>
+                                                    <div class="col-md-1" style="text-align:center;" id="">
+                                                        <span class="discount`+ item + `" id="discount` + item + `">` + cart[item][3] + `</span>%
+                                                    </div>
+                                                    <div class="col-md-2 butClick" style="text-align:center; vertical-align: middle;">
+                                                        <img id="minus`+item +`" src="{% static 'shop/images/addToCart_Minus.png' %}" width="25" class="minus" title="Remove From Cart"  alt="Remove From Cart" 
+                                                            onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
+                                                        <span id='val` + item + `' class='mx-2'>` + cart[item][1] + `</span> 
+                                                        <img id="plus`+item +`" src="{% static 'shop/images/addToCart_Plus.png' %}" width="25" class="plus" title="Add To Cart"  alt="Add To Cart" 
+                                                            onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
+                                                    </div>
+                                                    <div class="col-md-1" style="text-align:center;" id="">
+                                                        $<span class="" id="total`+ item + `">` + (cart[item][2] - (cart[item][2] * cart[item][3] / 100)) * cart[item][1] + `</span>
+                                                    </div>
+                                                </div>
+                                                <hr />`;
+            cartTotal = cartTotal + (cart[item][2] - (cart[item][2] * cart[item][3] / 100)) * cart[item][1];
+        }
+
+        document.getElementById('cartItem').innerHTML = chkout_str;
+
+        updateCartTotalLocalStorage(cartTotal);
+    }
+
+
+</script>
+
+{% endblock %}

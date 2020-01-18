@@ -83,10 +83,10 @@ Now if we go to [local host]("https://127.0.0.1:8000" ""), we can see our websit
 <!-- Details of different version of project -->
 ## Versions
 - [1.0](https://github.com/siddhantshah1986/Django-Projects/tree/master/Ecommerce%20Website) - In this version, we have just created a site where a user can browse the product, add them to cart, buy the product and then search for his order. It is not mandatory for the user to signup in order to buy items.
-    - [1.1](#) - Code in progress. In this version, we will use icons instead of a button to add the beautification of the website.
-    - [1.2](#) - Code in progress. In this version, we will send an email to the user whenever the purchase is made and also update them whenever the order status is updated.
+    - [1.1](https://github.com/siddhantshah1986/Django-Projects/tree/master/Ecommerce%20Website%201.1) - In this version, we ahve use icons instead of a button to add the beautification of the website. We have also cleaned the code to provide better readability.
+    - [1.2](#) - Code in progress. By end of Jan. In this version, we will user account with a user profile page and wishlist functionalities
 
-- [2.0](#) - By end of Jan. In this version, we will user account with a user profile page and wishlist functionalities
+- [2.0](#) - In this version, we will send an email to the user whenever the purchase is made and also update them whenever the order status is updated.
 
 <!-- Asking for Contributions and Issues -->
 ## Contributing / Reporting issues
