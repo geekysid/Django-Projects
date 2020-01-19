@@ -123,6 +123,10 @@
                             onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
                   </a>
                   &emsp;
+                  <span id="spWLpr{{prod.id}}" class="spWLpr">
+                    <img src="{% static 'shop/images/AddToWishlist.png' %}" width="25" class="addWL" id="addWLpr{{prod.id}}" title="Add To Wishlist"  alt="Add To Wishlist" 
+                            onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
+                  </span>
                 </div>
               </div>
             </div>
@@ -172,6 +176,8 @@
     popoverUpdate_cart();
   }
 
+  addToWishlist_initialize()
+
   // updating total items added to cart and displaying in cart popover
   function cart_items() {
     document.getElementById('cart').innerHTML = numberOfItemsInCard();
@@ -183,6 +189,7 @@
     return "{% static 'shop/images/addToCart_plus.png' %}"
   }
 
+
   // url for minus button image
   function staticMinusImage(){
     return "{% static 'shop/images/addToCart_Minus.png' %}"
@@ -193,6 +200,15 @@
     return "{% static 'shop/images/addToCart.png' %}"
   }
 
+  // url for Remove From Wishlist button
+  function staticAddedToWishlistImage(){
+    return "{% static 'shop/images/AddedToWishlist.png' %}"
+  }
+
+  // url for Add To Wishlist button
+  function staticAddToWishlistImage(){
+    return "{% static 'shop/images/AddToWishlist.png' %}"
+  }
 
 </script>
 {% endblock %}
