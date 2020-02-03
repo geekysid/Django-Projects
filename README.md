@@ -42,15 +42,14 @@ In this repository I will share code for few projects which I have developed on 
 
 - [Text Utility](https://github.com/siddhantshah1986/Django-Projects/tree/master/Text_Utilities) - Done
 - [Ecommerce Website](https://github.com/siddhantshah1986/Django-Projects/tree/master/Ecommerce%20Website) - Work in Progress
-- Weather Application - By January End
-- Personal Blogging - By February Mid
-- Resume Website - My Feruary End
+- [Perosnal Website (geekysid.com)](https://github.com/siddhantshah1986/Django-Projects/tree/master/GeekySid) - Work in Progress
+- Weather Application - By February Mid
 - Accounting Application - By March End
 - Application that pulls products from different Ecommerce website and copares their prices - By April
 
 <!-- Tools I have used for this project -->
 ## Tools
-* Visual Studio Code
+* Visual Studio Codes
 * Terminal (mac)
 
 <!-- Skill that will be required -->
