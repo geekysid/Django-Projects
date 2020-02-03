@@ -1,0 +1,57 @@
+1) Created an virtual envviornment - env
+        ==> virtualenv env
+
+2) Activated virtual env
+        ==> source bin/activate
+
+3) Installed djnago in this virtual env 
+        ==> pip3 install django==3.0.1
+    
+4) Created a project geekysid
+        ==> django-admin createproject GeekySid
+
+5) Inside GeekySid, created a folder with 'template' and created an blank index.html file in it.
+
+6) >Geekysid>GeekySid
+
+7) Into the settings.py, added a template settings
+        'DIRS': [
+            os.path.join(BASE_DIR, 'template'),
+        ],
+
+8) Made few changes to urlpatterns insid urls.py
+        from . import views
+
+        urlpatterns = [
+            path('', views.index, name='index),
+        ]
+
+9) Creating a new file views.py that will hold the action that would be executed when a url is clicked.
+        from django.shortcuts import render
+        from dhango.HTTP import HttpResponse
+
+        def index(request):
+            return render(request, 'index.html')
+
+10) Copy the theme's index.html content into our template's index.html file.
+
+11) in order to make the theme work, we need to add all static files, js, css, fonts and other static files to the project.
+    a) Create a 'static' folder at root and add all the required static files to this folder.
+    b) now we go settings.py file and configure static files location to let django know where we have placed all our static files.
+        settings.py>
+            STATIC_URL = '/static/'     # this how we will refer to static files locations
+            STATICFILES_DIR = [
+                os.path.join(BASE_DIR, 'static'),   # place where we will store our static files
+            ]
+            STATIC_ROOT = os.path.join(BASE_DIR, 'assets')  # place where django will store its static files.
+    c) now we will tell django to collect static files from static folder and store it into assets folder.
+            ==> python3 manage.py collectstatic
+
+12) Add '{% load static %}' at the top of the index.html
+
+13) Add "{% static '' %}" to everyplace in index.html that has a static file.
+        eg: <link rel="stylesheet" href="{% static 'home/css/glitche-basic.css' %}" />
+	        <link rel="stylesheet" href="{% static 'home/css/glitche-layout.css' %}" />
+	        <link rel="stylesheet" href="{% static 'home/css/ionicons.css' %}" />
+	        <link rel="stylesheet" href="{% static 'home/css/magnific-popup.css' %}" />
+	        <link rel="stylesheet" href="{% static 'home/css/animate.css' %}" />
