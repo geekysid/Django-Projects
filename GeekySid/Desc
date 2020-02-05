@@ -55,3 +55,39 @@
 	        <link rel="stylesheet" href="{% static 'home/css/ionicons.css' %}" />
 	        <link rel="stylesheet" href="{% static 'home/css/magnific-popup.css' %}" />
 	        <link rel="stylesheet" href="{% static 'home/css/animate.css' %}" />
+
+
+14) Adding BookStore
+            ==> django-admin startapp BookStore
+
+        2) Copyied all static files from bookstore project to statics folder of geekysid
+
+        3) Added a Media setting in settings.py and urls.py
+                Settings.py (geekysid)
+                        MEDIA_URL = '/media/'
+                        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+                urls.py (geekysid)
+                        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+15) Add new app Bookmark's url to the urls.py of Geekysid
+ 
+                path('bookstore/', include('bookstore.urls'))
+16) Add new app under INSTALLED_APPS inside Geekysid's settings.py
+                'BookStore.apps.Bookstoreconfig'
+
+17) BookStore App urls.py - copied all necessary urls from project
+
+18) BookStore App models.py - copied all necessary models from project
+
+19) BookStore App views.py - copied all necessary views from project
+
+20) BookStore App urls.py - copied all necessary urls from project
+
+21) Chnaged all redirected or rendered url in BookStore view.py file to bookstore/...
+
+22) Change all the photos url of in the templates of BookStore
+
+
+
+Create a Super user for accessing admin panel of the site
+                ==> python3 manage.py createuser

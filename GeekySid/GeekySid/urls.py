@@ -21,11 +21,11 @@ from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index')
+    path('', views.index, name='index'),
+    path('BookStore/', include('BookStore.urls'))
 ]
 
 url_static = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+url_media = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns = urlpatterns + url_static
-
-print(url_static)
+urlpatterns = urlpatterns + url_static + url_media

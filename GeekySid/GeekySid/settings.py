@@ -11,6 +11,27 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
+
+# fetching sensetive data stored in a json file 
+pathToFile= os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+file = os.path.join(pathToFile, 'SecretFile.json')
+_SecretKey = ''
+_EmailUser = ''
+_EmailPass = ''
+_EmailHost = ''
+_EmailPort = ''
+if os.path.exists(file):
+    print('True')
+    with open(file, 'r') as secret_file:
+        sensetive_data = json.load(secret_file)
+        _SecretKey = sensetive_data['SECRET_KEYS']
+        _EmailUser = sensetive_data['EMAIL_USER']
+        _EmailPass = sensetive_data['EMAIL_PASS']
+        _EmailHost = sensetive_data['EMAIL_HOST']
+        _EmailPort = sensetive_data['EMAIL_PORT']
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -37,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'BookStore.apps.BookstoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +146,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'statics')   # place where we will store our static files
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')  # place where django will store its static files.
+
+# Media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# Information about Email username and password to be used to sent mail to users
+EMAIL_HOST = _EmailHost
+EMAIL_PORT = _EmailPort
+EMAIL_USER = _EmailUser
+EMAIL_PASS = _EmailPass

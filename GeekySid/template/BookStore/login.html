@@ -1,0 +1,143 @@
+{% extends 'bookstore/master.html' %}
+
+{% block content %}
+
+<div class='container my-3'>
+    <div class='row'>
+        <div class='col'>
+            <h3>Register</h3>
+            <div class="my-4 border border-danger">
+                <div class="mx-4 my-4">
+                    <form action='register' class="needs-validation" method='post'>
+                        {% csrf_token %}
+                        <div class='form-group col-sm-12 my-3 text-center'>   <!-- info -->
+                            {% if reg_error_message %}
+                                <span class="text-dark">Enter your details to register with us and get 10% off coupon in your mailbox</span>
+                                <br /><br />
+                                <span class="text-danger">{{reg_error_message}}</span>
+                                <br />
+                            {% elif reg_success_message %}
+                                <span class="text-success">{{reg_success_message}}</span>
+                                <br />
+                            {% else %}
+                                <span class="text-dark">Enter your details to register with us and get 10% off coupon in your mailbox</span>
+                            {% endif %}
+                        </div>
+                        <div class='form-group row my-2 text-right'>   <!-- fname -->
+                            <label for="fname" class="col-sm-4 col-form-label">First Name:</label>
+                            <div class='col-sm-8'>
+                                <input type='text' class="form-control" name='fname' required />
+                            </div> 
+                        </div>
+                        <div class='form-group row my-2 text-right'>   <!-- lname -->
+                            <label for="lname" class="col-sm-4 col-form-label">Last Name:</label>
+                            <div class='col-sm-8'>
+                                <input type='text' class="form-control" name='lname' required />
+                            </div> 
+                        </div>
+                        <div class='form-group row my-2 text-right'>   <!-- email -->
+                            <label for="email" class="col-sm-4 col-form-label">Email:</label>
+                            <div class='col-sm-8'>
+                                <input type='email' class="form-control" name='email' required />
+                            </div> 
+                        </div>
+                        <div class='form-group row my-2 text-right'>   <!-- username -->
+                            <label for="username" class="col-sm-4 col-form-label">Username:</label>
+                            <div class='col-sm-8'>
+                                <input type='text' class="form-control" name='username' required />
+                            </div> 
+                        </div>
+                        <div class='form-group row my-2 text-right'>   <!-- password -->
+                            <label for="password" class="col-sm-4 col-form-label">Password:</label>
+                            <div class='col-sm-8'>
+                                <input type='password' class="form-control" name='password' required />
+                            </div> 
+                        </div>
+                        <div class='form-group row my-2 text-right'>   <!-- confirm_password -->
+                            <label for="confirm_password" class="col-sm-4 col-form-label">Confirm Password:</label>
+                            <div class='col-sm-8'>
+                                <input type='password' class="form-control" name='confirm_password' required />
+                            </div> 
+                        </div>
+                        <div class='form-group row mt-4 text-center'>   <!-- T&C -->
+                            <div class='col'>
+                                <input class="form-check-input" type="checkbox" value="" value='True' required />
+                                <label class="form-check-label" for="T&C">
+                                    Agree to terms and conditions
+                                </label>
+                            </div> 
+                        </div>
+                        <div class='form-group row mt-4 text-center'>   <!-- register button -->
+                            <div class='col'>
+                                {% if reg_success_message %}
+                                    <input type='submit' class="btn btn-secondary" value='Register Me' disabled />
+                                {% else %}
+                                    <input type='submit' class="btn btn-success" value='Register Me' />
+                                {% endif %}
+                            </div> 
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class='col'>
+            <h3>Login</h3>
+            <div class="my-4 border border-danger">
+                <div class="mx-4 my-4">
+                    
+                    <form action="login" class="needs-validation" method='post'>
+                        {% csrf_token %} 
+                        <div class='form-group col-sm-12 my-3 text-center'>   <!-- info -->
+                            {% if log_error_message %}
+                                <span class="text-dark">Please enter your detail to login.</span>
+                                <br /><br />
+                                <span class="text-danger">{{log_error_message}}</span>
+                                <br />
+                            {% else %}
+                                <span class="text-dark">Please enter your detail to login.</span>
+                            {% endif %}
+                        </div>
+                        <div class='form-group row my-2 text-right'>   <!-- username -->
+                            <label for="username" class="col-sm-4 col-form-label">Username:</label>
+                            <div class='col-sm-8'>
+                                <input type='text' class="form-control" name='username' required />
+                            </div> 
+                        </div>
+                        <div class='form-group row my-2 text-right'>   <!-- password -->
+                            <label for="password" class="col-sm-4 col-form-label">Password:</label>
+                            <div class='col-sm-8'>
+                                <input type='password' class="form-control" name='password' required />
+                            </div> 
+                        </div>
+                        <div class='form-group row mt-4 text-center'>   <!-- Remember Me -->
+                            <div class='col'>
+                                <input class="form-check-input" type="checkbox" value="" value='True' />
+                                <label class="form-check-label" for="T&C">
+                                    Remember Me
+                                </label>
+                            </div> 
+                        </div>
+                        <div class='form-group row mt-4 text-center'>   <!-- Forgot Password -->
+                            <div class='col'>
+                                <label class="form-check-label" for="T&C">
+                                    <a href='forgot_password'>Forgot Password</a>
+                                </label>
+                            </div> 
+                        </div>
+                        <div class='form-group row mt-4 text-center'>   <!-- register button -->
+                            <div class='col'>
+                                {% if not user.is_authenticated %}
+                                    <input type='submit' class="btn btn-success" value='Register Me' />
+                                {% else %}
+                                <input type='submit' class="btn btn-secondary" value='Register Me' disabled />
+                                {% endif %}
+                            </div> 
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
