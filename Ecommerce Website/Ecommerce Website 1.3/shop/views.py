@@ -109,7 +109,6 @@ def checkout(request):
 
                     return redirect("orders?orderid="+str(order)+"&emailadd="+email+"&checkoutStatus=success")
                 except Exception as e:
-                    print(str(e))
                     return render(request, "checkout.html", {'errorMessage': "Exception occured: "+ str(e)})
                 
             else:
@@ -124,9 +123,8 @@ def checkout(request):
 def product(request):
     if request.method == "GET" and 'id' in request.GET:
         id = request.GET.get("id", '')
-
-        if id.strip().isnumeric:
-
+        
+        if id.strip().isnumeric():
             try:
                 product = Products.objects.get(id=id)
                 if product != None:
@@ -139,7 +137,7 @@ def product(request):
         else:
             return render(request, 'product.html', {"error": "Invaild Product", "validity": "false"})
     else:
-        return render(request, 'product.html')
+        return render(request, 'product.html', {"error": "Invaild Params", "validity": "false"})
 
 
 def orders(request):
@@ -178,7 +176,6 @@ def orders_fetchData(order_id, email):
         order_obj = None
 
     if order_obj:
-        print(order_obj)
         try:
             ord_prod_obj = Ordered_Product.objects.filter(order=order_obj)
         except Ordered_Product.DoesNotExist:

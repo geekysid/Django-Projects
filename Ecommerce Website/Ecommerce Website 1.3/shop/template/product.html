@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
     {% if validity == 'true' %}
-
     <div class="container">
         <div class="card">
             <div class="container-fliud">
@@ -69,9 +68,24 @@
             </div>
         </div>
     </div>
-
+    {% elif error == "Invaild Product" %}
+        <div class="card">
+            <div class="alert alert-danger alert-dismissible fade show" style="text-align:center" >
+                <strong>Invalid Product. </strong> This is not a valid product. Please <a href='index'>click here</a> to go to homepage.
+            </div>
+        </div>
+    {% elif error == "Invaild Params" %}
+        <div class="card">
+            <div class="alert alert-danger alert-dismissible fade show" style="text-align:center" >
+                <strong>Opps!!! </strong> Something went wrong. Please write to "geekysid.com@gmail.com" about the issue and  <a href='index'>click here</a> to go to homepage.
+            </div>
+        </div>
     {% else %}
-    <div>No Product Found</div>
+        <div class="card">
+            <div class="alert alert-danger alert-dismissible fade show" style="text-align:center" >
+                <strong>Opps!!! </strong> Something went wrong. Please write to geekysid.com@gmail.com about the issue and  <a href='index'>click here</a> to go to homepage.
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
 

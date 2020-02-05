@@ -14,7 +14,7 @@ import os
 import json
 
 # fetching sensetive data stored in a json file 
-pathToFile= os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+pathToFile= os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 file = os.path.join(pathToFile, 'SecretFile.json')
 _SecretKey = ''
 _EmailUser = ''

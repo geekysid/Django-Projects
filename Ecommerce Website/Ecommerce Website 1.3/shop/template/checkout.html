@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 
+
 <!-- ALERT MESSAGES once order os placed -->
 {% if errorMessage %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -26,7 +27,7 @@
     </div>
 {% endif %}
 
-<div class='conatiner'>
+<div class='conatiner' id='cartLayout'>
     <div class='row my-2'>
         <div class='col-md-2 my-2'></div>
         <div class='col-md-8 my-2'>
@@ -270,12 +271,21 @@
 </div>
 {% endblock %}
 
+
+
+
 {% block js %}
 <script type="text/javascript" src="{% static 'shop/js/javascript.js' %}"></script> 
 <script>
 
     if(localStorage.getItem('cart') == '{}'){
-        window.location.replace("index");
+        // window.location.replace("index");
+        data = `<div class="card">
+                    <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                        <br /><br /><br /><strong>Empty Cart. </strong> Your cart is empty. Please <a href='index'>click here</a> to go abck to homepage.
+                    </div>
+                </div>`
+        document.getElementById('cartLayout').innerHTML = data
     }
     //alert box if order failes or success
     $('.alert').alert()
