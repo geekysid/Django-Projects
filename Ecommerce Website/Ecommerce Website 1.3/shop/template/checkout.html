@@ -86,8 +86,7 @@
                 </div>
 
                 <!-- SHIPING ADDRESS & PAYMENT  -->
-                <form action="" method="post">
-                    {% csrf_token %}
+                <form action="" method="post">{% csrf_token %}
                     <div class="card">
                         <div class="card-header" id="headingTwo" style="text-align: center ;">
                             <h2 class="mb-0">
@@ -286,6 +285,7 @@
     }
     
     updateCheckputAccordian()
+    update_CartItemHiddenInput()
     popoverUpdate_cart()
 
     //function that sets the valeu attribute of an hidden input which will sent to database using POST method.
@@ -312,36 +312,36 @@
             var prod_id = item.slice(2, );
 
             chkout_str = chkout_str + `<div class="row my-2" style="font-size:12px" >
-                                                    <div class="col-md-7">
-                                                        <li class="media">
-                                                            <a href="product?id=`+ prod_id + `"><img src="` + cart[item][4] + `" width="70px" id="image` + item + `" height="100px" class="mr-3" alt="..." /></a>
-                                                            <div class="media-body">
-                                                                <b><span class="" style="font-size:13px" id="name`+ item + `">
-                                                                    `+ cart[item][0] + `
-                                                                </span></b>
-                                                                <br />
-                                                                <span class="" id="desc`+ item + `" title="` + desc + `">` + desc + `</span>
-                                                            </div>
-                                                        </li>
+                                            <div class="col-md-7">
+                                                <li class="media">
+                                                    <a href="product?id=`+ prod_id + `"><img src="` + cart[item][4] + `" width="70px" id="image` + item + `" height="100px" class="mr-3" alt="..." /></a>
+                                                    <div class="media-body">
+                                                        <b><span class="" style="font-size:13px" id="name`+ item + `">
+                                                            `+ cart[item][0] + `
+                                                        </span></b>
+                                                        <br />
+                                                        <span class="" id="desc`+ item + `" title="` + desc + `">` + desc + `</span>
                                                     </div>
-                                                    <div class="col-md-1" style="text-align:center;" id="">
-                                                        $<span class="price`+ item + `" id="price` + item + `">` + cart[item][2] + `</span>
-                                                    </div>
-                                                    <div class="col-md-1" style="text-align:center;" id="">
-                                                        <span class="discount`+ item + `" id="discount` + item + `">` + cart[item][3] + `</span>%
-                                                    </div>
-                                                    <div class="col-md-2 butClick" style="text-align:center; vertical-align: middle;">
-                                                        <img id="minus`+item +`" src="{% static 'shop/images/addToCart_Minus.png' %}" width="25" class="minus" title="Remove From Cart"  alt="Remove From Cart" 
-                                                            onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
-                                                        <span id='val` + item + `' class='mx-2'>` + cart[item][1] + `</span> 
-                                                        <img id="plus`+item +`" src="{% static 'shop/images/addToCart_Plus.png' %}" width="25" class="plus" title="Add To Cart"  alt="Add To Cart" 
-                                                            onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
-                                                    </div>
-                                                    <div class="col-md-1" style="text-align:center;" id="">
-                                                        $<span class="" id="total`+ item + `">` + (cart[item][2] - (cart[item][2] * cart[item][3] / 100)) * cart[item][1] + `</span>
-                                                    </div>
-                                                </div>
-                                                <hr />`;
+                                                </li>
+                                            </div>
+                                            <div class="col-md-1" style="text-align:center;" id="">
+                                                $<span class="price`+ item + `" id="price` + item + `">` + cart[item][2] + `</span>
+                                            </div>
+                                            <div class="col-md-1" style="text-align:center;" id="">
+                                                <span class="discount`+ item + `" id="discount` + item + `">` + cart[item][3] + `</span>%
+                                            </div>
+                                            <div class="col-md-2 butClick" style="text-align:center; vertical-align: middle;">
+                                                <img id="minus`+item +`" src="{% static 'shop/images/addToCart_Minus.png' %}" width="25" class="minus" title="Remove From Cart"  alt="Remove From Cart" 
+                                                    onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
+                                                <span id='val` + item + `' class='mx-2'>` + cart[item][1] + `</span> 
+                                                <img id="plus`+item +`" src="{% static 'shop/images/addToCart_Plus.png' %}" width="25" class="plus" title="Add To Cart"  alt="Add To Cart" 
+                                                    onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
+                                            </div>
+                                            <div class="col-md-1" style="text-align:center;" id="">
+                                                $<span class="" id="total`+ item + `">` + (cart[item][2] - (cart[item][2] * cart[item][3] / 100)) * cart[item][1] + `</span>
+                                            </div>
+                                        </div>
+                                    <hr />`;
             cartTotal = cartTotal + (cart[item][2] - (cart[item][2] * cart[item][3] / 100)) * cart[item][1];
         }
 

@@ -3,8 +3,11 @@ from django.http import HttpResponse
 from .models import Products, Order, Ordered_Product, Order_Status
 from django.contrib.auth.models import User, auth
 import math
-import ast 
-# Create your views here.
+import ast, json
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from django.conf import settings
 
 
 def index(request):
@@ -59,24 +62,56 @@ def checkout(request):
             order.save()
 
             if order:
-                # cart_dict = json.loads(cart)
-                cart_dict = ast.literal_eval(cart)  # used this function to convert string to dictionary as json.loads() was not working for some reason
+                try:
+                    cart_dict = json.loads(cart)
+                    # cart_dict = ast.literal_eval(cart)  # used this function to convert string to dictionary as json.loads() was not working for some reason
 
-                # Adding all the proucts in a order to the Ordered_Product object
-                #cart_dict Format: {'pr12': [name, qnty, price, discount, image, desc]
-                for item in cart_dict:
-                    product = Products.objects.get(id=int(item[2:]))    # fetching product object for each item customer wants to save it in order_product table
-                    order_product = Ordered_Product(order=order, product=product, quantity=cart_dict[item][1], discount=cart_dict[item][3], price=float(cart_dict[item][2]), image=cart_dict[item][4])
-                    order_product.save()
+                    email_deatils = {}
 
-                # Setting status of the order as 'Order Placed' in Order_Status Table
-                order_status = Order_Status(order= order, status_desc = "Order successfully placed", remark="We will get back to your via mail about approximate date of delivery. Genarally Arrival time is between 5-8 workind days depending on the location.")
-                order_status.save()
+                    # Adding all the proucts in a order to the Ordered_Product object
+                    for item in cart_dict:
+                        product = Products.objects.get(id=int(item[2:]))    # fetching product object for each item customer wants to save it in order_product table
+                        order_product = Ordered_Product(order=order, product=product, quantity=cart_dict[item][1], discount=cart_dict[item][3], price=float(cart_dict[item][2]), image=cart_dict[item][4])
+                        order_product.save()
 
-                # return render(request, "checkout.html", {'succuessMessage': "success", 'orderid': str(order), 'emailadd': email })
-                # return render(request, "orders.html", {'checkoutStatus': 'success', 'orderid': str(order), 'emailadd': email })
-                return redirect("orders?orderid="+str(order)+"&emailadd="+email+"&checkoutStatus=success")
-                # return render(request, "orders.html?orderid="+str(order)+"&emailadd="+email, {'checkoutStatus': 'success', 'orderid': str(order), 'emailadd': email })
+                        # email_deatils[str(product)] =  [qnty, discount, price, img]
+                        email_deatils[str(product)] =  [cart_dict[item][1], cart_dict[item][3], float(cart_dict[item][2]), cart_dict[item][4]]
+
+                    # Setting status of the order as 'Order Placed' in Order_Status Table
+                    order_status = Order_Status(order= order, status_desc = "Order successfully placed", remark="We will get back to your via mail about approximate date of delivery. Genarally Arrival time is between 5-8 workind days depending on the location.")
+                    order_status.save()
+
+                    # SENDING EMAIL CONFIRMATION TO THE CLIENT ABOUT ORDER PLACED
+
+                    msg = MIMEMultipart()
+                    msg['To'] = email
+                    msg['From'] = 'donotreply@bookstore.com'
+                    msg['Subject'] = 'Bookstore: Your order (Book -' + str(product) + ') is placed.'
+
+                    prod_list = ""
+                    for prod in email_deatils:
+                        prod_list = prod_list + '<div><img src="' + email_deatils[prod][3] + '" width="70px" height="100px" /> <b>'+ prod +'</b>, Qnty: ' + str(email_deatils[prod][0]) + ' @ $' + str(email_deatils[prod][2]) + ' with ' + str(email_deatils[prod][1]) + '% discount.</div><br />'
+
+                    body = 'Hello ' + name + ',<p> Thankyou for chossing Bookstore. <p>Your order has been placed successfully and should reach your doorstep in next 5-6 working days.<p>Below is the details of your order.<p>' + prod_list
+
+                    msg_body = MIMEText(body,'html')
+                    
+                    msg.attach(msg_body)
+
+                    Email_User = settings.EMAIL_USER
+                    Email_Pass = settings.EMAIL_PASS
+                    smtp_address = settings.EMAIL_HOST
+                    port = settings.EMAIL_PORT
+
+                    with smtplib.SMTP_SSL(smtp_address, port) as smtp:
+                        smtp.login(Email_User, Email_Pass)
+                        smtp.sendmail(Email_User, email, msg.as_string())
+
+                    return redirect("orders?orderid="+str(order)+"&emailadd="+email+"&checkoutStatus=success")
+                except Exception as e:
+                    print(str(e))
+                    return render(request, "checkout.html", {'errorMessage': "Exception occured: "+ str(e)})
+                
             else:
                 return render(request, "checkout.html", {'errorMessage': "There was an error while placing your order. Please try again or contact admin."})
 

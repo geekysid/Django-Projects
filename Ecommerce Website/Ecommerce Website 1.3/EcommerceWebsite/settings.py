@@ -11,6 +11,25 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import json
+
+# fetching sensetive data stored in a json file 
+pathToFile= os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+file = os.path.join(pathToFile, 'SecretFile.json')
+_SecretKey = ''
+_EmailUser = ''
+_EmailPass = ''
+_EmailHost = ''
+_EmailPort = ''
+if os.path.exists(file):
+    with open(file, 'r') as secret_file:
+        sensetive_data = json.load(secret_file)
+        _SecretKey = sensetive_data['SECRET_KEYS']
+        _EmailUser = sensetive_data['EMAIL_USER']
+        _EmailPass = sensetive_data['EMAIL_PASS']
+        _EmailHost = sensetive_data['EMAIL_HOST']
+        _EmailPort = sensetive_data['EMAIL_PORT']
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +39,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'h1a-no02+p_u#=#_8mtcu4b3^&bygq_1ukjc9$!$-mn+3xn+3s'
+SECRET_KEY = _SecretKey
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -126,3 +145,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Information about Email username and password to be used to sent mail to users
+EMAIL_HOST = _EmailHost
+EMAIL_PORT = _EmailPort
+EMAIL_USER = _EmailUser
+EMAIL_PASS = _EmailPass

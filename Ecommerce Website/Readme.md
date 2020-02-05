@@ -87,7 +87,7 @@ Now if we go to [local host]("https://127.0.0.1:8000" ""), we can see our websit
     - [1.2](https://github.com/siddhantshah1986/Django-Projects/tree/258da881f380757a50d2bd127f68adcb44d26cd8/Ecommerce%20Website) - In this version, I have added **Wishlist** functionality 
     - [1.3](#) - 1st Week of Feb. In this version, we will send an email to the user whenever the purchase is made and also update them whenever the order status is updated.
 
-- [2.0](#) - By mid of Feb. In this version, we will user account
+- [2.0](#) - By end of Feb. In this version, we will user account
 
 <!-- Asking for Contributions and Issues -->
 ## Contributing / Reporting issues
