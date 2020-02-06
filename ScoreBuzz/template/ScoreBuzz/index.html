@@ -1,0 +1,173 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+  <title>ScoreBuzz</title>
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,300,400italic,700,900' rel='stylesheet' type='text/css'>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Score Buzz">
+  <meta name="keywords" content="Score Buzz">
+  <meta name="author" content="Siddhant Shah">
+
+  <!-- Bootstrap css -->
+  <link href="{% static 'ScoreBuzz/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'ScoreBuzz/css/bootstrap-sb.css' %}" rel="stylesheet">
+
+
+  <!-- Docs Custom styles -->
+  <style>
+    body,
+    html {
+      overflow-x: hidden
+    }
+
+    body {
+      padding: 60px 20px 0
+    }
+
+    footer {
+      border-top: 1px solid #ddd;
+      padding: 30px;
+      margin-top: 50px
+    }
+
+    .row>[class*=col-] {
+      margin-bottom: 40px
+    }
+
+    .navbar-container {
+      position: relative;
+      min-height: 100px
+    }
+
+    .navbar.navbar-fixed-bottom,
+    .navbar.navbar-fixed-top {
+      position: absolute;
+      top: 50px;
+      z-index: 0
+    }
+
+    .navbar.navbar-fixed-bottom .container,
+    .navbar.navbar-fixed-top .container {
+      max-width: 90%
+    }
+
+    .btn-group {
+      margin-bottom: 10px
+    }
+
+    .form-inline input[type=password],
+    .form-inline input[type=text],
+    .form-inline select {
+      width: 180px
+    }
+
+    .input-group {
+      margin-bottom: 10px
+    }
+
+    .pagination {
+      margin-top: 0
+    }
+
+    .navbar-inverse {
+      margin: 110px 0
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <h2 style="text-align:center">Live or Recently Concluded Matches</h2><br />
+    <div class="row mx-2">
+        {% if live_match_details != null %}
+            {% for live_match in live_match_details %}
+              
+                <div class="col-sm-3 col-lg-3">
+                    <div class="panel panel-info" data-effect="helix">
+                      <div class="panel-heading">
+                        <a href="scorecard?link={{live_match.match_link}}">
+                          <span style="font-weight:bold; font-size:12px">{{live_match.match_title}} </span>
+                          {% if live_match.match_current_status == 'LIVE' %}
+                          <span style="font-weight:bold; font-size:12px; color:Green">({{live_match.match_current_status}})</span>
+                          {% elif live_match.match_current_status == 'RESULT' %}
+                          <span style="font-weight:bold; font-size:12px; color:Red">({{live_match.match_current_status}})</span>
+                          {% else %}
+                          <span style="font-weight:bold; font-size:12px; color:Orange">({{live_match.match_current_status}})</span>
+                          {% endif %} 
+                        </a>
+                      </div>
+                      <div class="panel-body">
+                        <table>
+                          <tr>
+                            <td colspan=3>
+                              <span style="font-size:10.5px">{{live_match.match_heading}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="height:5px"> 
+                            </td>
+                          </tr>
+                          {% for teams in live_match.match_score %}
+                          <tr>
+                            <td width="16.5%">
+                              <img src="{{teams.0}}" />
+                            </td>
+                            <td style="width:25%; padding-left: 10px;">
+                              <span style="font-size:10.5px"><strong>{{teams.1}}</strong></span>
+                            </td>
+                            <td style="width:58.5%; padding-left: 5px;">
+                              <span style="font-size:10.5px"><strong>{{teams.2}}</strong></span>
+                            </td>
+                          </tr> 
+                          {% endfor %}
+                        </table>
+                      </div>
+                      <div class="panel-footer">
+                        <span style="font-size:10.5px">{{live_match.match_status}}</span>
+                      </div>
+                    </div>
+                </div>
+              {% if forloop.counter|divisibleby:4 %}
+                  </div>
+                  <div class="row">
+              {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+
+
+  </div>
+  <!-- /container -->
+
+  <footer class="text-center fixed-bottom">
+    <p>&copy; Siddhant Shah</p>
+    <div class="credits">
+      <!--
+        All the links in the footer should remain intact.
+        You can delete the links only if you purchased the pro version.
+        Licensing information: https://bootstrapmade.com/license/
+        Purchase the pro version form: https://bootstrapmade.com/buy/?theme=Techie
+      -->
+      Designed by <a href="geekysid.com/">Siddhant Shah</a>
+    </div>
+  </footer>
+
+  <!-- Main Scripts-->
+  <script src="{% static 'ScoreBuzz/js/jquery.js' %}"></script>
+  <script src="{% static 'ScoreBuzz/js/bootstrap.min.js' %}"></script>
+
+  <!-- Bootstrap 3 has typeahead optionally -->
+  <script src="{% static 'ScoreBuzz/js/typeahead.min.js' %}"></script>
+
+</body>
+
+</html>
