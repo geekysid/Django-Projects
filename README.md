@@ -43,8 +43,8 @@ In this repository I will share code for few projects which I have developed on 
 - [Text Utility](https://github.com/siddhantshah1986/Django-Projects/tree/master/Text_Utilities) - Done
 - [Ecommerce Website](https://github.com/siddhantshah1986/Django-Projects/tree/master/Ecommerce%20Website) - Work in Progress
 - [Perosnal Website (geekysid.com)](https://github.com/siddhantshah1986/Django-Projects/tree/master/GeekySid) - Work in Progress
-- [ScoreBuzz (Live CRicket Scores)](https://github.com/siddhantshah1986/Django-Projects/tree/master/ScoreBuzz) - Work in Progress
-
+- [ScoreBuzz (Live Cricket Scores)](https://github.com/siddhantshah1986/Django-Projects/tree/master/ScoreBuzz) - Work in Progress
+- [Github Octa Profile](https://github.com/siddhantshah1986/Django-Projects/tree/master/GithubOctarofile) - Work in Progress
 - Weather Application - By February Mid
 - Accounting Application - By March End
 - Application that pulls products from different Ecommerce website and copares their prices - By April
