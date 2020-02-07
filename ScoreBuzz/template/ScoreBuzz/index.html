@@ -1,95 +1,30 @@
-{% load static%}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'scorebuzz/master.html' %}
+{% load static %}
 
-<head>
+{% block content %}
+    <table width=100% height="400px" style="background-color: black;">
+      <tr style="height: 10%;">
+        <td style="text-align: left; padding-left:30px;">
+          <h4 style="color:#eee">ScoreBuze</h4>
+        </td>
+        <td style="text-align: right; padding-right:30px;">
+          <a href="geekysid.com"><h4 style="color: #eee;">Back to GeekySid</h4></a>
+        </td>
+      </tr>
+      <tr style="height: 90%;">
+        <td colspan=2 style="text-align:center; vertical-align:middle">
+          <img src="{% static 'ScoreBuzz/img/logo2.png' %}" width="25%" />
+        </td>
+      </tr>
+    </table>
 
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-
-  <title>ScoreBuzz</title>
-
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,300,400italic,700,900' rel='stylesheet' type='text/css'>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Score Buzz">
-  <meta name="keywords" content="Score Buzz">
-  <meta name="author" content="Siddhant Shah">
-
-  <!-- Bootstrap css -->
-  <link href="{% static 'ScoreBuzz/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'ScoreBuzz/css/bootstrap-sb.css' %}" rel="stylesheet">
-
-
-  <!-- Docs Custom styles -->
-  <style>
-    body,
-    html {
-      overflow-x: hidden
-    }
-
-    body {
-      padding: 60px 20px 0
-    }
-
-    footer {
-      border-top: 1px solid #ddd;
-      padding: 30px;
-      margin-top: 50px
-    }
-
-    .row>[class*=col-] {
-      margin-bottom: 40px
-    }
-
-    .navbar-container {
-      position: relative;
-      min-height: 100px
-    }
-
-    .navbar.navbar-fixed-bottom,
-    .navbar.navbar-fixed-top {
-      position: absolute;
-      top: 50px;
-      z-index: 0
-    }
-
-    .navbar.navbar-fixed-bottom .container,
-    .navbar.navbar-fixed-top .container {
-      max-width: 90%
-    }
-
-    .btn-group {
-      margin-bottom: 10px
-    }
-
-    .form-inline input[type=password],
-    .form-inline input[type=text],
-    .form-inline select {
-      width: 180px
-    }
-
-    .input-group {
-      margin-bottom: 10px
-    }
-
-    .pagination {
-      margin-top: 0
-    }
-
-    .navbar-inverse {
-      margin: 110px 0
-    }
-  </style>
-
-</head>
-
-<body>
-  <div class="container">
     <h2 style="text-align:center">Live or Recently Concluded Matches</h2><br />
     <div class="row mx-2">
         {% if live_match_details != null %}
             {% for live_match in live_match_details %}
-              
+              {% if ' ' in live_match.match_current_status %}
+
+              {% else %}
                 <div class="col-sm-3 col-lg-3">
                     <div class="panel panel-info" data-effect="helix">
                       <div class="panel-heading">
@@ -135,39 +70,13 @@
                       </div>
                     </div>
                 </div>
-              {% if forloop.counter|divisibleby:4 %}
+                {% if forloop.counter|divisibleby:4 %}
                   </div>
                   <div class="row">
+                {% endif %}
               {% endif %}
             {% endfor %}
         {% endif %}
     </div>
+{% endblock %}
 
-
-
-  </div>
-  <!-- /container -->
-
-  <footer class="text-center fixed-bottom">
-    <p>&copy; Siddhant Shah</p>
-    <div class="credits">
-      <!--
-        All the links in the footer should remain intact.
-        You can delete the links only if you purchased the pro version.
-        Licensing information: https://bootstrapmade.com/license/
-        Purchase the pro version form: https://bootstrapmade.com/buy/?theme=Techie
-      -->
-      Designed by <a href="geekysid.com/">Siddhant Shah</a>
-    </div>
-  </footer>
-
-  <!-- Main Scripts-->
-  <script src="{% static 'ScoreBuzz/js/jquery.js' %}"></script>
-  <script src="{% static 'ScoreBuzz/js/bootstrap.min.js' %}"></script>
-
-  <!-- Bootstrap 3 has typeahead optionally -->
-  <script src="{% static 'ScoreBuzz/js/typeahead.min.js' %}"></script>
-
-</body>
-
-</html>

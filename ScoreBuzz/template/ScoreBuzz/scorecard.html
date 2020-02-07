@@ -1,3 +1,370 @@
-{{match_summary}}<p></p>
-{{score_summary}}<p></p>
-{{scorecard}}
+{% extends 'scorebuzz/master.html' %}
+{% load static%}
+
+{% block cssContent %}
+    <link href="{% static 'ScoreBuzz/css/bootstrap.techie.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<table width="100%">
+    <tr>
+        <td width="50%" style="text-align:left">
+            <a href="../"><h2 style="color:#deb887">Back to Match Center</h2></a>
+        </td>
+        <td width="50%" style="text-align:right">
+            <a href="geekysid.com"><h2 style="color:#deb887">Back to GeekySid</h2></a href="geekysid.com">
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2>
+            <br />
+        </td>
+    </tr>
+    <tr>
+        <td colspan=2>
+            {% for items in match_summary %}
+                <h3>{{items.1}} <small><span style="color:red">{{items.0}}</span></small></h3>
+                <hr>
+                <table width=100%>
+                {% for item in items.2 %}
+                    <tr >
+                        <td width=5%>
+                            <img src='{{item.0}}'>
+                        </td>
+                        <td width=45% style="margin-left:20px">
+                            <h4>{{item.1}}</h4>
+                        </td>
+                        <td width=50%>
+                            <h4>{{item.3}}</h4>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </table>
+                {% endfor %}
+                <p ></p>
+                <p></p>
+                <hr>
+                {% if match_status == 'live' %}
+                    <h4>Live</h4>
+
+                    {% for item in score_summary %}
+                        <!-- Batsman Summary -->
+                        <div class="list-group">
+                        <!-- Printing Batsman Header -->
+                        <span class="list-group-item active">
+                            <table width=80%>
+                            <tr>
+                                {% for bat_header in item.0 %}
+                                    {% if forloop.counter == 1 %}
+                                        <td width=30%>
+                                            {{bat_header}}
+                                        </td>
+                                    {% elif forloop.counter == 7 %}
+                                        <td width=20% style="text-align:center">
+                                            {{bat_header}}
+                                        </td>
+                                    {% elif forloop.counter == 8 %}
+                                        <td width=30% style="text-align:center">
+                                            {{bat_header}}
+                                        </td>
+                                    {% else %}
+                                    <td width=8% style="text-align:center">
+                                        {{bat_header}}
+                                    </td>
+                                    {% endif %}
+                            {% endfor %}
+                            </tr>
+                            </table>
+                        </span>
+                        
+                        <!-- Printing Batsman' Stat -->
+                        {% for batsmen in item.1 %}
+                        <span class="list-group-item">
+                            <table width=80%>
+                                <tr>
+                                    {% for batsman in batsmen %}
+                                    {% if forloop.counter == 1 %}
+                                        <td width=30%>
+                                            {{batsman}}
+                                        </td>
+                                    {% elif forloop.counter == 7 %}
+                                        <td width=20% style="text-align:center">
+                                            {{batsman}}
+                                        </td>
+                                    {% elif forloop.counter == 8 %}
+                                        <td width=30% style="text-align:center">
+                                            {{batsman}}
+                                        </td>
+                                    {% else %}
+                                    <td width=8% style="text-align:center">
+                                        {{batsman}}
+                                    </td>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            </table>
+                        </span>
+                        {% endfor %}
+                        
+                        </div>
+
+                        <!-- Bowler Summary -->
+                        <div class="list-group">
+                            <!-- Printing Bowler Header -->
+                            <span class="list-group-item active">
+                            <table width=80%>
+                                <tr>
+                                {% for bowler_header in item.2 %}
+                                    {% if forloop.counter == 1 %}
+                                        <td width=30%>
+                                            {{bowler_header}}
+                                        </td>
+                                    {% elif forloop.counter == 10 %}
+                                        <td width=14% style="text-align:center">
+                                            {{bowler_header}}
+                                        </td>
+                                    {% else %}
+                                    <td width=7% style="text-align:center">
+                                        {{bowler_header}}
+                                    </td>
+                                    {% endif %}
+                                {% endfor %}
+                                </tr>
+                            </table>
+                            </span>
+                            
+                            <!-- Printing Bowlers's Stat -->
+                            {% for bowlers in item.3 %}
+                            <span class="list-group-item">
+                            <table width=80%>
+                                <tr>
+                                    {% for bowler in bowlers %}
+                                        {% if forloop.counter == 1 %}
+                                            <td width=30%>
+                                                {{bowler}}
+                                            </td>
+                                        {% elif forloop.counter == 10 %}
+                                            <td width=14% style="text-align:center">
+                                                {{bowler}}
+                                            </td>
+                                        {% else %}
+                                        <td width=7% style="text-align:center">
+                                            {{bowler}}
+                                        </td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                                </table>
+                            </span>
+                            {% endfor %}
+                            
+                        </div>
+
+                        <!-- Bowler Summary -->
+                        <div class="list-group">
+                            <!-- Printing Bowlers's Stat -->
+                            <span class="list-group-item">
+                                {{item.4}}
+                            </span>
+                            
+                        </div>
+                    {% endfor %}
+                {% elif match_status == 'past' %}
+                    <h4>Match Centre</h4>
+
+                    {% for items in score_summary %}
+                    {% if forloop.counter == 1 %} 
+                            <p style="line-height: 140%;">{{items.0}}</p>
+                            <p style="line-height: 140%;">{{items.1}}</p>
+                    {% elif forloop.counter == 2 %}
+                        <!-- Batsman Summary -->
+                        <div class="list-group">
+                            <!-- Printing Batsman Header -->
+                            <span class="list-group-item active">
+                                <table width=80%>
+                                <tr>
+                                    <td>
+                                        {{items}}
+                                    </td>
+                                </tr>
+                                </table>
+                            </span>
+                            {% elif forloop.counter == 3 %}
+                            <!-- Printing Batsman' Stat -->
+                            <span class="list-group-item">
+                                <table style="width:90%" >
+                                    <tr>
+                                        <td style="width:49%" >
+                                            <table class="table table-striped" data-effect="fade">
+                                                <tr>
+                                                    <th colspan=4>
+                                                        {{items.0}}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td width=30%>
+                                                        {{items.1.0}}
+                                                    </td>
+                                                    <td width=20% style="text-align:left">
+                                                        {{items.1.1}}
+                                                    </td>
+                                                    <td width=30%>
+                                                        {{items.1.4}}
+                                                    </td>
+                                                    <td width=20% style="text-align:left">
+                                                        {{items.1.5}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width=30% >
+                                                        {{items.1.2}}
+                                                    </td>
+                                                    <td width=8% style="text-align:left">
+                                                        {{items.1.3}}
+                                                    </td>
+                                                    <td width=30% >
+                                                        {{items.1.6}}
+                                                    </td>
+                                                    <td width=8% style="text-align:left">
+                                                        {{items.1.7}}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width:2%">
+                                            
+                                        </td>
+                                        <td style="width:49%" >
+                                            <table class="table table-striped" data-effect="fade">
+                                                <tr>
+                                                    <th colspan=4>
+                                                        {{items.2}}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td width=30%>
+                                                        {{items.3.0}}
+                                                    </td>
+                                                    <td width=20% style="text-align:left">
+                                                        {{items.3.1}}
+                                                    </td>
+                                                    <td width=30%>
+                                                        {{items.3.4}}
+                                                    </td>
+                                                    <td width=20% style="text-align:left">
+                                                        {{items.3.5}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width=30% >
+                                                        {{items.3.2}}
+                                                    </td>
+                                                    <td width=8% style="text-align:left">
+                                                        {{items.3.3}}
+                                                    </td>
+                                                    <td width=30% >
+                                                        {{items.3.6}}
+                                                    </td>
+                                                    <td width=8% style="text-align:left">
+                                                        {{items.3.7}}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </span>
+                            
+                        </div>
+                    {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <p></p>
+                <p></p>
+                <hr>
+                <h4>Scorecard</h4>
+                <div class="panel-group" id="accordion-panel2">
+                {% for innings, value in scorecard.items %}
+                    <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-panel2" href="#panel{{forloop.counter}}">
+                            <strong>{{innings}}</strong>
+                        </a>
+                        </h4>
+                    </div>
+                    <div id="panel{{forloop.counter}}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <table class="table table-striped" data-effect="fade">
+                                <thead>
+                                <tr>
+                                    {% for headers in value.0 %}
+                                    {% if forloop.counter == 1 %}
+                                        <th style="width:20%">{{headers}}</th>
+                                    {% elif forloop.counter == 2 %}
+                                        <th style="width:45%">{{headers}}</th>
+                                    {% else%}
+                                        <th style="width:7%">{{headers}}</th>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for batsmen in value.1 %}
+                                <tr>
+                                    {% for batsman in batsmen %}
+                                    <td>{{batsman}}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td colspan=3 style="text-align:left">Extras</td>
+                                    <td colspan=4 style="text-align:right">{{value.3}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan=3 style="text-align:left"><b>Total</b></td>
+                                    <td colspan=4 style="text-align:right"><b>{{value.4}}</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan=7>{{value.2}}</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                            <table class="table table-striped" data-effect="fade">
+                                <thead>
+                                <tr>
+                                    {% for headers in value.5 %}
+                                    {% if forloop.counter == 1 %}
+                                        <th style="width:20%">{{headers}}</th>
+                                    {% else%}
+                                        <th style="width:6.67%">{{headers}}</th>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for bowlers in value.6 %}
+                                <tr>
+                                    {% for bowler in bowlers %}
+                                    <td>{{bowler}}</td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+
+                {% endfor %}
+                </div>
+
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

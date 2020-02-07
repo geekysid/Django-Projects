@@ -19,6 +19,10 @@ def live_match_summary(soup, match_detail):
     for match_divs in batsman_header:
         if match_divs.get_text() == 'mat':     # breaking current loop after we have read all required
             break
+        elif match_divs.get_text() in ['YOUTH ODI CAREER', 'FIRST-CLASS CAREER']:     # breaking current loop after we have read all required
+            continue
+        elif match_divs.get_text() == '':     # breaking current loop after we have read all required
+            continue
         else:
             batsman_header_list.append(match_divs.get_text())
     
@@ -96,13 +100,13 @@ def live_match_summary(soup, match_detail):
     # fetching partnership detail
     current_partnership = partnership_match_divs.find('div', class_=['label', 'full']).get_text() + ' ' + partnership_match_divs.find('span').get_text()
 
-    match_score_summary = {
-        'batsman_header_list': batsman_header_list,
-        'batsman_summary_list': batsman_summary_list,
-        'bowler_header_list': bowler_header_list,
-        'bowler_summary_list': bowler_summary_list,
-        'current_partnership': current_partnership
-    }
+    match_score_summary = [[
+        batsman_header_list,
+        batsman_summary_list,
+        bowler_header_list,
+        bowler_summary_list,
+        current_partnership
+    ]]
 
     return match_score_summary
 
@@ -112,28 +116,43 @@ def past_match_summary(soup):
         Method to display summary of match which is got conculded 
     """
     match_heading_block = soup.find('article', class_=['top-stories'])
+    match_report = []
     try:
-        print(match_heading_block.h1.get_text())
-        print(match_heading_block.p.get_text().replace('"', ''))
+        match_report.append(match_heading_block.h1.get_text())
+        match_report.append(match_heading_block.p.get_text().replace('"', ''))
     except Exception as e:
         pass
     
-    print()
     
     scoreboard_summary_block = soup.find('article', class_=['scorecard-summary'])
     scoreboard_summary_heading = scoreboard_summary_block.find('header', class_='bordered')
-    print(scoreboard_summary_heading.get_text())
+    scrbrd_summary_heading = scoreboard_summary_heading.get_text()
 
+    score_summary = []
+
+    team_summary = []
     # Team's Score Summary:
     for team in scoreboard_summary_heading.next_sibling.children:
-        scoreboard_summary_Team = team.h4.get_text()
-        print(f'{scoreboard_summary_Team}')
+
+        team_summary.append(team.h4.get_text())
+
+        prayer_summary = []
+
         for batsmen_summary in team.find_all('ul'):
             for batsmen in batsmen_summary.find_all('li'):
-                batsmen_name = batsmen.a.get_text()
-                batsmen_score = batsmen.span.get_text()
-                print(f'\t{batsmen_name}\t{batsmen_score}')
-            print()
+                prayer_summary.append(batsmen.a.get_text())
+                prayer_summary.append(batsmen.span.get_text())
+                
+        team_summary.append(prayer_summary)
+    score_summary.append(team_summary)
+
+    match_score_summary = [
+        match_report,
+        scrbrd_summary_heading,
+        team_summary
+    ]
+
+    return match_score_summary
 
 
 def index(request):
@@ -171,7 +190,10 @@ def index(request):
 
                     match_current_status_div = match_Heading_div.previous_sibling
                     match_current_status = match_current_status_div.span.get_text()
-                    print(match_current_status)
+
+                    # skipping matchs that are not yest started
+                    if ' ' in match_current_status:
+                        continue
 
                     # fetching elements that have scores of the 2 teams
                     opponents = match_divs.find('ul', class_='cscore_competitors').children
@@ -197,18 +219,16 @@ def index(request):
                     matchLinks.append(match_link)
 
                     live_match_details.append({
-                                                    'match_current_status': match_current_status,
-                                                    'match_title' : match_title,
-                                                    'match_heading': match_Heading, 
-                                                    'match_score': match_score, 
-                                                    'match_status': match_status,
-                                                    'match_link': match_link
-                                                })
+                        'match_current_status': match_current_status,
+                        'match_title' : match_title,
+                        'match_heading': match_Heading, 
+                        'match_score': match_score, 
+                        'match_status': match_status,
+                        'match_link': match_link
+                    })
                     counter = counter+1
-                    print(json.dumps(live_match_details, indent=4))
 
                 except Exception as e:
-                    print(str(e))
                     break
 
     params = {'live_match_details': live_match_details}
@@ -236,12 +256,14 @@ def scorecard(request):
 
             # Displying scores for home team
             home_team = soup.find('li', class_='cscore_item--home')     # fetching list match_divs for home team
+            home_team_flag = home_team.a.picture.img.get('data-src')  # fetching falg of home team
             home_team_name = home_team.find('span', class_='cscore_name--long').get_text()  # fetching name of home team
             home_team_name_abbrev = home_team.find('span', class_='cscore_name--abbrev').get_text() # fetching short name of homr team
             home_team_score = home_team.find('div', class_='cscore_score').get_text()   # fetching score home team
             
             # Displying scores for away team
             away_team = soup.find('li', class_='cscore_item--away')     # fetching list match_divs for away team
+            away_team_flag = away_team.a.picture.img.get('data-src')  # fetching falg of away team
             away_team_name = away_team.find('span', class_='cscore_name--long').get_text()  # fetching name of away team
             away_team_name_abbrev = away_team.find('span', class_='cscore_name--abbrev').get_text() # fetching short name of away team
             away_team_score = away_team.find('div', class_='cscore_score').get_text()   # fetching score away team
@@ -250,16 +272,17 @@ def scorecard(request):
             score_note = soup.find('span', class_='cscore_notes_game').get_text()
 
             # dictionary that holds header for the match
-            match_header = {
-                'status' : match_status,
-                'match_detail' : match_detail,
-                'score' : [[home_team_name, home_team_name_abbrev, home_team_score], [away_team_name, away_team_name_abbrev, away_team_score]],
-                'score_note' : score_note,
-            }
+            match_header = [[
+                match_status,
+                match_detail,
+                [[home_team_flag, home_team_name, home_team_name_abbrev, home_team_score], [away_team_flag, away_team_name, away_team_name_abbrev, away_team_score]],
+                score_note,
+            ]]
 
             # FETCHING SCORE SUMMARY FOR LIVE PAST MATCH
             if match_status in ['Live', 'Lunch', 'Tea', 'Stumps']:
                 match_score_summary = live_match_summary(soup, match_detail)
+                match_status_current = 'live'
 
             # FETCHING SCORE SUMMARY FOR THE PAST MATCH
             elif match_status == 'Result':
@@ -267,8 +290,10 @@ def scorecard(request):
                     refresh_flag = False
                     soup.find('article', class_='current-inning')
                     match_score_summary = live_match_summary(soup, match_detail)
+                    match_status_current = 'live'
                 except Exception as e:
-                    past_match_summary(soup)
+                    match_score_summary = past_match_summary(soup)
+                    match_status_current = 'past'
                     
             # FETCHING SCORECARD FOR THE MATCH
             resp_match = requests.get(scorecard_url)    # fetching data from the match scorecard url
@@ -285,6 +310,9 @@ def scorecard(request):
                 innings_count = 0
 
                 for inning in innings:  # looping through all inings inthe match
+                    
+                    scorecard_title = inning.h2.get_text()
+
                     innings_detail_List = []
 
                     inning_title = inning.div      # fetching the 1st div element for that particular innings that holds title for innings
@@ -319,18 +347,18 @@ def scorecard(request):
                                 if batsman.find('div').get('class') == ['wrap', 'extras']:
                                     data_heading = batsman.find('div', class_='cell')
                                     data_value = data_heading.next_sibling
-                                    extras = data_heading.get_text() + ': ' + data_value.get_text()
+                                    extras = data_value.get_text()
 
                                 # fetching details of total runs scored by batting side
                                 elif batsman.find('div').get('class') == ['wrap', 'total']:
                                     data_heading = batsman.find('div', class_='cell')
                                     data_value = data_heading.next_sibling
-                                    total = data_heading.get_text() + ': ' + data_value.get_text()
+                                    total = data_value.get_text()
 
                                 # fetching details of fall of wickets and players yest to bat
                                 elif batsman.find('div').get('class') == ['wrap', 'dnb']:
                                     for dnb_data in batsman.find_all('div', class_='dnb'):
-                                        dnb = dnb + '\n' + dnb_data.get_text()
+                                        dnb = dnb + '\r\n' + dnb_data.get_text()
 
                                 # fetching scorecard for batsmsn
                                 else:
@@ -356,7 +384,7 @@ def scorecard(request):
 
                         # fetching datat for the bowlers for this innings in the match
                         elif inning_details['class'][1] == 'bowling':
-                            
+                        
                             bowler_header_sc_list = []
                             bowler_stat_sc_list = []
 
@@ -370,8 +398,10 @@ def scorecard(request):
                             
                             # fetching details of each bowler
                             for bowler in body:
+                                bowler_list = []
                                 for bowler_detail in bowler.children:
-                                    bowler_stat_sc_list.append(bowler_detail.get_text())
+                                    bowler_list.append(bowler_detail.get_text())
+                                bowler_stat_sc_list.append(bowler_list)
                     
                     innings_complete_data.append(batsmen_header_sc_list)
                     innings_complete_data.append(batsmen_stat_sc_list)
@@ -380,7 +410,7 @@ def scorecard(request):
                     innings_complete_data.append(total)
                     innings_complete_data.append(bowler_header_sc_list)
                     innings_complete_data.append(bowler_stat_sc_list)
-                    scorecard_List[innings_name[innings_count]] = innings_complete_data
+                    scorecard_List[scorecard_title] = innings_complete_data
                     
                     # innings_detail_List.append(inning_title.get_text())
 
@@ -391,6 +421,7 @@ def scorecard(request):
             print('Error')
 
         params = {
+            'match_status': match_status_current,
             'match_summary': match_header,
             'score_summary': match_score_summary,
             'scorecard': scorecard_List
