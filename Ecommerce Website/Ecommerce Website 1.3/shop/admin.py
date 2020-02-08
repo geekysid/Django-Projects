@@ -6,4 +6,3 @@ admin.site.register(Products)
 admin.site.register(Order)
 admin.site.register(Ordered_Product)
 admin.site.register(Order_Status)
-
