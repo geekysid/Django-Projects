@@ -39,11 +39,12 @@ def index(request):
                     followers = json_user['followers']
                     followings = json_user['following']
                     events_url = json_user['events_url']
+                    repos_count = json_user['public_repos']
                     
-
                     date = datetime.strptime(created_at, "%Y-%m-%dT%H:%M:%SZ")
                     joined_on = date.strftime('%B %d, %Y')
 
+                    personal_detail = [avatar, name, bio, company, location, website, github_url, joined_on, repos_count, followers, followers]
 
                     # FETCHING REPOSITORIES DETAILS
                     language_chart_data = {}
@@ -54,7 +55,6 @@ def index(request):
                     # using repos api link to fetch data about user's repositary
                     repos_url = json_user['repos_url']+'?per_page=100'
                     resp_repos = requests.get(repos_url)
-                    repos_count = 0
                     if resp_repos.status_code == 200:   # executing if user have atleast one repository
                         json_repos = json.loads(resp_repos.text)    # converting the received reponse object into json
 
@@ -62,7 +62,6 @@ def index(request):
 
                         # looping through all of repos
                         for repo in json_repos:
-                            repos_count += 1
                             repo_name = repo['name']
                             repo_desc = repo['description']
                             repo_starCount = int(repo['stargazers_count'])
