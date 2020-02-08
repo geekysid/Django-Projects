@@ -6,7 +6,8 @@
 
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-  <title>ScoreBuzz</title>
+  {% block title %}
+  {% endblock %}
 
   <link href='https://fonts.googleapis.com/css?family=Lato:400,300,400italic,700,900' rel='stylesheet' type='text/css'>
 
@@ -94,27 +95,38 @@
   </div>
   <!-- /container -->
 
-  <footer class="text-center">
-    <table width="100%">
-      <tr>
-        <td width="50%">
-          <p>Back to <a href="http://geekysid.com/">GeekySid.com</a></p>
-        </td>
-        <td width="50%">
-          <div class="credits">
-            <!--
-              All the links in the footer should remain intact.
-              You can delete the links only if you purchased the pro version.
-              Licensing information: https://bootstrapmade.com/license/
-              Purchase the pro version form: https://bootstrapmade.com/buy/?theme=Techie
-            -->
-            Data scrapped from <a href="https://wwwcriccinfo.com/">cricinfo.com</a> using BeautifulSoup library of Python
-          </div>
-        </td>
-      </tr>
-    </table>
+  <!-- Footer -->
+  <footer id="sticky-footer" class="fixed-bottom" style="background-color: #fff">
+    <div class='container'>
+      <div class='row align-middle text-left'>
+        <table width="100%">
+          <tr>
+            <td style="font-size:15px; text-align:left" width=25%>
+              <ul class="list-inline">
+                <li class="list-inline-item">&copy 2020 - Siddhant Shah</li>
+              </ul>
+            </td>
+            <td style="font-size:15px; text-align:right" width=75%>
+              <ul class="list-inline">
+                <li class="list-inline-item">Built with</li>
+                <li class="list-inline-item" style="color:dodgerblue">Python</li>
+                  <li class="list-inline-item">.</li>
+                  <li class="list-inline-item" style="color:dodgerblue">HTML/CSS</li>
+                  <li class="list-inline-item">.</li>
+                  <li class="list-inline-item" style="color:dodgerblue">Python - BeautifulSoup</li>
+                  <li class="list-inline-item">.</li>
+                  <li class="list-inline-item" style="color:dodgerblue">Python - Requests (API)</li>
+                  <li class="list-inline-item">.</li>
+                  <li class="list-inline-item" style="color:dodgerblue">Django</li>
+                  <li class="list-inline-item">and more!!</li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </footer>
-
+  <!-- Footer -->
   <!-- Main Scripts-->
   <script src="{% static 'ScoreBuzz/js/jquery.js' %}"></script>
   <script src="{% static 'ScoreBuzz/js/bootstrap.min.js' %}"></script>

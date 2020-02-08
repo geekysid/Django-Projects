@@ -19,7 +19,7 @@ def live_match_summary(soup, match_detail):
     for match_divs in batsman_header:
         if match_divs.get_text() == 'mat':     # breaking current loop after we have read all required
             break
-        elif match_divs.get_text() in ['YOUTH ODI CAREER', 'FIRST-CLASS CAREER']:     # breaking current loop after we have read all required
+        elif match_divs.get_text() in ['YOUTH ODI CAREER', 'FIRST-CLASS CAREER', 'ODI CAREER', 'TEST CAREER', 'WOMEN\'S T20I CAREER', 'WOMEN\'S TEST CAREER', 'WOMEN\'S ODI CAREER']:     # breaking current loop after we have read all required
             continue
         elif match_divs.get_text() == '':     # breaking current loop after we have read all required
             continue

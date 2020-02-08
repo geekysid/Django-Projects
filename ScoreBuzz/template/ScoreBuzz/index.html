@@ -1,24 +1,38 @@
 {% extends 'scorebuzz/master.html' %}
 {% load static %}
 
-{% block content %}
-    <table width=100% height="400px" style="background-color: black;">
-      <tr style="height: 10%;">
-        <td style="text-align: left; padding-left:30px;">
-          <h4 style="color:#eee">ScoreBuze</h4>
-        </td>
-        <td style="text-align: right; padding-right:30px;">
-          <a href="geekysid.com"><h4 style="color: #eee;">Back to GeekySid</h4></a>
-        </td>
-      </tr>
-      <tr style="height: 90%;">
-        <td colspan=2 style="text-align:center; vertical-align:middle">
-          <img src="{% static 'ScoreBuzz/img/logo2.png' %}" width="25%" />
-        </td>
-      </tr>
-    </table>
+{% block title %}
+    <title>
+        ScoreBuzz by Siddhant
+    </title>
+{% endblock %}
 
-    <h2 style="text-align:center">Live or Recently Concluded Matches</h2><br />
+{% block content %}
+<table width=100% height="200px" style="background-color: black;">
+  <tr>
+    <td width="20%" style="text-align: left; padding-left:30px; vertical-align:top">
+      <h4 style="color:#eee">ScoreBuze</h4>
+    </td>
+    <td width="60%" style="text-align:center; vertical-align:middle">
+      <img src="{% static 'ScoreBuzz/img/logo2.png' %}" width="300px" />
+    </td>
+    <td width="20%" style="text-align: right; padding-right:30px; vertical-align:top">
+      <a href="geekysid.com"><h4 style="color: #eee;">Back to GeekySid</h4></a>
+    </td>
+  </tr>
+</table>
+<!-- <table width=100%>
+  <tr style="height:100%;">
+    <td style="text-align: left; padding-left:30px;">
+      <h2 style="color:#000">ScoreBuze</h2>
+    </td>
+    <td style="text-align: right; padding-right:30px;">
+      <a href="geekysid.com"><h2 style="color: #000;">Back to GeekySid</h2></a>
+    </td>
+  </tr>
+</table> -->
+    <br />
+    <h4 style="text-align:center; color: #333333;">Live or Recently Concluded Matches</h4><br />
     <div class="row mx-2">
         {% if live_match_details != null %}
             {% for live_match in live_match_details %}
@@ -28,6 +42,16 @@
                 <div class="col-sm-3 col-lg-3">
                     <div class="panel panel-info" data-effect="helix">
                       <div class="panel-heading">
+                        {% if live_match.match_current_status == 'ABANDONED' %}
+                          <span style="font-weight:bold; font-size:12px">{{live_match.match_title}} </span>
+                          {% if live_match.match_current_status == 'LIVE' %}
+                          <span style="font-weight:bold; font-size:12px; color:Green">({{live_match.match_current_status}})</span>
+                          {% elif live_match.match_current_status == 'RESULT' %}
+                          <span style="font-weight:bold; font-size:12px; color:Red">({{live_match.match_current_status}})</span>
+                          {% else %}
+                          <span style="font-weight:bold; font-size:12px; color:Orange">({{live_match.match_current_status}})</span>
+                          {% endif %} 
+                        {% else %}
                         <a href="scorecard?link={{live_match.match_link}}">
                           <span style="font-weight:bold; font-size:12px">{{live_match.match_title}} </span>
                           {% if live_match.match_current_status == 'LIVE' %}
@@ -38,6 +62,7 @@
                           <span style="font-weight:bold; font-size:12px; color:Orange">({{live_match.match_current_status}})</span>
                           {% endif %} 
                         </a>
+                        {% endif %}
                       </div>
                       <div class="panel-body">
                         <table>

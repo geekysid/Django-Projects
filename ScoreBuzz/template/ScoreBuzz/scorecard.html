@@ -1,6 +1,12 @@
 {% extends 'scorebuzz/master.html' %}
 {% load static%}
 
+{% block title %}
+    <title>
+        ScoreBuzz - {{items.1}}
+    </title>
+{% endblock %}
+
 {% block cssContent %}
     <link href="{% static 'ScoreBuzz/css/bootstrap.techie.css' %}" rel="stylesheet">
 {% endblock %}
@@ -295,7 +301,9 @@
                     </div>
                     <div id="panel{{forloop.counter}}" class="panel-collapse collapse">
                         <div class="panel-body">
+                            <!-- Scorecard - Batsman -->
                             <table class="table table-striped" data-effect="fade">
+                                <!-- Batsman heading -->
                                 <thead>
                                 <tr>
                                     {% for headers in value.0 %}
@@ -309,6 +317,7 @@
                                     {% endfor %}
                                 </tr>
                                 </thead>
+                                <!-- Batsman Score -->
                                 <tbody>
                                 {% for batsmen in value.1 %}
                                 <tr>
@@ -320,18 +329,19 @@
 
                                 <tr>
                                     <td colspan=3 style="text-align:left">Extras</td>
-                                    <td colspan=4 style="text-align:right">{{value.3}}</td>
+                                    <td colspan=5 style="text-align:right">{{value.3}}&emsp;</td>
                                 </tr>
                                 <tr>
                                     <td colspan=3 style="text-align:left"><b>Total</b></td>
-                                    <td colspan=4 style="text-align:right"><b>{{value.4}}</b></td>
+                                    <td colspan=5 style="text-align:right"><b>{{value.4}}&emsp;</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan=7>{{value.2}}</td>
+                                    <td colspan=8>{{value.2}}</td>
                                 </tr>
 
                                 </tbody>
                             </table>
+                            <!-- Scorecard - Bowler -->
                             <table class="table table-striped" data-effect="fade">
                                 <thead>
                                 <tr>
@@ -352,8 +362,6 @@
                                     {% endfor %}
                                 </tr>
                                 {% endfor %}
-
-
                                 </tbody>
                             </table>
                         </div>
