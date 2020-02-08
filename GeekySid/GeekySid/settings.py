@@ -23,7 +23,6 @@ _EmailPass = ''
 _EmailHost = ''
 _EmailPort = ''
 if os.path.exists(file):
-    print('True')
     with open(file, 'r') as secret_file:
         sensetive_data = json.load(secret_file)
         _SecretKey = sensetive_data['SECRET_KEYS']

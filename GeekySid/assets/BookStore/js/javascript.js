@@ -87,12 +87,17 @@ function Wishlist_AddRemove(prod_id, action){
 
 // function called when the pag is load
 function add_wishlist_buttons(){
-    wishList = fetch_LocalStorage_Wishlist();
-    for (item in wishList){
-        new_img = `<img src="` + staticAddedToWishlistImage() + `" width="25" class="removeWL" id="removeWL` + item + `" title="Remove From Wishlist"  alt="Remove From Wishlist" 
-                    onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />`;
+    if(pathname == '/BookStore/orders'){
+        //do nothing
+    }
+    else{
+        wishList = fetch_LocalStorage_Wishlist();
+        for (item in wishList){
+            new_img = `<img src="` + staticAddedToWishlistImage() + `" width="25" class="removeWL" id="removeWL` + item + `" title="Remove From Wishlist"  alt="Remove From Wishlist" 
+                        onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />`;
 
-        document.getElementById('spWL'+item).innerHTML = new_img
+            document.getElementById('spWL'+item).innerHTML = new_img
+    }
     }
 }
 
@@ -194,6 +199,7 @@ function popoverUpdate_wishList() {
 function removeFromWishlist(){
     prod_id = this.id.toString().slice(11)
     Wishlist_AddRemove(prod_id, 'remove_wishlist')
+    $('#popwishList').popover('hide');
 }
 
 // function called when 'Add To Cart' is clicked from Wishlist Popup
@@ -550,6 +556,8 @@ function cartClear() {
     updateLocalStorageWithCart(cart)
     popoverUpdate_cart()
 
+    $('#popcart').popover('hide');
+
     if (pathname == '/BookStore/checkpout'){
         if (document.getElementById('successAlert') == null){
             window.location.replace("index");
@@ -567,32 +575,33 @@ function popoverClicked (element){
 
     if(element_id == 'wishList'){
         if(alt == '0'){
+            console.log(element_id + ' - ' + alt)
             document.getElementById(element_id).alt='1'
-            document.getElementById('cart').alt='0'
-            $('#popcart').popover('hide');
             $('#popwishList').popover('show');
         }
         if(alt == '1'){
+            console.log(element_id + ' = ' + alt)
             document.getElementById(element_id).alt = '0'
-            document.getElementById(element_id).alt='0'
             $('#popwishList').popover('hide');
-            $('#popcart').popover('hide');
         }
+        document.getElementById('cart').alt='0'
+        $('#popcart').popover('hide');
+        $('#popcart').popover('hide');
     }
     else if(element_id == 'cart'){
         if(alt == '0'){
+            console.log(element_id + ' - ' + alt)
             document.getElementById(element_id).alt='1'
-            document.getElementById('wishList').alt='0'
-            $('#popwishList').popover('hide');
             $('#popcart').popover('show');
         }
         if(alt == '1'){
+            console.log(element_id + ' - ' + alt)
             document.getElementById(element_id).alt='0'
-            document.getElementById(element_id).alt = '0'
-            $('#popcart').popover('hide');
             $('#popwishList').popover('hide');  
             
         }
+        document.getElementById('wishList').alt='0'
+        $('#popwishList').popover('hide');
     }
 
 

@@ -1,4 +1,5 @@
 {% extends 'bookstore/master.html' %}
+{% load static %}
 {% block css %}
 <style>
     body {
@@ -202,94 +203,51 @@
 {% endblock %}
 
 {% block js %}
+<script type="text/javascript" src="{% static 'BookStore/js/javascript.js' %}"></script> 
 <script>
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+        updateLocalStorageWithCart(cart);
+    }
+    else {
+        // add_cart_button();
+        popoverUpdate_cart();
+    }
+    
+    addToWishlist_initialize()
     
     // updating total items added to cart and displaying in cart popover
     function cart_items() {
-      document.getElementById('cart').innerHTML = numberOfItemsInCard();
-      popoverUpdate_cart();
-    }
-
-    if (document.getElementById('successAlert') != null) {
-        cartClear()
-    }
-    popoverUpdate_cart()
-    
-    //function that returns the cart
-    function fetchCart() {
-        cart = JSON.parse(localStorage.getItem('cart'));
-        return cart;
-    }
-
-
-    // function that returns items in cart
-    function numberOfItemsInCard() {
-        var items_in_cart = 0;
-        if (localStorage.getItem('cart') == null) {
-            return 0;
-        }
-        else {
-            cart = fetchCart();
-            for (item in cart) {
-                items_in_cart = items_in_cart + cart[item][1];
-            }
-            return items_in_cart;
-        }
-    }
-
-
-    // function to display products in cart popover
-    function popoverUpdate_cart() {
         document.getElementById('cart').innerHTML = numberOfItemsInCard();
-        cart = fetchCart()
-        items_in_cart = numberOfItemsInCard()
-
-        if (items_in_cart == 0) {
-        document.getElementById('popcart').setAttribute('title', "<h6>There are no items in your cart</h6>");
-        document.getElementById('popcart').setAttribute('data-content', "");
-        }
-        else {
-        var popStr = "<div class='popover-div'>";
-        var i = 1
-
-        for (item in cart) {
-            if(cart[item][0].length > 20){
-                var name = cart[item][0].slice(0, 20) + "...";
-            }
-            else{
-                var name = cart[item][0];
-            }
-
-            var prod_id = item.slice(2, );
-
-            popStr = popStr + "<div class='row mx=2 my-2'><div class='col-md-2'>" +
-                "<a href='product?id=" + prod_id + "'><img src='" + cart[item][4] + "' width='25' height='35' /> </a></div><div class='col-md-10'>" +
-                name + "<br />" +
-                cart[item][1] +
-                " pcs. @ $" +
-                cart[item][2] + " - " +
-                " Discount " +
-                cart[item][3] + "%" +
-                " <br /></div></div>";
-
-            i = i + 1;
-        }
-        popStr = popStr + "<div class='mt-3' style='text-align:center'><a href='checkout'><button class='btn btn-primary'>Checkout</button></a>&emsp;<button class='btn btn-primary' onClick='cartClear()'>Clear Cart</button></div>"
-        popSts = popStr + "</div>"
-        document.getElementById('popcart').setAttribute('title', "<h6>There are " + numberOfItemsInCard() + " items in your cart</h6>");
-        document.getElementById('popcart').setAttribute('data-content', popStr);
-        }
-        $('#popcart').popover('show');
+        popoverUpdate_cart();
     }
-
-    // clearing cart
-    function cartClear() {
-        cart = JSON.parse(localStorage.getItem('cart'))
-
-        localStorage.clear()
-        cart = {}
-        popoverUpdate_cart()
+    
+    // url for plus button image
+    function staticPlusImage(){
+        return "{% static 'BookStore/images/addToCart_plus.png' %}"
     }
+    
+    
+    // url for minus button image
+    function staticMinusImage(){
+        return "{% static 'BookStore/images/addToCart_Minus.png' %}"
+    }
+    
+    // url for add to cart button image
+    function staticAddToCartImage(){
+        return "{% static 'BookStore/images/addToCart.png' %}"
+    }
+    
+    // url for Remove From Wishlist button
+    function staticAddedToWishlistImage(){
+        return "{% static 'BookStore/images/AddedToWishlist.png' %}"
+    }
+    
+    
 
+    // url for Add To Wishlist button
+    function staticAddToWishlistImage(){
+        return "{% static 'BookStore/images/AddToWishlist.png' %}"
+    }
 </script>
 {% endblock %}

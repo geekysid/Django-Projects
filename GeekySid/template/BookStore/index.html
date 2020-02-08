@@ -68,15 +68,6 @@
 
 {% block content %}
 
-<!-- Categorised Item Carousel  -->
-<!-- <div class="container-fluid d-flex justify-content-center" style="background-color: #999; min-height:100%">
-  <div class="row">
-    <div class="col-9">
-      hello
-    </div>
-  </div>
-</div> -->
-
 <div class='container my-3'>
   {% for product, range in all_products %}
   <h3> Genre: {{product.first.category}}({{product|length}})</h3>

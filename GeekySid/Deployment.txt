@@ -1,0 +1,199 @@
+CMD FOR SERVER
+    1) Connect to SERVER
+        >> ssh root@172.105.38.72
+    2) Now it will ask for password
+        >> put your password
+    3) Now we will upgrade and update our ubuntu machine
+        >> apt-get update && apt-get upgrade
+    4) Setting host name for this machine
+        >> hostnamectl set-hostname siddhant-server
+    5) To check if last command worked, we will use below command and it will give siddhant-server
+        >> hostname
+    6) Need to change hostname in hostfile.
+        >> nano etc/hosts
+            172.105.38.72   siddhant-server
+       Now press control+X -> Y -> Enter
+    7) Till now we are logged in as root user which has all the permissions. 
+       Now we will create a limited user and assign different permissions to  the same
+       a) Add new user
+            >> adduser siddhant
+            >> enter password
+       b) Giving permission to user to run sudo commands
+            >> adduser siddhant sudo
+    8) Exit from server (control+c) and login as siddhant
+        >> ssh siddhant@172.105.38.72
+    9) Now we wil use SSH key-based authentication instead of Password based authentication.
+        a) make sure we are in home directory. (To check for current location use command 'pwd')
+            >> cd
+       b) Make a directory in home folder
+            >> mkdir -p ~/.ssh
+          (To check if the directory is created use command 'ls -la')
+
+CMD FOR LOCAL MACHINE
+    10) We will generate a ssh keys and put them on server
+        a) We will generate a ssh keys. use the default file to store the keys.
+            >> ssk-keygen -b 4096
+            >> passphrase --> optional
+          Here my private key is saved as id_rsa
+          and public key is saved as id_rsa.pub
+       b) Now we will put our public key on server to authentcate ourself instaed of using password.
+            >> scp ~/.ssh/id_rsa.pub siddhant@172.105.38.72:~/.ssh/authorized_keys
+CMD FOR SERVER
+    11) Now we will check if the file is copied
+        >> ls .ssh
+    12) Now we will set few extra permissions to this user so that he can loginto server using ssh authentication
+        >>sudo chmod 700 ~/.ssh/
+        >>sudo chmod 600 ~/.ssh/*
+    13) exit the machine
+        >> exit
+    14) Now when we log again into the machine we will be logged into the machine without a passsword
+        >> ssh siddhant@172.105.38.72
+    15) Now we will make sure that root user doest not log into the server using ssh authentication and also disable password based authentication
+        We do this by editing sshd_config file
+        >> sudo nano etc/ssh/sshd_config
+                change PermitRootLogin to 'no'
+                change PasswordAuthentication to 'no' # make sure its not commented
+                Now press control+X -> Y -> Enter to save
+    16) Now we will retart the service
+        >> sudo systemctl restart sshd
+    17) Setting up a firewall
+       a) install firewall
+            >> sudo apt-get install ufw
+       b) Few Basic setups
+            >> sudo ufw default allow outgoing
+            >> sudo ufw default deny incoming
+            >> sudo ufw allow ssh
+            >> sudo ufw allow 8000 (we are not allowing http at this moment as we need to to test our site before making it live to we are presently just allowing port 8000)
+       c) Now we need to enable firewall
+            >> sudo ufw enable
+       c) Now we will check the status of our firewall
+            >> sudo ufw status
+    
+Now we will Upload our website to the server (Make sure we have a requirement.txt)
+CMD FOR LOCAL MACHINE
+    18) Actuvate the virtual Env
+        >> source desktop/python/django_final/geekysid/env/bin/activate
+    19) Now we will check all the dependencies in our project
+        >> pip freeze
+    20) Now create requirements.txt 
+        >> pip freeze > requirements.txt
+    21) Copy the requirements.txt file to the project
+    22) Copying project to home folder of the server (make terminal points to the folder which has our project)
+        >> scp -r geekysid siddhant@172.105.38.72:~/
+
+CMD FOR SERVER
+    23) We will check of the project is copied to the server
+        >> ls
+    24) Create a virtual env
+        a) Install python pip
+            >> sudo apt-git install python3-pip
+        b) Install virtal env
+            >> sudo apt-get install python3-venv
+        c) move into project
+            >> cd geekysid
+        d) create a virtual env
+            >> python3 -m venv env
+        e) activate virtual env
+            >> source env/bin/activate
+    25) Now install ate dependencies in requirements.txt
+        >> pip install -r requirements.txt
+    26) Now we will change few setting our project to test our project on linode server
+        a) open settings.py
+            >> sudo nano geekysid/settings.py 
+                    ALLOWED_HOST = ['172.105.38.72']
+                    Now press control+X -> Y -> Enter to save
+    27) Testing our project
+        > python manage.py runserver 0.0.0.0:8000
+    28) now go to browser and go to 172.105.38.72:8000
+    29) Now we will want to run apache server and not django server for perfomance issue
+        a) Kill the present django server 
+            >> control+can
+        b) Move to root directory
+            >> cd
+        c) Install Apache
+            >> sudo apt-get install apache2
+        d) Install mod-wsgi (allows apache to interact with python)
+            >> sudo apt-get install libapache2-mod-wsgi-py3
+    30) Configue Appache server
+        a) move to directory that holds apache configration file
+            >> cd etc/apache2/sites-available
+        b) now we will copy one of the configration files into geekysid.conf file
+            >> sudo cp 000-default.conf geekysid.conf
+        c)
+            >> sudo nano geekysid.conf  
+                    <VirtualHost *:80>
+                        .
+                        .
+                        .
+                        Alias /static /home/siddhant/geekysid/asstes    # letting apavhe now what folder '/static' points to
+                        <Directory /home/siddhant/geekysid/asstes>      # granting permission
+                            Require all granted
+                        </Directory>
+
+                        Alias /media /home/siddhant/geekysid/media    # letting apavhe now what folder '/static' points to
+                        <Directory /home/siddhant/geekysid/media>     # granting permission  
+                            Require all granted
+                        </Directory>
+
+                        # grantingaccess to the wsgi file in our project. this makes sure that apache can access our wsgi file which enable our project to talk to apache server
+                        <Directory /home/siddhant/geekysid/geekysid/>
+                            <Files wsgi.py>
+                                Require all granted
+                            </Files>
+                        </Directory>
+
+                        # This part actually handels the wsgi
+                        WSGIScriptAlias / /home/siddhant/geekysid/geekysid/wsgi.py
+                        WSGIDaemonProcess geekysid_app python-path=/home/siddhant/geekysid python-home=/home/siddhant/geekysid/env
+                        WSGIProcessGroup geekysid
+
+                    </VirtualHost>
+                    Now press control+X -> Y -> Enter to save
+    31) Now we will enable the site through apache
+        >> sudo a2ensite geekysid
+        >> sudo a2dissite 000-default.conf  # disabled test site
+
+    32) Allowing Apache to connect to sqlite3 database
+        >> sudo chown :www-data geekysid/db.sqlite3     # making apache group owner of this database
+        >> sudo chmod 664 geekysid/db.sqlite3       # permissions granted to apache for database
+        >> sudo chown :www-data geekysid/        # giving user ownership of the project
+        >> sudo chmod 775 geekysid/ 
+    
+    32) Allowing Apache to connect to media folder
+        >> sudo chown -R :www-data geekysid/media/     # making apache group owner of this folder
+        >> sudo chmod -R 775 geekysid/media/       # permissions granted to apache for folder
+
+    33) Moving sensetive data into a file
+        >> sudo touch /etc/config.json
+        >> sudo nanp geekysid/geekysid/settings.py      # copy SECRET_KEY and
+        >> sudo nano /etc/config.json   
+                {
+                    'SECRET_KEY': 'SECRET_KEY copied in last step',
+                    'EMAIL_USER': 'siddhant.shah.1986@gmail.com',
+                    'EMAIL_PASS': 'password',
+                    'EMAIL_HOST': 'smtp.gmail.com',
+                    'EMAIL_PORT': 465
+
+                }
+        >> sudo nanp geekysid/geekysid/settings.py
+                import json
+                with open('/etc/config.json', 'r') as config_file:
+                    config = json.load(config_file)
+                
+                SECRET_KEY = config['SECRET_KEY']
+                DEBUG = False
+                EMAIL_HOST = config[EmailHost]
+                EMAIL_PORT = config[EmailPort]
+                EMAIL_USER = config[EMAIL_USER]
+                EMAIL_PASS = config[EMAIL_PASS]
+
+    34) Now we will disallow port 8000 that we were using to test firewall and allow http traffic
+        >> sudo ufw delete allow 8000
+        >> sudo ufw allow http/tcp
+    
+    35) We will restart apache server   
+        >> sudo service apache2 restart
+
+
+
+
