@@ -11,6 +11,7 @@
 
     <title>
         Github - Octa Profile
+        {% if username %} - {{username}} {% endif %}
     </title>
 
     <style>
@@ -102,7 +103,7 @@
     {% if success == 'true' %}
     <!-- TOP RIGHT BUTTON -->
     <div class="githubLink"> 
-      <a href="{{personal_detail.6}}"><img src="{% static 'octaprofile/images/github_top_left.png' %}" style="width:90px;" onmouseover="githubLink_hover(this)" onmouseout="githubLink_out(this)" /></a>
+      <a href="{{personal_detail.6}}"><img id="github_img" src="{% static 'octaprofile/images/github_top_left.png' %}" style="width:90px;" onmouseover="githubLink_hover(this)" onmouseout="githubLink_out(this)" /></a>
     </div>
       
     <div class="jumbotron" style="background-color:black;">
@@ -481,7 +482,7 @@
     <footer id="sticky-footer" class="fixed-bottom  text-white-50" style="background-color: #111;">
       <div class='container' style="font-size:12px">
         <div class='row  mt-3 align-middle'>
-          <div class='col-3'>
+          <div class='col-3 text-left'>
             &copy 2020 - Siddhant Shah
           </div>
           <div class='col-9 text-right'>
@@ -607,7 +608,7 @@
 
           console.log(colors_2)
 
-          while(i <= language_lc_list.length){
+          while(i <= starsPerRepo_data.length){
             var index = getRandomInt(colors_2.length);
             var rand_color = colors_2[index];
             color_starsPerRepo_chart.push(rand_color);
