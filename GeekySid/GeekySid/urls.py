@@ -22,7 +22,8 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('bookstore/', include('bookstore.urls'))
+    path('bookstore/', include('bookstore.urls')),
+    path('octaprofile/', include('octaprofile.urls'))
 ]
 
 url_static = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
