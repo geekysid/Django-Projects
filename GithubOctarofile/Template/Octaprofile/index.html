@@ -78,10 +78,10 @@
       }
       
       function gekkySidLink_hover(element){
-        document.getElementById(element.id).src = "{% static 'octaprofile/images/geekysid_hover.png' %}"
+        document.getElementById(element.id).src = "{% static 'octaprofile/images/geeky_sid_hover.png' %}"
       }
       function gekkySidLink_out(element){
-        document.getElementById(element.id).src = "{% static 'octaprofile/images/geekysid.png' %}"
+        document.getElementById(element.id).src = "{% static 'octaprofile/images/geeky_sid.png' %}"
       }
       
       function githubLink_hover(element){
@@ -97,7 +97,7 @@
   <body  style="background-color:black;">
     <!-- TOP LEFT BUTTON -->
     <div class="gekkySidLink"> 
-      <a href=""><img id="gekkySid_img" src="{% static 'octaprofile/images/geekysid.png' %}" style="width:90px;" onmouseover="gekkySidLink_hover(this)" onmouseout="gekkySidLink_out(this)" /></a>
+      <a href="http://www.geekysid.com"><img id="gekkySid_img" src="{% static 'octaprofile/images/geeky_sid.png' %}" style="width:90px;" onmouseover="gekkySidLink_hover(this)" onmouseout="gekkySidLink_out(this)" /></a>
     </div>
       
     {% if success == 'true' %}
@@ -117,39 +117,39 @@
                     <img src="{{personal_detail.0}}" style="border-radius: 50%; border: 5px solid dodgerblue; width:150px;" />
                 </p>
               </div>
-              <p><a href="{{personal_detail.6}}" target="_blank" style="color:white; font-size:larger;">{{personal_detail.1}}</a></p>
-              <br />
+              <p><a href="{{personal_detail.6}}" target="_blank" style="color:white; font-size:x-large;">{{personal_detail.1}}</a></p>
+              <p style="color:white; font-size:medium;">{{personal_detail.2}}</p>
               <!-- WORK, LOCATION, JOINED -->
               <div width="100%" style="text-align: center;">
                 <div class="row justify-content-md-center">
-                  <div class="col-md-auto">
+                  <div class="col-md-auto mt-3">
                     <img src="{% static 'octaprofile/images/work.png' %}" style="height:25px;" /> &nbsp;&nbsp; {% if personal_detail.3 == '' %} Not Mentioned {% else %} {{personal_detail.3}}  {% endif %}
                   </div>
-                  <div class="col-md-auto">
+                  <div class="col-md-auto mt-3">
                     <img src="{% static 'octaprofile/images/location.png' %}" style="height:25px;" /> &nbsp;&nbsp; {{personal_detail.4}}
                   </div>
-                  <div class="col-md-auto">
+                  <div class="col-md-auto mt-3">
                     <img src="{% static 'octaprofile/images/calendar.png' %}" style="height:25px;" /> &nbsp;&nbsp; {{personal_detail.7}}
                   </div>
                 </div>
               </div>
               <div class="mt-4" width="100%" style="text-align: center;">
                 <div class="row justify-content-md-center">
-                  <div class="mx-2" style="border-radius:5px; background-color:#111; width:150px;">
+                  <div class="mx-2 my-2" style="border-radius:5px; background-color:#111; width:150px;">
                     <div class="mx-2 my-2">
                       <span style="font-size: 25px; color:#EEE">{{personal_detail.8}}</span>
                       <br />
                       <span style="font-size: 12px; color:#999; letter-spacing: 1px;">REPOSITORIES</span>
                     </div>
                   </div>
-                  <div class="mx-2" style="border-radius:5px; background-color:#111; width:150px">
+                  <div class="mx-2 my-2" style="border-radius:5px; background-color:#111; width:150px">
                     <div class="mx-2 my-2">
                       <span style="font-size: 25px; color:#EEE">{{personal_detail.9}}</span>
                       <br />
                       <span style="font-size: 12px; color:#999; letter-spacing: 1px;">FOLLOWERS</span>
                     </div>
                   </div>
-                  <div class="mx-2" style="border-radius:5px; background-color:#111; width:150px">
+                  <div class="mx-2 my-2" style="border-radius:5px; background-color:#111; width:150px">
                     <div class="mx-2 my-2">
                       <span style="font-size: 25px; color:#EEE">{{personal_detail.10}}</span>
                       <br />
@@ -177,7 +177,7 @@
       <!-- CHARTS START -->
       <div class="container">
         <div class='row my-2 align-middle'>
-          <div class='col-sm-4 align-middle'>
+          <div class='col-sm-4 my-2 align-middle'>
             <div class="card">
               <div class="card-body" style="border-radius: 5px; border: 2px solid dodgerblue; ">
                 <p class="card-text" style="text-align: center;"><h5>Top Languages</h5></p>
@@ -185,7 +185,7 @@
               </div>
             </div>
           </div>
-          <div class='col-sm-4 align-middle'>
+          <div class='col-sm-4 my-2 align-middle'>
             <div class="card">
               <div class="card-body" style="border-radius: 5px; border: 2px solid dodgerblue; ">
                 <p class="card-text" style="text-align: center;"><h5>Most Starred</h5></p>
@@ -193,7 +193,7 @@
               </div>
             </div>
           </div>
-          <div class='col-sm-4 align-middle'>
+          <div class='col-sm-4 my-2 align-middle'>
             <div class="card">
               <div class="card-body" style="border-radius: 5px; border: 2px solid dodgerblue; ">
                 <p class="card-text" style="text-align: center; font-size: 12px"><h5>Stars per Language</h5></p>
@@ -218,18 +218,29 @@
 
       <!-- REPOSITORIES STARTS-->
       <div>
-        <div class="container">
+        <div class="container" name="repository">
           <div class='row mx-2 my-2 align-middle'>
-            <h4 style="color:#fff">Repository Details</h4>&emsp; &emsp; <span style="color:white; font-size:larg;">Sort By</span> &emsp;
-            <a href="#repository"><button id="SortBySize_btn" class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#SortBySize" 
-                  aria-expanded="true" aria-controls="SortBySize" style="color:white" onclick="repository_filter(this)">&emsp;Size&emsp;</button></a>
-                  &emsp;
-            <a href="#repository"><button id="SortByForkCount_btn" class="btn btn-outline-dark" type="button" data-toggle="collapse" data-target="#SortByForkCount" 
-                  aria-expanded="false" aria-controls="SortByForkCount" style="color:white" onclick="repository_filter(this)">&emsp;Forks Count&emsp;</button></a>
-            &emsp;
-            <a href="#repository"></a><button id="SortByStarCount_btn" class="btn btn-outline-dark" type="button" data-toggle="collapse" data-target="#SortByStarCount" 
-                      aria-expanded="false" aria-controls="SortByStarCount" style="color:white" onclick="repository_filter(this)">&emsp;Stars Count&emsp;</button></a>
-            &emsp; &emsp; 
+          <div class="col-auto my-2" style="text-align: left; vertical-align:middle">
+            <h4 style="color:#fff">Repository Details</h4>
+          </div>
+          <div class="col my-2">
+            <div class="row">
+          <div class="col-auto my-2" style="text-align: right; vertical-align:middle">
+            <span style="color:white; font-size:larg;">Sort By&emsp;</span>
+          </div>
+              <div class="col-auto my-2" style="text-align: left; vertical-align:middle">
+                <a href="#SortBySize"></a><button id="SortBySize_btn" class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#SortBySize" 
+                  aria-expanded="true" aria-controls="SortBySize" style="color:white" onclick="repository_filter(this)">&nbsp;&nbsp;Size&nbsp;&nbsp;</button></a>
+              </div>
+              <div class="col-auto my-2" style="text-align: left; vertical-align:middle">
+                <a href="#SortByForkCount"><button id="SortByForkCount_btn" class="btn btn-outline-dark" type="button" data-toggle="collapse" data-target="#SortByForkCount" 
+                      aria-expanded="false" aria-controls="SortByForkCount" style="color:white" onclick="repository_filter(this)">&nbsp;&nbsp;Forks Count&nbsp;&nbsp;</button></a>
+              </div>
+              <div class="col-auto my-2" style="text-align: left; vertical-align:middle">
+                <a href="#SortByStarCount"><button id="SortByStarCount_btn" class="btn btn-outline-dark" type="button" data-toggle="collapse" data-target="#SortByStarCount" 
+                      aria-expanded="false" aria-controls="SortByStarCount" style="color:white" onclick="repository_filter(this)">&nbsp;&nbsp;Stars Count&nbsp;&nbsp;</button></a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -240,12 +251,12 @@
         </div>
 
         <!-- REPOSITORIES - SORT BY SIZE -->
-        <div class="collapse show" id="SortBySize">
+        <div class="collapse show" name="SortBySize" id="SortBySize">
           <div class="container">
             <div class='row'>
               
               {% for item in size_list %}
-                <div class='col-sm-4 text-center mt-10' style="color:white">
+                <div class='col-sm-4 my-2 text-center mt-10' style="color:white">
                   <div style="border-radius: 10px ; border: 2px solid dodgerblue; background-color:#ddd; color:black">
                     <div class="mx-2 my-2" >
                       <table style="font-size: 13px; height: 125px">
@@ -305,12 +316,12 @@
         </div>
         
         <!-- REPOSITORIES - SORT BY FORK CONT -->
-        <div class="collapse" id="SortByForkCount">
+        <div class="collapse" name="SortByForkCount" id="SortByForkCount">
           <div class="container">
             <div class='row'>
               
               {% for item in fork_list %}
-                <div class='col-sm-4 text-center mt-10' style="color:white">
+                <div class='col-sm-4 my-2 text-center mt-10' style="color:white">
                   <div style="border-radius: 10px ; border: 2px solid dodgerblue; background-color:#ddd; color:black">
                     <div class="mx-2 my-2" >
                       <table style="font-size: 13px; height: 125px">
@@ -370,12 +381,12 @@
         </div>
         
         <!-- REPOSITORIES - SORT BY STAR CONT -->
-        <div class="collapse" id="SortByStarCount">
+        <div class="collapse" name="SortByStarCount" id="SortByStarCount">
           <div class="container">
             <div class='row'>
               
               {% for item in fork_list %}
-                <div class='col-sm-4 text-center mt-10' style="color:white">
+                <div class='col-sm-4 my-2 text-center mt-10' style="color:white">
                   <div style="border-radius: 10px ; border: 2px solid dodgerblue; background-color:#ddd; color:black">
                     <div class="mx-2 my-2" >
                       <table style="font-size: 13px; height: 125px">
@@ -435,7 +446,8 @@
         </div>
       </div>
       <!-- REPOSITORIES ENDS-->
-      <div id="repository"></div>
+
+      <div></div>
     </div>
     
     {% else %}
@@ -453,7 +465,7 @@
                           <input type="text" name="gh_username" placeholder="Github Username" 
                               style="border:0.75px solid dodgerblue; border-radius: 7.5px; background-color: #000; max-width:200px; padding: 5px; min-width:150px; color:white; font-size:15px" />
                           &emsp;
-                          <button type="submit" class="btn btn-outline-primary btn-sm">
+                          <button type="submit" class="btn btn-outline-primary btn-sm">&emsp;
                             &emsp; <span style="color: white;">Fetch Profile</span> &emsp;
                           </button>
                       </form>
@@ -519,124 +531,137 @@
 
       // Language Count Chart
           var languageCount_data = '{{languageCount_data | safe}}';
-          var languageCount_data_json = JSON.parse(languageCount_data);
-
-          var language_lc_list = [];
-          var repoCount_list = [];
-              
-          for (item in languageCount_data_json){
-            language_lc_list.push(item);
-            repoCount_list.push(languageCount_data_json[item]);
+          if (languageCount_data == ''){
+            var languageCount_data_json = {};
           }
-
-          var color_languageCount_chart = [];
-          var i = 1;
-
-          while(i <= language_lc_list.length){
-            var index = getRandomInt(colors_1.length);
-            var rand_color = colors_1[index];
-            color_languageCount_chart.push(rand_color);
-            colors_1.splice(index, 1);
-            i++;
-          }
-          
-          new Chart(document.getElementById("languageCount_Chart"), {
-            type: 'polarArea',
-            data: {
-              labels: language_lc_list,
-              datasets: [
-                {
-                  label: "Repository Count",
-                  // backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                  backgroundColor: color_languageCount_chart,
-                  data: repoCount_list
-                }
-              ]
-            },
-            options: {
-              title: {
-                display: true,
-                // text: 'Languages Used in Repository'
-              }
+          else{
+            var languageCount_data_json = JSON.parse(languageCount_data);
+         
+            var language_lc_list = [];
+            var repoCount_list = [];
+                
+            for (item in languageCount_data_json){
+              language_lc_list.push(item);
+              repoCount_list.push(languageCount_data_json[item]);
             }
-        });
-    
+
+            var color_languageCount_chart = [];
+            var i = 1;
+
+            while(i <= language_lc_list.length){
+              var index = getRandomInt(colors_1.length);
+              var rand_color = colors_1[index];
+              color_languageCount_chart.push(rand_color);
+              colors_1.splice(index, 1);
+              i++;
+            }
+            
+            new Chart(document.getElementById("languageCount_Chart"), {
+              type: 'polarArea',
+              data: {
+                labels: language_lc_list,
+                datasets: [
+                  {
+                    label: "Repository Count",
+                    // backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+                    backgroundColor: color_languageCount_chart,
+                    data: repoCount_list
+                  }
+                ]
+              },
+              options: {
+                title: {
+                  display: true,
+                  // text: 'Languages Used in Repository'
+                }
+              }
+          });
+          }
       // Stars Per Language Count Chart
           var starsPerLanguage_data = '{{starsPerLanguage_data | safe}}';
-          var starsPerLanguage_json = JSON.parse(starsPerLanguage_data);
-          
-          var language_strpl_list = [];
-          var starCount_strpl_list = [];
-          
-          for (item in starsPerLanguage_json){
-            language_strpl_list.push(item);
-            starCount_strpl_list.push(starsPerLanguage_json[item]);
+          if (starsPerLanguage_data == ''){
+            var languageCount_data_json = {};
           }
-
-          new Chart(document.getElementById("starPerLanguage_Chart"), {
-            type: 'pie',
-            data: {
-              labels: language_strpl_list,
-              datasets: [{
-                label: "Star Count",
-                backgroundColor: color_languageCount_chart,
-                data: starCount_strpl_list
-              }]
-            },
-            options: {
-              title: {
-                display: true,
-                // text: 'Stars Per Language Chart'
-              }
+          else{
+            var starsPerLanguage_json = JSON.parse(starsPerLanguage_data);
+          
+            var language_strpl_list = [];
+            var starCount_strpl_list = [];
+            
+            for (item in starsPerLanguage_json){
+              language_strpl_list.push(item);
+              starCount_strpl_list.push(starsPerLanguage_json[item]);
             }
-          });
 
-      // Stars per Repository Chart
-          var starsPerRepo_data = '{{starsPerRepo_data | safe}}';
-          var starsPerRepo = JSON.parse(starsPerRepo_data);
-          
-          var repo_list = [];
-          var starCount_list = [];
-          
-          for (item in starsPerRepo){
-            repo_list.push(item);
-            starCount_list.push(starsPerRepo[item]);
-          }
-
-          var color_starsPerRepo_chart = [];
-          var i = 1;
-
-          console.log(colors_2)
-
-          while(i <= starsPerRepo_data.length){
-            var index = getRandomInt(colors_2.length);
-            var rand_color = colors_2[index];
-            color_starsPerRepo_chart.push(rand_color);
-            colors_2.splice(index, 1);
-            i++;
-          }
-
-          new Chart(document.getElementById("starsPerRepo_Chart"), {
-            type: 'bar',
-            data: {
-              labels: repo_list,
-              datasets: [
-                {
-                  //label: "Star Count",
-                  backgroundColor: color_starsPerRepo_chart,
-                  data: starCount_list
+            new Chart(document.getElementById("starPerLanguage_Chart"), {
+              type: 'pie',
+              data: {
+                labels: language_strpl_list,
+                datasets: [{
+                  label: "Star Count",
+                  backgroundColor: color_languageCount_chart,
+                  data: starCount_strpl_list
+                }]
+              },
+              options: {
+                title: {
+                  display: true,
+                  // text: 'Stars Per Language Chart'
                 }
-              ]
-            },
-            options: {
-              legend: { display: false },
-              title: {
-                display: true,
-                // text: 'Star Per Repository Chart'
               }
+            });
+          }
+      
+          // Stars per Repository Chart
+          var starsPerRepo_data = '{{starsPerRepo_data | safe}}';
+          if (starsPerRepo_data == ''){
+            var starsPerRepo = {};
+          }
+          else{
+            var starsPerRepo = JSON.parse(starsPerRepo_data);
+          
+            var repo_list = [];
+            var starCount_list = [];
+            
+            for (item in starsPerRepo){
+              repo_list.push(item);
+              starCount_list.push(starsPerRepo[item]);
             }
-          });
-  
+
+            var color_starsPerRepo_chart = [];
+            var i = 1;
+
+            console.log(colors_2)
+
+            while(i <= starsPerRepo_data.length){
+              var index = getRandomInt(colors_2.length);
+              var rand_color = colors_2[index];
+              color_starsPerRepo_chart.push(rand_color);
+              colors_2.splice(index, 1);
+              i++;
+            }
+
+            new Chart(document.getElementById("starsPerRepo_Chart"), {
+              type: 'bar',
+              data: {
+                labels: repo_list,
+                datasets: [
+                  {
+                    //label: "Star Count",
+                    backgroundColor: color_starsPerRepo_chart,
+                    data: starCount_list
+                  }
+                ]
+              },
+              options: {
+                legend: { display: false },
+                title: {
+                  display: true,
+                  // text: 'Star Per Repository Chart'
+                }
+              }
+            });
+          }
     </script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
