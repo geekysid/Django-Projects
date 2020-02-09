@@ -38,7 +38,7 @@ def index(request):
         "disc_product_list": disc_product_list,
         "range_slides_discountItems": range_slides_discountItems,
     }
-    return render(request, "BookStore/index.html", product_params)
+    return render(request, "bookstore/index.html", product_params)
 
 
 def checkout(request):
@@ -82,10 +82,15 @@ def checkout(request):
 
                     # SENDING EMAIL CONFIRMATION TO THE CLIENT ABOUT ORDER PLACED
 
+                    Email_User = settings.EMAIL_USER
+                    Email_Pass = settings.EMAIL_PASS
+                    smtp_address = settings.EMAIL_HOST
+                    port = settings.EMAIL_PORT
+
                     msg = MIMEMultipart()
                     msg['To'] = email
-                    msg['From'] = 'donotreply@bookstore.com'
-                    msg['Subject'] = 'Bookstore: Your order (Book -' + str(product) + ') is placed.'
+                    msg['From'] = Email_User
+                    msg['Subject'] = 'GeekySid - Bookstore: Your order (Book -' + str(product) + ') is placed.'
 
                     prod_list = ""
                     for prod in email_deatils:
@@ -97,26 +102,21 @@ def checkout(request):
                     
                     msg.attach(msg_body)
 
-                    Email_User = settings.EMAIL_USER
-                    Email_Pass = settings.EMAIL_PASS
-                    smtp_address = settings.EMAIL_HOST
-                    port = settings.EMAIL_PORT
-
                     with smtplib.SMTP_SSL(smtp_address, port) as smtp:
                         smtp.login(Email_User, Email_Pass)
                         smtp.sendmail(Email_User, email, msg.as_string())
 
                     return redirect("orders?orderid="+str(order)+"&emailadd="+email+"&checkoutStatus=success")
                 except Exception as e:
-                    return render(request, "BookStore/checkout.html", {'errorMessage': "Exception occured: "+ str(e)})
+                    return render(request, "bookstore/checkout.html", {'errorMessage': "Exception occured: "+ str(e)})
                 
             else:
-                return render(request, "BookStore/checkout.html", {'errorMessage': "There was an error while placing your order. Please try again or contact admin."})
+                return render(request, "bookstore/checkout.html", {'errorMessage': "There was an error while placing your order. Please try again or contact admin."})
 
         except Exception as e:
-            return render(request, "BookStore/checkout.html", {'errorMessage': "Exception occured: "+ str(e) +". There was an while placing your order. Please try again or contact admin."})
+            return render(request, "bookstore/checkout.html", {'errorMessage': "Exception occured: "+ str(e) +". There was an while placing your order. Please try again or contact admin."})
     else:
-        return render(request, "BookStore/checkout.html")
+        return render(request, "bookstore/checkout.html")
 
 
 def product(request):
@@ -127,16 +127,16 @@ def product(request):
             try:
                 product = Products.objects.get(id=id)
                 if product != None:
-                    return render(request, 'BookStore/product.html', {"product": product, "validity": "true"})
+                    return render(request, 'bookstore/product.html', {"product": product, "validity": "true"})
                 else:
-                    return render(request, 'BookStore/product.html', {"error": "Invaild Product", "validity": "false"})
+                    return render(request, 'bookstore/product.html', {"error": "Invaild Product", "validity": "false"})
             except Products.DoesNotExist:
-                return render(request, 'BookStore/product.html', {"error": "Invaild Product", "validity": "false"})
+                return render(request, 'bookstore/product.html', {"error": "Invaild Product", "validity": "false"})
 
         else:
-            return render(request, 'BookStore/product.html', {"error": "Invaild Product", "validity": "false"})
+            return render(request, 'bookstore/product.html', {"error": "Invaild Product", "validity": "false"})
     else:
-        return render(request, 'BookStore/product.html', {"error": "Invaild Params", "validity": "false"})
+        return render(request, 'bookstore/product.html', {"error": "Invaild Params", "validity": "false"})
 
 
 def orders(request):
@@ -153,19 +153,19 @@ def orders(request):
                 params['orderid'] = order_id
                 params['emailadd'] = email
 
-            return render(request, "BookStore/orders.html", params)
+            return render(request, "bookstore/orders.html", params)
         else:
-            return render(request, "BookStore/orders.html")
+            return render(request, "bookstore/orders.html")
 
     elif request.method == "POST":
         email = request.POST.get("emailadd", "").strip()
         order_id = request.POST.get("orderid", "").strip()
 
         params = orders_fetchData(order_id, email)
-        return render(request, "BookStore/orders.html", params)
+        return render(request, "bookstore/orders.html", params)
     
     else:
-        return render(request, "BookStore/orders.html")
+        return render(request, "bookstore/orders.html")
         
         
 def orders_fetchData(order_id, email):

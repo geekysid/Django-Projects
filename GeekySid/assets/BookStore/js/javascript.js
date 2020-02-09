@@ -21,6 +21,7 @@ function addToWishlist_initialize(){
 
 // function that executes when add to wishlist button is clicked
 $('.spWLpr').on('click', 'img.addWL', function(){
+    popover_hide();
     prod_id = this.id.toString().slice(5);
 
     // adding product to wishlist dictionary in localStorage
@@ -35,6 +36,7 @@ $('.spWLpr').on('click', 'img.addWL', function(){
 
 // function that executes when remove from wishlist button is clicked
 $('.spWLpr').on('click', 'img.removeWL', function(){
+    popover_hide();
     prod_id = this.id.toString().slice(8);
     
     let wishList = fetch_LocalStorage_Wishlist();
@@ -87,7 +89,7 @@ function Wishlist_AddRemove(prod_id, action){
 
 // function called when the pag is load
 function add_wishlist_buttons(){
-    if(pathname == '/BookStore/orders'){
+    if(pathname == '/bookstore/orders'){
         //do nothing
     }
     else{
@@ -219,10 +221,9 @@ $(document).ready(function(){
 $('.sppr').on('click', 'img.plus', function () {
     prod_id = this.id.toString().slice(4);   // fetching id of the clicked element and then using slice function to get desired part of the id
 
-
     Cart_AddRemove(prod_id, 'plus_cart')
 
-    if (pathname == '/BookStore/checkout'){
+    if (pathname == '/bookstore/checkout'){
       discount = parseFloat(document.getElementById('discount' + prod_id).innerHTML)
       price = parseFloat(document.getElementById('price' + prod_id).innerHTML)
       document.getElementById('total' + prod_id).innerHTML = (price - (price * discount / 100)) * cart[prod_id][1]
@@ -249,7 +250,9 @@ $('.sppr').on('click', 'img.minus', function () {
 
 function Cart_AddRemove(prod_id, action){
 
-    cart = fetchCart()
+    popover_hide();
+
+    cart = fetchCart();
 
     if(action == 'plus_cart'){
         if (cart[prod_id] == null) {  // checking if cart dictionary has any key with same value as id of button clicked.
@@ -265,12 +268,12 @@ function Cart_AddRemove(prod_id, action){
             
             var prod_arr = cart[prod_id]
 
-            // executing only for homepage of BookStore
-            if (pathname == '/BookStore/' || pathname == '/BookStore/index' || pathname == '/BookStore/product'){
+            // executing only for homepage of bookstore
+            if (pathname == '/bookstore/' || pathname == '/bookstore/index' || pathname == '/bookstore/product'){
                 updateLocalStorageWithCart(cart)   // updating cart dictionary in the local storage
                 add_cart_button()      
-            }// executing only for homepage of BookStore
-            else if (pathname == '/BookStore/checkout'){
+            }// executing only for homepage of bookstore
+            else if (pathname == '/bookstore/checkout'){
                 updateLocalStorageWithCart(cart)   // updating cart dictionary in the local storage
             }
         }
@@ -293,18 +296,18 @@ function Cart_AddRemove(prod_id, action){
 
             if (cart[prod_id][1] == 0) {
                 delete cart[prod_id];
-                if (pathname == '/BookStore/' || pathname == '/BookStore/index' || pathname == '/BookStore/product'){
+                if (pathname == '/bookstore/' || pathname == '/bookstore/index' || pathname == '/bookstore/product'){
                 document.getElementById('sp' + prod_id).innerHTML = `<img id="plus` +prod_id + `" src=` + staticAddToCartImage() + ` width="25" class="plus" title="Add To Cart"  alt="Add To Cart" 
                                                                         onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />`
                 }
-                else if (pathname == '/BookStore/checkout'){
+                else if (pathname == '/bookstore/checkout'){
                     quantity = 1
                     cartTotalCalculation(0)
                 }
             }
             else{
 
-                if (pathname == '/BookStore/checkout'){
+                if (pathname == '/bookstore/checkout'){
                     cartTotalCalculation(cart[prod_id][1] )
                 }   
             }
@@ -360,7 +363,7 @@ function add_cart_button() {
     cart = fetchCart()
     for (item in cart) {
         id = parseInt(item.slice(2,))
-        if(pathname == '/BookStore/product'){
+        if(pathname == '/bookstore/product'){
             if(id == parseInt(GetParameter_URL('id'))){
                 document.getElementById("sp" + item).innerHTML = add_button(item)
                 break
@@ -544,7 +547,7 @@ function cartClear() {
     
     cart = fetchCart()
 
-    if (pathname == '/BookStore/' || pathname == '/BookStore/index'){
+    if (pathname == '/bookstore/' || pathname == '/bookstore/index'){
         for (item in cart) {
             document.getElementById('sp' + item).innerHTML = `<img id="plus`+item +`" src=` + staticAddToCartImage() + ` width="25" class="plus" title="Add To Cart"  alt="Add To Cart" 
                                                                     onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />`
@@ -558,13 +561,13 @@ function cartClear() {
 
     $('#popcart').popover('hide');
 
-    if (pathname == '/BookStore/checkpout'){
+    if (pathname == '/bookstore/checkpout'){
         if (document.getElementById('successAlert') == null){
             window.location.replace("index");
         }
     }
 
-    if(pathname == '/BookStore/checkout'){
+    if(pathname == '/bookstore/checkout'){
         window.location.replace("index");
     }
 }
@@ -575,12 +578,10 @@ function popoverClicked (element){
 
     if(element_id == 'wishList'){
         if(alt == '0'){
-            console.log(element_id + ' - ' + alt)
             document.getElementById(element_id).alt='1'
             $('#popwishList').popover('show');
         }
         if(alt == '1'){
-            console.log(element_id + ' = ' + alt)
             document.getElementById(element_id).alt = '0'
             $('#popwishList').popover('hide');
         }
@@ -590,12 +591,10 @@ function popoverClicked (element){
     }
     else if(element_id == 'cart'){
         if(alt == '0'){
-            console.log(element_id + ' - ' + alt)
             document.getElementById(element_id).alt='1'
             $('#popcart').popover('show');
         }
         if(alt == '1'){
-            console.log(element_id + ' - ' + alt)
             document.getElementById(element_id).alt='0'
             $('#popwishList').popover('hide');  
             
@@ -603,7 +602,13 @@ function popoverClicked (element){
         document.getElementById('wishList').alt='0'
         $('#popwishList').popover('hide');
     }
-
-
 }
+
+function popover_hide (){
+    $('#popwishList').popover('hide');
+    document.getElementById('popwishList').alt='0'
+    $('#popcart').popover('hide');
+    document.getElementById('popcart').alt='0'
+}
+
 

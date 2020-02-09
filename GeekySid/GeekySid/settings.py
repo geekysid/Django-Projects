@@ -40,7 +40,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'cw2qe=9+=x@=qpd#$0+da4#s*$+2ui7bli98=*o2u#_&+=+h99'
+SECRET_KEY = _SecretKey
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'BookStore.apps.BookstoreConfig',
+    'bookstore.apps.BookstoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -70,7 +70,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'GeekySid.urls'
+ROOT_URLCONF = 'geekysid.urls'
 
 TEMPLATES = [
     {
@@ -90,7 +90,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'GeekySid.wsgi.application'
+WSGI_APPLICATION = 'geekysid.wsgi.application'
 
 
 # Database

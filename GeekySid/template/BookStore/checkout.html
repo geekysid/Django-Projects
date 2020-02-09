@@ -275,7 +275,7 @@
 
 
 {% block js %}
-<script type="text/javascript" src="{% static 'BookStore/js/javascript.js' %}"></script> 
+<script type="text/javascript" src="{% static 'bookstore/js/javascript.js' %}"></script> 
 <script>
 
     if(localStorage.getItem('cart') == '{}'){
@@ -341,10 +341,10 @@
                                                 <span class="discount`+ item + `" id="discount` + item + `">` + cart[item][3] + `</span>%
                                             </div>
                                             <div class="col-md-2 butClick" style="text-align:center; vertical-align: middle;">
-                                                <img id="minus`+item +`" src="{% static 'BookStore/images/addToCart_Minus.png' %}" width="25" class="minus" title="Remove From Cart"  alt="Remove From Cart" 
+                                                <img id="minus`+item +`" src="{% static 'bookstore/images/add_to_cart_minus.png' %}" width="25" class="minus" title="Remove From Cart"  alt="Remove From Cart" 
                                                     onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
                                                 <span id='val` + item + `' class='mx-2'>` + cart[item][1] + `</span> 
-                                                <img id="plus`+item +`" src="{% static 'BookStore/images/addToCart_Plus.png' %}" width="25" class="plus" title="Add To Cart"  alt="Add To Cart" 
+                                                <img id="plus`+item +`" src="{% static 'bookstore/images/add_to_cart_plus.png' %}" width="25" class="plus" title="Add To Cart"  alt="Add To Cart" 
                                                     onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
                                             </div>
                                             <div class="col-md-1" style="text-align:center;" id="">

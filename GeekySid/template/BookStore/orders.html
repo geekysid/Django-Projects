@@ -203,7 +203,7 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript" src="{% static 'BookStore/js/javascript.js' %}"></script> 
+<script type="text/javascript" src="{% static 'bookstore/js/javascript.js' %}"></script> 
 <script>
     if (localStorage.getItem('cart') == null) {
         var cart = {};
@@ -224,30 +224,30 @@
     
     // url for plus button image
     function staticPlusImage(){
-        return "{% static 'BookStore/images/addToCart_plus.png' %}"
+        return "{% static 'bookstore/images/add_to_cart_plus.png' %}"
     }
     
     
     // url for minus button image
     function staticMinusImage(){
-        return "{% static 'BookStore/images/addToCart_Minus.png' %}"
+        return "{% static 'bookstore/images/add_to_cart_minus.png' %}"
     }
     
     // url for add to cart button image
     function staticAddToCartImage(){
-        return "{% static 'BookStore/images/addToCart.png' %}"
+        return "{% static 'bookstore/images/add_to_cart.png' %}"
     }
     
     // url for Remove From Wishlist button
     function staticAddedToWishlistImage(){
-        return "{% static 'BookStore/images/AddedToWishlist.png' %}"
+        return "{% static 'bookstore/images/added_to_wishlist.png' %}"
     }
     
     
 
     // url for Add To Wishlist button
     function staticAddToWishlistImage(){
-        return "{% static 'BookStore/images/AddToWishlist.png' %}"
+        return "{% static 'bookstore/images/add_to_wishlist.png' %}"
     }
 </script>
 {% endblock %}

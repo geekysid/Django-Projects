@@ -54,12 +54,12 @@
                         <p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p>
                         <div>
                             <span class="sppr" id="sppr{{product.id}}" >
-                                <img id="pluspr{{product.id}}" src="{% static 'BookStore/images/addToCart.png' %}"  width="35" class="plus" title="Add To Cart"  alt="Add To Cart" 
+                                <img id="pluspr{{product.id}}" src="{% static 'bookstore/images/add_to_cart.png' %}"  width="35" class="plus" title="Add To Cart"  alt="Add To Cart" 
                                                             onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
                             </span>
                             &emsp;
                             <span id="spWLpr{{product.id}}" class="spWLpr">
-                                <img src="{% static 'BookStore/images/AddToWishlist.png' %}" width="35" class="addWL" id="addWLpr{{product.id}}" title="Add To Wishlist"  alt="Add To Wishlist" 
+                                <img src="{% static 'bookstore/images/add_to_wishlist.png' %}" width="35" class="addWL" id="addWLpr{{product.id}}" title="Add To Wishlist"  alt="Add To Wishlist" 
                                         onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
                               </span>
                         </div>
@@ -261,7 +261,7 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript" src="{% static 'BookStore/js/javascript.js' %}"></script> 
+<script type="text/javascript" src="{% static 'bookstore/js/javascript.js' %}"></script> 
 <script>
     if(localStorage.getItem('cart') == null){
         var cart = {}
@@ -286,27 +286,27 @@
 
     // url for plus button image
      function staticPlusImage(){
-        return "{% static 'BookStore/images/addToCart_plus.png' %}"
+        return "{% static 'bookstore/images/add_to_cart_plus.png' %}"
     }
 
     // url for minus button image
     function staticMinusImage(){
-        return "{% static 'BookStore/images/addToCart_Minus.png' %}"
+        return "{% static 'bookstore/images/add_to_cart_minus.png' %}"
     }
 
      // url for add to cart button image
     function staticAddToCartImage(){
-        return "{% static 'BookStore/images/addToCart.png' %}"
+        return "{% static 'bookstore/images/add_to_cart.png' %}"
     }
 
     // url for Remove From Wishlist button
     function staticAddedToWishlistImage(){
-      return "{% static 'BookStore/images/AddedToWishlist.png' %}"
+      return "{% static 'bookstore/images/added_to_wishlist.png' %}"
     }
   
     // url for Add To Wishlist button
     function staticAddToWishlistImage(){
-      return "{% static 'BookStore/images/AddToWishlist.png' %}"
+      return "{% static 'bookstore/images/add_to_wishlist.png' %}"
     }
 
 </script>

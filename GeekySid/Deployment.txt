@@ -11,7 +11,7 @@ CMD FOR SERVER
         >> hostname
     6) Need to change hostname in hostfile.
         >> nano etc/hosts
-            172.105.38.72   siddhant-server
+               siddhant-server
        Now press control+X -> Y -> Enter
     7) Till now we are logged in as root user which has all the permissions. 
        Now we will create a limited user and assign different permissions to  the same
@@ -38,6 +38,7 @@ CMD FOR LOCAL MACHINE
           and public key is saved as id_rsa.pub
        b) Now we will put our public key on server to authentcate ourself instaed of using password.
             >> scp ~/.ssh/id_rsa.pub siddhant@172.105.38.72:~/.ssh/authorized_keys
+
 CMD FOR SERVER
     11) Now we will check if the file is copied
         >> ls .ssh
@@ -50,7 +51,7 @@ CMD FOR SERVER
         >> ssh siddhant@172.105.38.72
     15) Now we will make sure that root user doest not log into the server using ssh authentication and also disable password based authentication
         We do this by editing sshd_config file
-        >> sudo nano etc/ssh/sshd_config
+        >> sudo nano /etc/ssh/sshd_config
                 change PermitRootLogin to 'no'
                 change PasswordAuthentication to 'no' # make sure its not commented
                 Now press control+X -> Y -> Enter to save
@@ -86,7 +87,7 @@ CMD FOR SERVER
         >> ls
     24) Create a virtual env
         a) Install python pip
-            >> sudo apt-git install python3-pip
+            >> sudo apt-get install python3-pip
         b) Install virtal env
             >> sudo apt-get install python3-venv
         c) move into project
@@ -116,40 +117,40 @@ CMD FOR SERVER
             >> sudo apt-get install libapache2-mod-wsgi-py3
     30) Configue Appache server
         a) move to directory that holds apache configration file
-            >> cd etc/apache2/sites-available
+            >> cd /etc/apache2/sites-available
         b) now we will copy one of the configration files into geekysid.conf file
             >> sudo cp 000-default.conf geekysid.conf
         c)
-            >> sudo nano geekysid.conf  
+            >> sudo nano geekysid.conf
+
+
                     <VirtualHost *:80>
                         .
                         .
                         .
-                        Alias /static /home/siddhant/geekysid/asstes    # letting apavhe now what folder '/static' points to
-                        <Directory /home/siddhant/geekysid/asstes>      # granting permission
+                        Alias /static /home/siddhant/geekysid/assets
+                        <Directory /home/siddhant/geekysid/assets>
                             Require all granted
                         </Directory>
 
-                        Alias /media /home/siddhant/geekysid/media    # letting apavhe now what folder '/static' points to
-                        <Directory /home/siddhant/geekysid/media>     # granting permission  
+                        Alias /media /home/siddhant/geekysid/media
+                        <Directory /home/siddhant/geekysid/media>
                             Require all granted
                         </Directory>
 
-                        # grantingaccess to the wsgi file in our project. this makes sure that apache can access our wsgi file which enable our project to talk to apache server
-                        <Directory /home/siddhant/geekysid/geekysid/>
+                        <Directory /home/siddhant/geekysid/geekysid>
                             <Files wsgi.py>
-                                Require all granted
+                            Require all granted
                             </Files>
                         </Directory>
-
-                        # This part actually handels the wsgi
                         WSGIScriptAlias / /home/siddhant/geekysid/geekysid/wsgi.py
-                        WSGIDaemonProcess geekysid_app python-path=/home/siddhant/geekysid python-home=/home/siddhant/geekysid/env
-                        WSGIProcessGroup geekysid
+                        WSGIDaemonProcess geekysid_app python-path=/home/siddhant/geekysid python-home=/home/siddhant/env
+                        WSGIProcessGroup geekysid_app
 
                     </VirtualHost>
                     Now press control+X -> Y -> Enter to save
     31) Now we will enable the site through apache
+        >> cd
         >> sudo a2ensite geekysid
         >> sudo a2dissite 000-default.conf  # disabled test site
 
@@ -165,17 +166,17 @@ CMD FOR SERVER
 
     33) Moving sensetive data into a file
         >> sudo touch /etc/config.json
-        >> sudo nanp geekysid/geekysid/settings.py      # copy SECRET_KEY and
+        >> sudo nano geekysid/geekysid/settings.py      # copy SECRET_KEY and
         >> sudo nano /etc/config.json   
                 {
-                    'SECRET_KEY': 'SECRET_KEY copied in last step',
+                    'SECRET_KEY': 'cw2qe=9+=x@=qpd#$0+da4#s*$+2ui7bli98=*o2u#_&+=+h99',
                     'EMAIL_USER': 'siddhant.shah.1986@gmail.com',
-                    'EMAIL_PASS': 'password',
-                    'EMAIL_HOST': 'smtp.gmail.com',
+                    'EMAIL_USER": "donotreply.sid@gmail.com",
+                    "EMAIL_PASS": "g00gle@ 123$;",
                     'EMAIL_PORT': 465
 
                 }
-        >> sudo nanp geekysid/geekysid/settings.py
+        >> sudo nano /geekysid/geekysid/settings.py
                 import json
                 with open('/etc/config.json', 'r') as config_file:
                     config = json.load(config_file)

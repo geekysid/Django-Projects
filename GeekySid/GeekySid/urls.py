@@ -22,7 +22,7 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('BookStore/', include('BookStore.urls'))
+    path('bookstore/', include('bookstore.urls'))
 ]
 
 url_static = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
