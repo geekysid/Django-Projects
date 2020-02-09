@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookstore.apps.BookstoreConfig',
     'octaprofile.apps.OctaprofileConfig',
+    'scorebuzz.apps.ScorebuzzConfig'
 ]
 
 MIDDLEWARE = [

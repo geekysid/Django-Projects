@@ -81,6 +81,7 @@ CMD FOR LOCAL MACHINE
     21) Copy the requirements.txt file to the project
     22) Copying project to home folder of the server (make terminal points to the folder which has our project)
         >> scp -r geekysid siddhant@172.105.38.72:~/
+>> scp -r geekysid/template/octaprofile/index.html siddhant@172.105.38.72:~/geekysid/template/octaprofile/
 
 CMD FOR SERVER
     23) We will check of the project is copied to the server
