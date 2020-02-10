@@ -1,0 +1,29 @@
+
+    /* The alert message box */
+    .alert_sid {
+        position: relative;
+        width: 100%;
+        top: 0;
+        padding: 20px;
+        background-color: rgb(245, 64, 41, 0.9); /* Red */
+        color: white;
+        z-index:1;
+        vertical-align: middle;
+      }
+  
+      /* The close button */
+      .closebtn_sid {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 30px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.5s;
+      }
+  
+      /* When moving the mouse over the close button */
+      .closebtn_sid:hover {
+        color: black;
+      }

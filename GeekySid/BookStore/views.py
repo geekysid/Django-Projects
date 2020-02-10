@@ -9,8 +9,42 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.conf import settings
 
+def my_view(request):
+    
+    # Let's assume that the visitor uses an iPhone...
+    print(request.user_agent.is_mobile) # returns True
+    print(request.user_agent.is_tablet) # returns False
+    print(request.user_agent.is_touch_capable) # returns True
+    print(request.user_agent.is_pc) # returns False
+    print(request.user_agent.is_bot) # returns False
+
+    # Accessing user agent's browser attributes
+    print(request.user_agent.browser)  # returns Browser(family=u'Mobile Safari', version=(5, 1), version_string='5.1')
+    print(request.user_agent.browser.family)  # returns 'Mobile Safari'
+    print(request.user_agent.browser.version)  # returns (5, 1)
+    print(request.user_agent.browser.version_string)   # returns '5.1'
+
+    # Operating System properties
+    print(request.user_agent.os)  # returns OperatingSystem(family=u'iOS', version=(5, 1), version_string='5.1')
+    print(request.user_agent.os.family)  # returns 'iOS'
+    print(request.user_agent.os.version)  # returns (5, 1)
+    print(request.user_agent.os.version_string)  # returns '5.1'
+
+    # Device properties
+    print(request.user_agent.device)  # returns Device(family='iPhone')
+    print(request.user_agent.device.family)  # returns 'iPhone'
+
+
+def device_check(request):
+    if (request.user_agent.is_mobile == True) or (request.user_agent.is_tablet == True):
+        return 'true'
+    else:
+        return 'false'
+
 
 def index(request):
+    
+    MOBILE_TABLET_FLAG = device_check(request)
 
     # fetching discounted item
     disc_product_list = Products.objects.filter(discount__gt=0.0).order_by("-discount")  # returns list of products that has dicount attribute > 0.0 and the the list is ordered DESC by by column discount
@@ -34,6 +68,7 @@ def index(request):
 
     # creating a dictioary to pass to the page when it is called.
     product_params = {
+        'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG,
         "all_products": all_products,
         "disc_product_list": disc_product_list,
         "range_slides_discountItems": range_slides_discountItems,
@@ -42,6 +77,9 @@ def index(request):
 
 
 def checkout(request):
+
+    MOBILE_TABLET_FLAG = device_check(request)
+
     if request.method == 'POST':
         name = request.POST.get('inputName', '')
         email = request.POST.get('inputEmail', '')
@@ -116,10 +154,13 @@ def checkout(request):
         except Exception as e:
             return render(request, "bookstore/checkout.html", {'errorMessage': "Exception occured: "+ str(e) +". There was an while placing your order. Please try again or contact admin."})
     else:
-        return render(request, "bookstore/checkout.html")
+        return render(request, "bookstore/checkout.html", {'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG})
 
 
 def product(request):
+
+    MOBILE_TABLET_FLAG = device_check(request)
+
     if request.method == "GET" and 'id' in request.GET:
         id = request.GET.get("id", '')
         
@@ -127,19 +168,22 @@ def product(request):
             try:
                 product = Products.objects.get(id=id)
                 if product != None:
-                    return render(request, 'bookstore/product.html', {"product": product, "validity": "true"})
+                    return render(request, 'bookstore/product.html', {"product": product, "validity": "true", 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG})
                 else:
-                    return render(request, 'bookstore/product.html', {"error": "Invaild Product", "validity": "false"})
+                    return render(request, 'bookstore/product.html', {"error": "Invaild Product", "validity": "false", 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG})
             except Products.DoesNotExist:
-                return render(request, 'bookstore/product.html', {"error": "Invaild Product", "validity": "false"})
+                return render(request, 'bookstore/product.html', {"error": "Invaild Product", "validity": "false", 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG})
 
         else:
-            return render(request, 'bookstore/product.html', {"error": "Invaild Product", "validity": "false"})
+            return render(request, 'bookstore/product.html', {"error": "Invaild Product", "validity": "false", 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG})
     else:
-        return render(request, 'bookstore/product.html', {"error": "Invaild Params", "validity": "false"})
+        return render(request, 'bookstore/product.html', {"error": "Invaild Params", "validity": "false", 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG})
 
 
 def orders(request):
+
+    MOBILE_TABLET_FLAG = device_check(request)
+
     if request.method == "GET" and 'orderid' in request.GET and 'emailadd' in request.GET:
         print("="*50)
         email = request.GET.get("emailadd", "").strip()
@@ -149,13 +193,14 @@ def orders(request):
             params = orders_fetchData(order_id, email)
 
             if 'checkoutStatus' in request.GET:
+                params['MOBILE_TABLET_FLAG']: MOBILE_TABLET_FLAG
                 params['checkoutStatus'] = 'success'
                 params['orderid'] = order_id
                 params['emailadd'] = email
 
             return render(request, "bookstore/orders.html", params)
         else:
-            return render(request, "bookstore/orders.html")
+            return render(request, "bookstore/orders.html", {'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG})
 
     elif request.method == "POST":
         email = request.POST.get("emailadd", "").strip()
@@ -165,7 +210,7 @@ def orders(request):
         return render(request, "bookstore/orders.html", params)
     
     else:
-        return render(request, "bookstore/orders.html")
+        return render(request, "bookstore/orders.html", {'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG})
         
         
 def orders_fetchData(order_id, email):

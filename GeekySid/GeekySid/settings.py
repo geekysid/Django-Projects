@@ -14,22 +14,27 @@ import os
 import json
 
 # fetching sensetive data stored in a json file 
-pathToFile= os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
-file = os.path.join(pathToFile, 'SecretFile.json')
 _SecretKey = ''
 _EmailUser = ''
 _EmailPass = ''
 _EmailHost = ''
 _EmailPort = ''
+
+pathToFile= os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+file = os.path.join(pathToFile, 'SecretFile.json')
+
 if os.path.exists(file):
-    with open(file, 'r') as secret_file:
-        sensetive_data = json.load(secret_file)
+    with open(file, 'r') as config_file:
+
+# if os.path.exists('/etc/config.json'):
+#     with open('/etc/config.json', 'r') as config_file:
+        sensetive_data = json.load(config_file)
         _SecretKey = sensetive_data['SECRET_KEYS']
         _EmailUser = sensetive_data['EMAIL_USER']
         _EmailPass = sensetive_data['EMAIL_PASS']
         _EmailHost = sensetive_data['EMAIL_HOST']
         _EmailPort = sensetive_data['EMAIL_PORT']
+
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -45,8 +50,8 @@ SECRET_KEY = _SecretKey
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ['www.geekysid.com', 'geekysid.com', '172.105.38.72']
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -57,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_user_agents',
     'bookstore.apps.BookstoreConfig',
     'octaprofile.apps.OctaprofileConfig',
     'scorebuzz.apps.ScorebuzzConfig'
@@ -70,6 +76,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware'
 ]
 
 ROOT_URLCONF = 'geekysid.urls'

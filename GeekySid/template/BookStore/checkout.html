@@ -51,21 +51,26 @@
                                     <!-- cart header -->
                                     <div>
                                         <div class="row">
-                                            <div class='col-md-7' style="text-align:center; color:black">
-                                                <h6 class="">Product Name</h6>
-                                            </div>
-                                            <div class="col-md-1" style="text-align:center; color:black" id="">
-                                                <h6>Price</h6>
-                                            </div>
-                                            <div class="col-md-1" style="text-align:center; color:black" id="">
-                                                <h6>Discount</h6>
-                                            </div>
-                                            <div class="col-md-2"
-                                                style="text-align:center; color:black; vertical-align: middle;">
-                                                <h6>Quantity</h6>
-                                            </div>
-                                            <div class="col-md-1" style="text-align:center; color:black" id="">
-                                                <h6>Total</h6>
+                                            <div class="col-md-12">
+                                                <table style="width:100%; text-align:center; color:black">
+                                                    <tr>
+                                                        <td width="58.31%">
+                                                            <h6 class="">Product Name</h6>
+                                                        </td>
+                                                        <td width="8.3%">
+                                                            <h6>Price</h6>
+                                                        </td>
+                                                        <td width="8.3%">
+                                                            <h6>Discount</h6>
+                                                        </td>
+                                                        <td width="16.7%">
+                                                            <h6>Quantity</h6>
+                                                        </td>
+                                                        <td width="8.3%">
+                                                            <h6>Total</h6>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -322,34 +327,40 @@
             var prod_id = item.slice(2, );
 
             chkout_str = chkout_str + `<div class="row my-2" style="font-size:12px" >
-                                            <div class="col-md-7">
-                                                <li class="media">
-                                                    <a href="product?id=`+ prod_id + `"><img src="` + cart[item][4] + `" width="70px" id="image` + item + `" height="100px" class="mr-3" alt="..." /></a>
-                                                    <div class="media-body">
-                                                        <b><span class="" style="font-size:13px" id="name`+ item + `">
-                                                            `+ cart[item][0] + `
-                                                        </span></b>
-                                                        <br />
-                                                        <span class="" id="desc`+ item + `" title="` + desc + `">` + desc + `</span>
-                                                    </div>
-                                                </li>
-                                            </div>
-                                            <div class="col-md-1" style="text-align:center;" id="">
-                                                $<span class="price`+ item + `" id="price` + item + `">` + cart[item][2] + `</span>
-                                            </div>
-                                            <div class="col-md-1" style="text-align:center;" id="">
-                                                <span class="discount`+ item + `" id="discount` + item + `">` + cart[item][3] + `</span>%
-                                            </div>
-                                            <div class="col-md-2 butClick" style="text-align:center; vertical-align: middle;">
-                                                <img id="minus`+item +`" src="{% static 'bookstore/images/add_to_cart_minus.png' %}" width="25" class="minus" title="Remove From Cart"  alt="Remove From Cart" 
-                                                    onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
-                                                <span id='val` + item + `' class='mx-2'>` + cart[item][1] + `</span> 
-                                                <img id="plus`+item +`" src="{% static 'bookstore/images/add_to_cart_plus.png' %}" width="25" class="plus" title="Add To Cart"  alt="Add To Cart" 
-                                                    onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
-                                            </div>
-                                            <div class="col-md-1" style="text-align:center;" id="">
-                                                $<span class="" id="total`+ item + `">` + (cart[item][2] - (cart[item][2] * cart[item][3] / 100)) * cart[item][1] + `</span>
-                                            </div>
+                                          <div class="col-md-12">
+                                            <table style="width:100%; text-align:center; vertical-align:top; color:black">
+                                              <tr>
+                                                <td width="58.31%" style="vertical-align:top;">
+                                                    <li class="media">
+                                                        <a href="product?id=`+ prod_id + `"><img src="` + cart[item][4] + `" width="70px" id="image` + item + `" height="100px" class="mr-3" alt="..." /></a>
+                                                        <div class="media-body">
+                                                            <b><span class="" style="font-size:13px" id="name`+ item + `">
+                                                                `+ cart[item][0] + `
+                                                            </span></b>
+                                                            <br />
+                                                            <span class="" id="desc`+ item + `" title="` + desc + `">` + desc + `</span>
+                                                        </div>
+                                                    </li>
+                                                </td>
+                                                <td width="8.3%" style="vertical-align:top;">
+                                                    $<span class="price`+ item + `" id="price` + item + `">` + cart[item][2] + `</span>
+                                                </td>
+                                                <td width="8.3%" style="vertical-align:top;">
+                                                    <span class="discount`+ item + `" id="discount` + item + `">` + cart[item][3] + `</span>%
+                                                </td>
+                                                <td width="16.7%" style="vertical-align:top;">
+                                                    <img id="minus`+item +`" src="{% static 'bookstore/images/add_to_cart_minus.png' %}" width="25" class="minus" title="Remove From Cart"  alt="Remove From Cart" 
+                                                        onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
+                                                    <span id='val` + item + `' class='mx-2'>` + cart[item][1] + `</span> 
+                                                    <img id="plus`+item +`" src="{% static 'bookstore/images/add_to_cart_plus.png' %}" width="25" class="plus" title="Add To Cart"  alt="Add To Cart" 
+                                                        onmouseover="changebutton_Hover(this)" onmouseout="changebutton_Hover_Out(this)" />
+                                                </td>
+                                                <td width="8.3%" style="vertical-align:top;">
+                                                    $<span class="" id="total`+ item + `">` + (cart[item][2] - (cart[item][2] * cart[item][3] / 100)) * cart[item][1] + `</span>
+                                                </td>
+                                              </tr>
+                                            </table>
+                                          </div>
                                         </div>
                                     <hr />`;
             cartTotal = cartTotal + (cart[item][2] - (cart[item][2] * cart[item][3] / 100)) * cart[item][1];

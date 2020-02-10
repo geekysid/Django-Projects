@@ -82,26 +82,38 @@
                             {% if not ord_status_error %}
                                 <ul class="list-unstyled">
                                     <div class="row">
-                                        <div class='col-md-2' style="text-align:center;">
-                                            <strong class="">Order Number</strong>
-                                        </div>
-                                        <div class="col-md-2" style="text-align:center;">
-                                            <strong>Status Date</strong>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <strong>Order Status</strong>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <strong>Remark</strong>
+                                        <div class="col-md-12 mx-2">
+                                            <table style="width:100%; text-align:center; color:black">
+                                                <tr>
+                                                    <td width="8.33%">
+                                                        <strong class="">Order Number</strong>
+                                                    </td>
+                                                    <td width="16.6%">
+                                                        <strong>Status Date</strong>
+                                                    </td>
+                                                    <td width="25%">
+                                                        <strong>Status</strong>
+                                                    </td>
+                                                    <td width="41%">
+                                                        <strong>Remark</strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </div>
                                     </div>
                                     <hr />
                                     {% for status in ord_stat_obj %}
-                                    <div class="row mb-3">
-                                        <div class='col-md-2' style="text-align:center;">{{status.order.order_id}}</div>
-                                        <div class="col-md-2" style="text-align:center;">{{status.timestamp}}</div>
-                                        <div class="col-md-3">{{status.status_desc}}</div>
-                                        <div class="col-md-5">{{status.remark}}</div>
+                                    <div class="row mb-3 ">
+                                        <div class="col-md-12 mx-2">
+                                            <table style="width:100%; text-align:center; color:black">
+                                                <tr>
+                                                    <td width="8.33%" style="vertical-align:top; ">{{status.order.order_id}}</td>
+                                                    <td width="16.6%" style="vertical-align:top; ">{{status.timestamp}}</td>
+                                                    <td width="25%" style="vertical-align:top; ">{{status.status_desc}}</td>
+                                                    <td width="41%" style="text-align:left; vertical-align:top; ">{{status.remark}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
                                     {% if not forloop.counter.last %}
                                     <hr />
@@ -134,46 +146,48 @@
                             {% if not prod_details_error %}
                             <ul class="list-unstyled">
                                 <div class="row">
-                                    <div class='col-md-6' style="text-align:center;">
-                                        <h6 class="">Product Name</h6>
-                                    </div>
-                                    <div class="col-md-1" style="text-align:center;">
-                                        <h6>Price</h6>
-                                    </div>
-                                    <div class="col-md-2" style="text-align:center;">
-                                        <h6>Discount</h6>
-                                    </div>
-                                    <div class="col-md-2"style="text-align:center;">
-                                        <h6>Quantity</h6>
-                                    </div>
-                                    <div class="col-md-1" style="text-align:center;">
-                                        <h6>Total</h6>
+                                    <div class="col-md-12 mx-2">
+                                        <table style="width:100%; text-align:center; color:black">
+                                            <tr>
+                                                <td width="50%"><h6 class="">Product Name</h6></td>
+                                                <td width="8.3%"><h6>Price</h6></td>
+                                                <td width="16.7%"><h6>Discount</h6></td>
+                                                <td width="16.7%"><h6>Quantity</h6></td>
+                                                <td width="8.3%"><h6>Total</h6></td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                                 <hr />
                                 {% for product in ord_prod_obj %}
                                 <div class="row my-2">
-                                    <div class="col-md-6">
-                                        <li class="media">
-                                            <a href="product?id={{product.product.product_id}}"><img src="{{product.image}}" width="70px"  height="100px" class="mr-3" alt="..." /></a>
-                                            <div class="media-body">
-                                                <b>{{product.product.name}}</b>
-                                                <br />
-                                                {{product.product.desc}}
-                                            </div>
-                                        </li>
-                                    </div>
-                                    <div class="col-md-1" style="text-align:center;">
-                                        ${{product.price}}
-                                    </div>
-                                    <div class="col-md-2" style="text-align:center;">
-                                        {{product.discount}}%
-                                    </div>
-                                    <div class="col-md-2 butClick" style="text-align:center;">
-                                        {{product.quantity}}
-                                    </div>
-                                    <div class="col-md-1" style="text-align:center;">
-                                        ${{ product.total }}
+                                    <div class="col-md-12 mx-2">
+                                        <table style="width:100%; text-align:center; color:black">
+                                            <tr>
+                                                <td width="50%" style="vertical-align: top; text-align:left">
+                                                    <li class="media">
+                                                        <a href="product?id={{product.product.product_id}}"><img src="{{product.image}}" width="70px"  height="100px" class="mr-3" alt="..." /></a>
+                                                        <div class="media-body">
+                                                            <b>{{product.product.name}}</b>
+                                                            <br />
+                                                            {{product.product.desc}}
+                                                        </div>
+                                                    </li>
+                                                </td>
+                                                <td width="8.3%" style="vertical-align: top;">
+                                                    ${{product.price}}
+                                                </td>
+                                                <td width="16.7%" style="vertical-align: top;">
+                                                    {{product.discount}}%
+                                                </td>
+                                                <td width="16.7%" style="vertical-align: top;">
+                                                    {{product.quantity}}
+                                                </td>
+                                                <td width="8.3%" style="vertical-align: top;">
+                                                    ${{ product.total }}
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                                 <hr />

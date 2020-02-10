@@ -8,6 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="{% static 'home/css/alert_sid.css' %}" rel="stylesheet">
 
     <title>
         Github - Octa Profile
@@ -95,6 +96,15 @@
     
   </head>
   <body  style="background-color:black;">
+    
+   <!-- Display only for mobile and tablet device -->
+  {% if MOBILE_TABLET_FLAG == 'true' %}
+  <div class="alert_sid">
+    <span class="closebtn_sid" onclick="this.parentElement.style.display='none';">&times;</span> 
+    <strong>The UI might look out of place on mobile</strong>.... This App is best viewed on Desktop or Laptop.
+  </div>
+  {% endif %}
+
     <!-- TOP LEFT BUTTON -->
     <div class="gekkySidLink"> 
       <a href="http://www.geekysid.com"><img id="gekkySid_img" src="{% static 'octaprofile/images/geeky_sid.png' %}" style="width:90px;" onmouseover="gekkySidLink_hover(this)" onmouseout="gekkySidLink_out(this)" /></a>

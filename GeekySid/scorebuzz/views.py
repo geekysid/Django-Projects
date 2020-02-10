@@ -3,6 +3,37 @@ from django.http import HttpResponse
 import requests, time, json
 from bs4 import BeautifulSoup
 
+def my_view(request):
+    
+    # Let's assume that the visitor uses an iPhone...
+    print(request.user_agent.is_mobile) # returns True
+    print(request.user_agent.is_tablet) # returns False
+    print(request.user_agent.is_touch_capable) # returns True
+    print(request.user_agent.is_pc) # returns False
+    print(request.user_agent.is_bot) # returns False
+
+    # Accessing user agent's browser attributes
+    print(request.user_agent.browser)  # returns Browser(family=u'Mobile Safari', version=(5, 1), version_string='5.1')
+    print(request.user_agent.browser.family)  # returns 'Mobile Safari'
+    print(request.user_agent.browser.version)  # returns (5, 1)
+    print(request.user_agent.browser.version_string)   # returns '5.1'
+
+    # Operating System properties
+    print(request.user_agent.os)  # returns OperatingSystem(family=u'iOS', version=(5, 1), version_string='5.1')
+    print(request.user_agent.os.family)  # returns 'iOS'
+    print(request.user_agent.os.version)  # returns (5, 1)
+    print(request.user_agent.os.version_string)  # returns '5.1'
+
+    # Device properties
+    print(request.user_agent.device)  # returns Device(family='iPhone')
+    print(request.user_agent.device.family)  # returns 'iPhone'
+
+
+def device_check(request):
+    if (request.user_agent.is_mobile == True) or (request.user_agent.is_tablet == True):
+        return 'true'
+    else:
+        return 'false'
 
 
 def live_match_summary(soup, match_detail):
@@ -156,6 +187,8 @@ def past_match_summary(soup):
 
 
 def index(request):
+
+    MOBILE_TABLET_FLAG = device_check(request)
     
     # url to fetch all matches
     live_match_details = []
@@ -231,12 +264,15 @@ def index(request):
                 except Exception as e:
                     break
 
-    params = {'live_match_details': live_match_details}
+    params = {'live_match_details': live_match_details, 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG}
 
     return render(request, 'scorebuzz/index.html', params)
 
 
 def scorecard(request):
+
+    MOBILE_TABLET_FLAG = device_check(request)
+
     if request.method == 'GET' and 'link' in request.GET:
         match_url = request.GET.get('link','')
 
@@ -421,6 +457,7 @@ def scorecard(request):
             print('Error')
 
         params = {
+            'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG,
             'match_status': match_status_current,
             'match_summary': match_header,
             'score_summary': match_score_summary,

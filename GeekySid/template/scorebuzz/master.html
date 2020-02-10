@@ -17,6 +17,7 @@
   <meta name="author" content="Siddhant Shah">
 
   <!-- Bootstrap css -->
+  <link href="{% static 'home/css/alert_sid.css' %}" rel="stylesheet">
   <link href="{% static 'scorebuzz/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'scorebuzz/css/bootstrap-sb.css' %}" rel="stylesheet">
 
@@ -31,13 +32,19 @@
     }
 
     body {
-      padding: 60px 20px 0
+      padding: 0px 20px 0
     }
 
     footer {
       border-top: 1px solid #ddd;
-      padding: 30px;
-      margin-top: 50px
+      position: fixed;
+      background-color: #fff;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+      padding: 5px;
+      text-align: center;
+      font-size:smaller;
     }
 
     .row>[class*=col-] {
@@ -82,31 +89,41 @@
     .navbar-inverse {
       margin: 110px 0
     }
-  </style>
 
+  </style>
 </head>
 
 <body>
-  <div class="container">
+  
+  <!-- Display only for mobile and tablet device -->
+  {% if MOBILE_TABLET_FLAG == 'true' %}
+  <div class="alert_sid">
+    <span class="closebtn_sid" onclick="this.parentElement.style.display='none';">&times;</span> 
+    <strong>The UI might look out of place on mobile</strong>.... This App is best viewed on Desktop or Laptop.
+  </div>
+  {% endif %}
+  
+  <!-- wesite content -->
+  <div class="container" style="padding:30px">
 
     {% block content %}
 
     {% endblock %}
   </div>
   <!-- /container -->
-
+  <br /><br />
   <!-- Footer -->
-  <footer id="sticky-footer" class="fixed-bottom" style="background-color: #fff">
+  <footer id="sticky-footer" class="footer align-text-middle" style="background-color: #fff">
     <div class='container'>
       <div class='row align-middle text-left'>
         <table width="100%">
           <tr>
-            <td style="font-size:15px; text-align:left" width=25%>
+            <td style="text-align:left" width=25%>
               <ul class="list-inline">
                 <li class="list-inline-item">&copy 2020 - Siddhant Shah</li>
               </ul>
             </td>
-            <td style="font-size:15px; text-align:right" width=75%>
+            <td style="text-align:right" width=75%>
               <ul class="list-inline">
                 <li class="list-inline-item">Built with</li>
                 <li class="list-inline-item" style="color:dodgerblue">Python</li>
@@ -134,6 +151,6 @@
   <!-- Bootstrap 3 has typeahead optionally -->
   <script src="{% static 'scorebuzz/js/typeahead.min.js' %}"></script>
 
-</body>
+</body >
 
 </html>

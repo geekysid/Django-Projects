@@ -4,8 +4,45 @@ import requests, json
 import pandas as pd
 from datetime import datetime
 
+
+def my_view(request):
+    
+    # Let's assume that the visitor uses an iPhone...
+    print(request.user_agent.is_mobile) # returns True
+    print(request.user_agent.is_tablet) # returns False
+    print(request.user_agent.is_touch_capable) # returns True
+    print(request.user_agent.is_pc) # returns False
+    print(request.user_agent.is_bot) # returns False
+
+    # Accessing user agent's browser attributes
+    print(request.user_agent.browser)  # returns Browser(family=u'Mobile Safari', version=(5, 1), version_string='5.1')
+    print(request.user_agent.browser.family)  # returns 'Mobile Safari'
+    print(request.user_agent.browser.version)  # returns (5, 1)
+    print(request.user_agent.browser.version_string)   # returns '5.1'
+
+    # Operating System properties
+    print(request.user_agent.os)  # returns OperatingSystem(family=u'iOS', version=(5, 1), version_string='5.1')
+    print(request.user_agent.os.family)  # returns 'iOS'
+    print(request.user_agent.os.version)  # returns (5, 1)
+    print(request.user_agent.os.version_string)  # returns '5.1'
+
+    # Device properties
+    print(request.user_agent.device)  # returns Device(family='iPhone')
+    print(request.user_agent.device.family)  # returns 'iPhone'
+
+
+def device_check(request):
+    if (request.user_agent.is_mobile == True) or (request.user_agent.is_tablet == True):
+        return 'true'
+    else:
+        return 'false'
+
+
 # Create your views here.
 def index(request):
+    
+    MOBILE_TABLET_FLAG = device_check(request)
+
     if request.method == 'GET' and 'gh_username' in request.GET:
         # try:
         username = request.GET.get('gh_username', '')
@@ -141,6 +178,7 @@ def index(request):
                             starsPerRepo_dict[item[0]] = item[1]
                         
                         params = {
+                            'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG,
                             'username': username,
                             'success': 'true',
                             'personal_detail': personal_detail,
@@ -153,6 +191,7 @@ def index(request):
                         }
                     else:
                         params = {
+                            'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG,
                             'username': username,
                             'success': 'true',
                             'personal_detail': personal_detail,
@@ -166,6 +205,7 @@ def index(request):
 
                 else:
                     params = {
+                        'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG,
                         'username': username,
                         'success': 'true',
                         'personal_detail': personal_detail,
@@ -181,25 +221,25 @@ def index(request):
 
             # if the api request page is not found
             elif resp.status_code == 400 or resp.status_code == 404:
-                params = {'error': f'Damnnnn!!!! No account found with "{username}" username'}
+                params = {'error': f'Damnnnn!!!! No account found with "{username}" username', 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG}
                 return render(request, 'octaprofile/index.html', params)
 
             # if the api requested shares not-authorized status code
             elif resp.status_code == 401 or resp.status_code == 403:
-                params = {'error': f'Oppsss!!!! You might have exhausted your search limit (30 queries in 60 mins). Please try after 1 hour'}
+                params = {'error': f'Oppsss!!!! You might have exhausted your search limit (30 queries in 60 mins). Please try after 1 hour', 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG}
                 return render(request, 'octaprofile/index.html', params)
 
             # for anyother status code
             else:
-                params = {'error': f'Oppsss!!!! There seems to be an issue with Github API at this moment. Please try after some time.'}
+                params = {'error': f'Oppsss!!!! There seems to be an issue with Github API at this moment. Please try after some time.', 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG}
                 return render(request, 'octaprofile/index.html', params)
 
         else:
-            params = {'error': 'Not a valid Username'}
+            params = {'error': 'Not a valid Username', 'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG}
             return render(request, 'octaprofile/index.html', params)
         # except Exception as e:
         #     params = {'error': f'Oh no!!!! Something went wrong. Try again later!\n {str(e)}'}
         #     return render(request, 'octaprofile/index.html', params)    
     else:    
-        params = {'hello': ''}
+        params = {'MOBILE_TABLET_FLAG': MOBILE_TABLET_FLAG}
         return render(request, 'octaprofile/index.html', params)
