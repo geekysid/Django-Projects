@@ -22,6 +22,8 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
+    path('index', views.index, name='index'),
+    path('emailer', views.emailer, name='emailer'),
     path('bookstore/', include('bookstore.urls')),
     path('octaprofile/', include('octaprofile.urls')),
     path('scorebuzz/', include('scorebuzz.urls'))

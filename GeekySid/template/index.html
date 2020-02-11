@@ -450,7 +450,7 @@
 								</a>
 							</div>
 							<div class="desc">
-								<div class="category">Django based Ecommerce Website</div>
+								<div class="category">Ecommerce Website</div>
 								<a href="#Bookstore" class="name has-popup-media">BookStore</a>
 							</div>
 							<div id="Bookstore" class="popup-box mfp-fade mfp-hide">
@@ -673,7 +673,7 @@
 							<div class="icon"><span class="ion ion-email"></span></div>
 							<div class="name">Email</div>
 							<p>
-								<a href="mailto:siddhant.shah.1986@gmail.com">siddhant.shah.1986@gmail.com</a>
+								siddhant.shah.1986@gmail.com
 							</p>
 						</div>
 						<div class="service-item">
@@ -685,23 +685,23 @@
 						</div>
 					</div>
 					<div class="contact_form">
-						<form id="cform" method="post">
+						<form id="cform" method="post">{% csrf_token %}
 							<div class="group-val">
-								<input type="text" name="name" placeholder="Name" />
+								<input type="text" name="name" id='contact_name' placeholder="Name" />
 							</div>
 							<div class="group-val">
-								<input type="text" name="email" placeholder="Email" />
+								<input type="text" name="email" id='contact_email' placeholder="Email" />
 							</div>
 							<div class="group-val ct-gr">
-								<textarea name="message" placeholder="Message"></textarea>
+								<textarea name="message" id='contact_msg' placeholder="Message"></textarea>
 							</div>
-							<a href="#" class="btn fill" onclick="$('#cform').submit(); return false;" data-text="Send Message">Send Message</a>
+							<button class="btn fill" id="mailbtn" data-text="Send Message">Send Message</button>
 						</form>
-						<div class="alert-success">
+						<!-- <div class="alert-success">
 							<p>
 								Thanks, your message is sent successfully. I will contact you shortly!
 							</p>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -739,6 +739,75 @@
 	
 	<!-- Main Scripts -->
 	<script src="{% static 'home/js/glitche-scripts.js' %}"></script>
-	
+
+	<!-- Mailing Script-->
+	<script>
+		$('#mailbtn').on('click',function(e){
+			
+			// preventing from reloading the page
+			e.preventDefault();
+
+			var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+
+			if(!($('#contact_name').val() == null || $('#contact_name').val() == '')){
+				
+				$("#contact_name").removeAttr("style");
+
+				if(!($('#contact_email').val() == null || $('#contact_email').val() == '') && (emailReg.test($('#contact_email').val()))){
+				
+					$("#contact_email").removeAttr("style");
+					
+					if(!($('#contact_msg').val() == null || $('#contact_msg').val() == '')){
+
+						$("#contact_msg").removeAttr("style");	
+
+						$("#mailbtn").attr("disabled", true);
+
+						$('html, body').css("cursor", "wait");
+
+						$.ajax({
+							type : "POST",
+							url : 'emailer',
+							data : {
+								contact_name : $('#contact_name').val(),
+								contact_email : $('#contact_email').val(),
+								contact_msg : $('#contact_msg').val(),
+								csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+							},
+							beforeSend: function() {
+								
+							},
+							complete: function() {
+								
+							},
+							success: function(data) {
+								console.log('success')
+								//$('#cform').fadeOut();
+								$('#cform').html("<div class='name'><p>Success</p></div>"),
+								//$('.alert-success').delay(1000).fadeIn();
+								$('html, body').css("cursor", "default");
+							},
+							error: function(err){
+								$('#cform').html("<div class='name'><p> There is an error with my firewall thats preventing to get connect to smtp. I am working on it and should be resolved soon. Meanwhile feel free to drop me mail on siddhant.shah.86@gmail.com</p></div>"),
+								$("#AssignTPM").removeAttr("disabled"),
+								$('html, body').css("cursor", "auto");
+							}
+						});
+					}
+				
+
+					else{
+						$("#contact_msg").attr("style", "border: 1px solid red");
+					}
+				}
+				else{
+					$("#contact_email").attr("style", "border: 1px solid red");
+				}
+			}
+			else{
+				$("#contact_name").attr("style", "border: 1px solid red");
+			}
+		});
+	</script>
 </body>
 </html>

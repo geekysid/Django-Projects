@@ -8,6 +8,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.conf import settings
+import emoji
 
 def my_view(request):
     
@@ -128,13 +129,16 @@ def checkout(request):
                     msg = MIMEMultipart()
                     msg['To'] = email
                     msg['From'] = Email_User
-                    msg['Subject'] = 'GeekySid - Bookstore: Your order (Book -' + str(product) + ') is placed.'
+                    msg['Subject'] = 'GeekySid - Bookstore: Your order (Book -' + str(product) + ') is placed. ' + emoji.emojize(":thumbs_up:")
 
                     prod_list = ""
                     for prod in email_deatils:
                         prod_list = prod_list + '<div><img src="' + email_deatils[prod][3] + '" width="70px" height="100px" /> <b>'+ prod +'</b>, Qnty: ' + str(email_deatils[prod][0]) + ' @ $' + str(email_deatils[prod][2]) + ' with ' + str(email_deatils[prod][1]) + '% discount.</div><br />'
 
-                    body = 'Hello ' + name + ',<p> Thankyou for chossing Bookstore. <p>Your order has been placed successfully and should reach your doorstep in next 5-6 working days.<p>Below is the details of your order.<p>' + prod_list
+                    body = 'Hello ' + name + ',<p> Thankyou for choosing Bookstore. <p>Your order has been placed successfully and should reach your doorstep in next 5-6 working days.' \
+                        '<p>Below is the details of your order.<p>' + prod_list + '<p> <span style="color:red">Please note This is just a dummy mail. you wont receive any books.</span> ' \
+                        '' + emoji.emojize(":grinning_face_with_smiling_eyes:") + '' \
+                        '<p><br />--<br />' + settings.EMAIL_SIGNATURE
 
                     msg_body = MIMEText(body,'html')
                     

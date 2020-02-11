@@ -57,6 +57,7 @@ CMD FOR SERVER
                 Now press control+X -> Y -> Enter to save
     16) Now we will retart the service
         >> sudo systemctl restart sshd
+
     17) Setting up a firewall
        a) install firewall
             >> sudo apt-get install ufw
@@ -72,7 +73,7 @@ CMD FOR SERVER
     
 Now we will Upload our website to the server (Make sure we have a requirement.txt)
 CMD FOR LOCAL MACHINE
-    18) Actuvate the virtual Env
+    18) Activate the virtual Env
         >> source desktop/python/django_final/geekysid/env/bin/activate
     19) Now we will check all the dependencies in our project
         >> pip freeze
@@ -81,11 +82,19 @@ CMD FOR LOCAL MACHINE
     21) Copy the requirements.txt file to the project
     22) Copying project to home folder of the server (make terminal points to the folder which has our project)
         >> scp -r geekysid siddhant@172.105.38.72:~/
->> scp -r geekysid/scorebuzz/views.py siddhant@172.105.38.72:~/geekysid/scorebuzz/
+>> scp -r geekysid/bookstore/views.py siddhant@172.105.38.72:~/geekysid/bookstore/
+>> scp -r geekysid/geekysid/views.py siddhant@172.105.38.72:~/geekysid/geekysid/
+>> scp -r geekysid/geekysid/settings.py siddhant@172.105.38.72:~/geekysid/geekysid/
+>> scp -r geekysid/template/bookstore/index.html siddhant@172.105.38.72:~/geekysid/template/bookstore/
+>> scp -r geekysid/template/index.html siddhant@172.105.38.72:~/geekysid/template/
+>> scp -r geekysid/requirements.txt siddhant@172.105.38.72:~/geekysid/
+>> scp -r geekysid/geekysid/urls.py siddhant@172.105.38.72:~/geekysid/geekysid/
+>> scp -r geekysid/statics/home/js siddhant@172.105.38.72:~/geekysid/statics/home/
 
 CMD FOR SERVER
     23) We will check of the project is copied to the server
         >> ls
+    
     24) Create a virtual env
         a) Install python pip
             >> sudo apt-get install python3-pip
@@ -97,16 +106,21 @@ CMD FOR SERVER
             >> python3 -m venv env
         e) activate virtual env
             >> source env/bin/activate
+    
     25) Now install ate dependencies in requirements.txt
         >> pip install -r requirements.txt
+    
     26) Now we will change few setting our project to test our project on linode server
         a) open settings.py
             >> sudo nano geekysid/settings.py 
                     ALLOWED_HOST = ['172.105.38.72']
                     Now press control+X -> Y -> Enter to save
+    
     27) Testing our project
         > python manage.py runserver 0.0.0.0:8000
+    
     28) now go to browser and go to 172.105.38.72:8000
+    
     29) Now we will want to run apache server and not django server for perfomance issue
         a) Kill the present django server 
             >> control+can
@@ -123,8 +137,6 @@ CMD FOR SERVER
             >> sudo cp 000-default.conf geekysid.conf
         c)
             >> sudo nano geekysid.conf
-
-
                     <VirtualHost *:80>
                         .
                         .
@@ -170,11 +182,12 @@ CMD FOR SERVER
         >> sudo nano geekysid/geekysid/settings.py      # copy SECRET_KEY and
         >> sudo nano /etc/config.json   
                 {
-                    'SECRET_KEY': 'cw2qe=9+=x@=qpd#$0+da4#s*$+2ui7bli98=*o2u#_&+=+h99',
-                    'EMAIL_USER': 'siddhant.shah.1986@gmail.com',
-                    'EMAIL_USER": "donotreply.sid@gmail.com",
+                    "SECRET_KEYS": "cw2qe=9+=x@=qpd#$0+da4#s*$+2ui7bli98=*o2u#_&+=+h99",
+                    "EMAIL_HOST": "smtp.gmail.com",
+                    "EMAIL_USER": "donotreply.sid@gmail.com",
                     "EMAIL_PASS": "g00gle@ 123$;",
-                    'EMAIL_PORT': 465
+                    "EMAIL_PORT": 465,
+                    "EMAIL_SIGNATURE": "123"
 
                 }
         >> sudo nano /geekysid/geekysid/settings.py
@@ -196,6 +209,6 @@ CMD FOR SERVER
     35) We will restart apache server   
         >> sudo service apache2 restart
 
-
+ERROR: Internal Server Error
 
 

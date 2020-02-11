@@ -19,27 +19,27 @@ _EmailUser = ''
 _EmailPass = ''
 _EmailHost = ''
 _EmailPort = ''
+_EmailSignature = ''
 
 pathToFile= os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 file = os.path.join(pathToFile, 'SecretFile.json')
 
-if os.path.exists(file):
-    with open(file, 'r') as config_file:
-
 # if os.path.exists('/etc/config.json'):
 #     with open('/etc/config.json', 'r') as config_file:
+
+if os.path.exists(file):
+    with open(file, 'r') as config_file:
         sensetive_data = json.load(config_file)
         _SecretKey = sensetive_data['SECRET_KEYS']
         _EmailUser = sensetive_data['EMAIL_USER']
         _EmailPass = sensetive_data['EMAIL_PASS']
         _EmailHost = sensetive_data['EMAIL_HOST']
         _EmailPort = sensetive_data['EMAIL_PORT']
-
+        _EmailSignature = sensetive_data['EMAIL_SIGNATURE']
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -164,3 +164,6 @@ EMAIL_HOST = _EmailHost
 EMAIL_PORT = _EmailPort
 EMAIL_USER = _EmailUser
 EMAIL_PASS = _EmailPass
+# EMAIL_SIGNATURE = "test"
+
+EMAIL_SIGNATURE = _EmailSignature
