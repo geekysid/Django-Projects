@@ -9,6 +9,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.conf import settings
 import emoji
+from geekysid import cvEmailer
 
 def my_view(request):
     
@@ -104,7 +105,7 @@ def checkout(request):
                     cart_dict = json.loads(cart)
                     # cart_dict = ast.literal_eval(cart)  # used this function to convert string to dictionary as json.loads() was not working for some reason
 
-                    email_deatils = {}
+                    product_deatils = {}
 
                     # Adding all the proucts in a order to the Ordered_Product object
                     for item in cart_dict:
@@ -112,43 +113,26 @@ def checkout(request):
                         order_product = Ordered_Product(order=order, product=product, quantity=cart_dict[item][1], discount=cart_dict[item][3], price=float(cart_dict[item][2]), image=cart_dict[item][4])
                         order_product.save()
 
-                        # email_deatils[str(product)] =  [qnty, discount, price, img]
-                        email_deatils[str(product)] =  [cart_dict[item][1], cart_dict[item][3], float(cart_dict[item][2]), cart_dict[item][4]]
+                        # product_deatils[str(product)] =  [qnty, discount, price, img]
+                        product_deatils[str(product)] =  [cart_dict[item][1], cart_dict[item][3], float(cart_dict[item][2]), cart_dict[item][4]]
 
                     # Setting status of the order as 'Order Placed' in Order_Status Table
                     order_status = Order_Status(order= order, status_desc = "Order successfully placed", remark="We will get back to your via mail about approximate date of delivery. Genarally Arrival time is between 5-8 workind days depending on the location.")
                     order_status.save()
 
                     # SENDING EMAIL CONFIRMATION TO THE CLIENT ABOUT ORDER PLACED
-
-                    Email_User = settings.EMAIL_USER
-                    Email_Pass = settings.EMAIL_PASS
-                    smtp_address = settings.EMAIL_HOST
-                    port = settings.EMAIL_PORT
-
-                    msg = MIMEMultipart()
-                    msg['To'] = email
-                    msg['From'] = Email_User
-                    msg['Subject'] = 'GeekySid - Bookstore: Your order (Book -' + str(product) + ') is placed. ' + emoji.emojize(":thumbs_up:")
-
-                    prod_list = ""
-                    for prod in email_deatils:
-                        prod_list = prod_list + '<div><img src="' + email_deatils[prod][3] + '" width="70px" height="100px" /> <b>'+ prod +'</b>, Qnty: ' + str(email_deatils[prod][0]) + ' @ $' + str(email_deatils[prod][2]) + ' with ' + str(email_deatils[prod][1]) + '% discount.</div><br />'
-
-                    body = 'Hello ' + name + ',<p> Thankyou for choosing Bookstore. <p>Your order has been placed successfully and should reach your doorstep in next 5-6 working days.' \
-                        '<p>Below is the details of your order.<p>' + prod_list + '<p> <span style="color:red">Please note This is just a dummy mail. you wont receive any books.</span> ' \
-                        '' + emoji.emojize(":grinning_face_with_smiling_eyes:") + '' \
-                        '<p><br />--<br />' + settings.EMAIL_SIGNATURE
-
-                    msg_body = MIMEText(body,'html')
                     
-                    msg.attach(msg_body)
+                    prod_list = ""
+                    for prod in product_deatils:
+                        prod_list = prod_list + '<div><img src="' + product_deatils[prod][3] + '" width="70px" height="100px" /> <b>'+ prod +'</b>, Qnty: ' + str(product_deatils[prod][0]) + ' @ $' + str(product_deatils[prod][2]) + ' with ' + str(product_deatils[prod][1]) + '% discount.</div><br />'
 
-                    with smtplib.SMTP_SSL(smtp_address, port) as smtp:
-                        smtp.login(Email_User, Email_Pass)
-                        smtp.sendmail(Email_User, email, msg.as_string())
+                    body = '<strong>Your order has been placed successfully and should reach your doorstep in next 5-6 working days.</strong>' \
+                            '<p>Below is the details of your order.<p>' + prod_list + ''
+
+                    cvEmailer.bookStore_checkout_mail(email, body)
 
                     return redirect("orders?orderid="+str(order)+"&emailadd="+email+"&checkoutStatus=success")
+
                 except Exception as e:
                     return render(request, "bookstore/checkout.html", {'errorMessage': "Exception occured: "+ str(e)})
                 

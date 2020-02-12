@@ -14,12 +14,14 @@ import os
 import json
 
 # fetching sensetive data stored in a json file 
-_SecretKey = ''
-_EmailUser = ''
-_EmailPass = ''
-_EmailHost = ''
-_EmailPort = ''
-_EmailSignature = ''
+# Information about Email username and password to be used to sent mail to users
+EMAIL_HOST = ''
+EMAIL_PORT = ''
+EMAIL_USER = ''
+EMAIL_PASS = ''
+EMAIL_SIGNATURE = ''
+EMAIL_SELF = ''
+SECRET_KEY = ''
 
 pathToFile= os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 file = os.path.join(pathToFile, 'SecretFile.json')
@@ -29,13 +31,19 @@ file = os.path.join(pathToFile, 'SecretFile.json')
 
 if os.path.exists(file):
     with open(file, 'r') as config_file:
-        sensetive_data = json.load(config_file)
-        _SecretKey = sensetive_data['SECRET_KEYS']
-        _EmailUser = sensetive_data['EMAIL_USER']
-        _EmailPass = sensetive_data['EMAIL_PASS']
-        _EmailHost = sensetive_data['EMAIL_HOST']
-        _EmailPort = sensetive_data['EMAIL_PORT']
-        _EmailSignature = sensetive_data['EMAIL_SIGNATURE']
+        smtp_data = json.load(config_file)
+        SECRET_KEY = smtp_data['SECRET_KEYS']
+        EMAIL_USER = smtp_data['EMAIL_USER']
+        EMAIL_PASS = smtp_data['EMAIL_PASS']
+        EMAIL_HOST = smtp_data['EMAIL_HOST']
+        EMAIL_PORT = smtp_data['EMAIL_PORT']
+        EMAIL_SIGNATURE = smtp_data['EMAIL_SIGNATURE']
+        EMAIL_SELF = smtp_data['EMAIL_SELF']
+
+
+# Connetcting to MY CV
+CV_PATH = os.path.join(pathToFile, 'SiddhantShah-Resume.pdf')
+# CV_PATH ='/etc/SiddhantShah-Resume.pdf'    # for server
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -45,7 +53,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = _SecretKey
+SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -159,11 +167,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')  # place where django will store 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# Information about Email username and password to be used to sent mail to users
-EMAIL_HOST = _EmailHost
-EMAIL_PORT = _EmailPort
-EMAIL_USER = _EmailUser
-EMAIL_PASS = _EmailPass
-# EMAIL_SIGNATURE = "test"
 
-EMAIL_SIGNATURE = _EmailSignature

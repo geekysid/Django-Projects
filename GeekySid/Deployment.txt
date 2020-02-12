@@ -84,12 +84,19 @@ CMD FOR LOCAL MACHINE
         >> scp -r geekysid siddhant@172.105.38.72:~/
 >> scp -r geekysid/bookstore/views.py siddhant@172.105.38.72:~/geekysid/bookstore/
 >> scp -r geekysid/geekysid/views.py siddhant@172.105.38.72:~/geekysid/geekysid/
+>> scp -r geekysid/geekysid/cvEmailer.py siddhant@172.105.38.72:~/geekysid/geekysid/
 >> scp -r geekysid/geekysid/settings.py siddhant@172.105.38.72:~/geekysid/geekysid/
 >> scp -r geekysid/template/bookstore/index.html siddhant@172.105.38.72:~/geekysid/template/bookstore/
+>> scp -r geekysid/template/bookstore/master.html siddhant@172.105.38.72:~/geekysid/template/bookstore/
+>> scp -r geekysid/template/scorebuzz/index.html siddhant@172.105.38.72:~/geekysid/template/scorebuzz/
+>> scp -r geekysid/template/scorebuzz/master.html siddhant@172.105.38.72:~/geekysid/template/scorebuzz/
+>> scp -r geekysid/template/octaprofile/index.html siddhant@172.105.38.72:~/geekysid/template/octaprofile/
 >> scp -r geekysid/template/index.html siddhant@172.105.38.72:~/geekysid/template/
 >> scp -r geekysid/requirements.txt siddhant@172.105.38.72:~/geekysid/
 >> scp -r geekysid/geekysid/urls.py siddhant@172.105.38.72:~/geekysid/geekysid/
 >> scp -r geekysid/statics/home/js siddhant@172.105.38.72:~/geekysid/statics/home/
+>> scp -r geekysid/statics/"SiddhantShah-Resume.pdf" siddhant@172.105.38.72:~/etc
+>> scp -r geekysid/statics/"SiddhantShah-Resume.pdf" siddhant@172.105.38.72:~/geekysid/statics
 
 CMD FOR SERVER
     23) We will check of the project is copied to the server

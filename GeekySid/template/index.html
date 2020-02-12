@@ -121,7 +121,7 @@
 								<li><strong>E-mail:</strong> siddhant.shah.1986@gmail.com</li>
 							</ul>
 						</div>
-						<div class="bts"><a href="#" class="btn fill" data-text="Download CV">Download CV</a></div>
+						<div class="bts"><a href="{% static 'SiddhantShah-Resume.pdf' %}" class="btn fill" data-text="Download CV" download>Download CV</a></div>
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -145,16 +145,7 @@
 									</p>
 								</div>
 								<div class="resume-item">
-									<div class="date">2014 - 2015</div>
-									<div class="name"> </div>
-									<p>
-										Responsibility: .<br />
-                                        Tools: <br />
-                                        Skills: <i> </i>
-									</p>
-								</div>
-								<div class="resume-item">
-									<div class="date">2012 - 2014</div>
+									<div class="date">2012 - 2015</div>
 									<div class="name">Asp.Net Developer - Shivam Technology</div>
 									<p>
 										Responsibility: Developing ERP for a Hologram manufacturing company.<br />
@@ -761,6 +752,9 @@
 
 						$("#contact_msg").removeAttr("style");	
 
+						$("#mailbtn").removeAttr("data-text");
+						$("#mailbtn").attr("data-text", "Wait");
+						$("#mailbtn").html("WAIT");
 						$("#mailbtn").attr("disabled", true);
 
 						$('html, body').css("cursor", "wait");
