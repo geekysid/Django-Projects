@@ -1,0 +1,283 @@
+{% extends 'riddlechamp/riddle_master.html' %}
+{% load static %}
+
+    {% block title %}
+	<title>riddlechampz Den - Create Den</title>
+    {% endblock %}
+
+
+	{% block body %}
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="login100-more" style="background-image: url('images/bg-01.jpg');"></div>
+
+			<div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+				<form class="login100-form validate-form" method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					<span class="login100-form-title p-b-59">
+						Create Den
+					</span>
+
+					<div id="name_div" class="wrap-input100 validate-input" data-validate="Name is required">
+						<span class="label-input100">Name</span>
+						<input class="input100" type="text" id="name" name="name" placeholder="Name of Den..." />
+					</div>
+					<div id="desc_div" class="wrap-input100 validate-input" data-validate="Description is required">
+						<span class="label-input100">Description</span>
+						<input class="input100" type="text" id="desc" name="desc" placeholder="Description..." />
+					</div>
+					<div id="avatar_div" class="wrap-input100 validate-input">
+						<span class="label-input100">Avatar</span>
+						<input class="input100" type="file" id="avatar" name="avatar" onchange="validateFileType(this)" />
+					</div>
+					<div id="riddle_per_day_div" class="wrap-input100 validate-select" data-validate="This is required">
+						<span class="label-input100">Number of Riddle/Day</span>
+						<select class="input100" id="riddle_per_day" name="riddle_per_day">
+							<option value="0">---Select---</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							</select>
+					</div>
+					<div id="riddle_activation_div" class="wrap-input100 validate-select" data-validate="This is required">
+						<span class="label-input100">Time of 1st Riddle in Day</span>
+						<select class="input100" id="riddle_start" name="riddle_start">
+						</select>
+					</div>
+					<div id="hours_bw_riddle_div" class="wrap-input100 validate-select" data-validate="This is required">
+						<span class="label-input100">Time of 1st Riddle in Day</span>
+						<select class="input100" id="hours_bw_riddle" name="hours_bw_riddle">
+							</select>
+					</div>
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button id="btnClick" type="submit" class="login100-form-btn">
+								Create My Den
+							</button>
+						</div>
+
+						<a href="/riddlechamp/index" class="dis-block txt3 hov1 p-r-30 p-t-10 p-b-10 p-l-30">
+							Home
+							<i class="fa fa-long-arrow-right m-l-5"></i>
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+
+
+    {% block scripts %}
+	<script>
+        // function for change cursor to wait on ajax call
+		$(document).ajaxStart(function() {
+			$(document.body).css({'cursor' : 'wait'});
+		}).ajaxStop(function() {
+			$(document.body).css({'cursor' : 'default'});
+        });
+
+		// Validation
+		$("#name").focusout(function(){
+			value = $(this).val()
+			if (value.length < 5 || value.length > 20 ){
+				$("#name").focus()
+				swal({
+					title: 'Invalid Name',
+					text: 'Name should be betwwn 5-20 characters',
+					icon: "error",
+					button: "Sorry",
+				});
+			}
+			else{
+				$("#desc").focus()}
+		});
+
+		// Validation
+		$("#desc").focusout(function(){
+			value = $(this).val()
+			if (value.length < 20 || value.length > 80 ){
+				$("#desc").focus()
+				swal({
+					title: 'Invalid Description',
+					text: 'Name should be betwwn 20-80 characters',
+					icon: "error",
+					button: "Sorry",
+				});
+			}
+			else{
+				$("#avatar").focus()}
+		});
+
+		// validating riddle_per_day
+		$("#riddle_per_day").focusout(function(){
+			value = $(this).val()
+			if(value == "0"){
+				swal({
+					title: 'Invalid Choice',
+					text: 'Please select number of riddles that needs to be asked per day.',
+					icon: "error",
+					button: "ok",
+				});
+			}
+		});
+
+		// validating riddle_per_day
+		$("#riddle_per_day").change(function(){
+			value = $(this).val()
+			if(value > 0){
+				$("#riddle_start").html(
+					'<option value="0">---Select---</option>'+
+					'<option value="1">8:00 AM</option>'+
+					'<option value="2">10:00 AM</option>'+
+					'<option value="3">12:00 Noon</option>'+
+					'<option value="4">2:00 PM</option>'
+				)
+				
+				$("#riddle_start").focus()
+			}
+			else{
+				$("#riddle_per_day").focus()
+				swal({
+					title: 'Invalid Choice',
+					text: 'Please select number of riddles that needs to be asked per day.',
+					icon: "error",
+					button: "ok",
+				});
+			}
+		});
+
+		// validating riddle_start
+		$("#riddle_start").focusout(function(){
+			value = $(this).val()
+			if(value > 0){
+				$("#hours_bw_riddle").html(
+					'<option value="0">---Select---</option>'+
+					'<option value="2">2 Hrs</option>'+
+					'<option value="3">3 Hrs</option>'+
+					'<option value="4">4 Hrs</option>'+
+					'<option value="6">6 Hrs</option>'
+			)}
+			else{
+				swal({
+					title: 'Invalid Choice',
+					text: 'Please select Time at which first riddle will be asked in the day.',
+					icon: "error",
+					button: "ok",
+				});
+			}
+		});
+
+		// validating hours_bw_riddle
+		$("#hours_bw_riddle").focusout(function(){
+			value = $(this).val()
+			if(value == 0){
+				swal({
+					title: 'Invalid Choice',
+					text: 'Please select number of hours between each riddles in a day',
+					icon: "error",
+					button: "ok",
+				});
+			}
+		});
+
+		// validation vavatar
+		function validateFileType(input) {
+			var fileName = input.value,
+				idxDot = fileName.lastIndexOf(".") + 1,
+				extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+
+			if (["jpg", "jpeg", "png"].includes(extFile)) {
+				if (input.files[0].size / 1000 < 500) {
+					$("#riddle_per_day").focus()
+				}
+				else {
+					input.value = ""
+					swal({
+						title: 'Size Too Big',
+						text: 'We only accept photo of size less then 500KB.',
+						icon: "error",
+						button: "Sorry",
+					});
+				}
+			} else {
+				input.value = ""
+				swal({
+					title: 'Invalid Format',
+					text: 'Format accepted: JPG, JPEG, PNG',
+					icon: "error",
+					button: "Sorry",
+				});
+			}
+		}
+
+		// ON SUBMIT FORM
+		$("form").submit(function(e){
+
+			e.preventDefault();
+
+			if($("#name").val().length > 0 && $("#riddle_per_day").val() != 0 && $("#riddle_start").val() != 0 && $("#hours_bw_riddle").val() != 0  && $("#avatar").val() != ""){
+				
+				var data = new FormData(this)
+				
+				//for (var [key, value] of data.entries()) { 
+				//	console.log(key, value);
+				//}
+
+				$.ajax({
+					type: "POST",
+					url: "",
+					// headers: {'X-CSRFToken': '{{ csrf_token }}'}, // for csrf token
+					data: data,
+					dataType: 'json',
+					processData: false,  // tell jQuery not to process the data
+					contentType: false,  // tell jQuery not to set contentType
+					success: function(result) {
+						if(result.succesFlag == true){
+							swal({
+								title: 'Den Created Successfully',
+								text: 'You are being redicted to the newly created den in 5 seconds',
+								icon: "success",
+								button: "Yaaayyyyyy",
+							});
+							window.location.href = "/riddlechamp/den/"+result.den_uincode
+						}
+						else{
+							if(result.msg == 'Exception'){
+								swal({
+									title: 'Exception Occurred',
+									text: 'There was an exception while creating Den. Please try again or contact System administrator.',
+									icon: "error",
+									button: "Ohh Noo....",
+								});
+							}
+							else if (result.msg == 'Invalid Request') {
+								window.location.href = "/account/login/e/8be6"
+							}
+							else if (result.msg == 'Login Required') {
+								window.location.href = "/account/login/e/7955"
+							}
+						}
+					},
+					error: function(){
+						swal({
+							title: 'Error Occurred',
+							text: 'We encountered an error while creating Den. Please try again or contact System administrator.',
+							icon: "error",
+							button: "This is sooo BAD....",
+						});
+					}
+				});
+			}
+			else{
+				swal({
+					title: 'Incomplete Form',
+					text: 'It seems not all fields are filled. please complete the form.',
+					icon: "error",
+					button: "Sorry",
+				});
+			}
+		})
+	</script>
+	{% endblock %}

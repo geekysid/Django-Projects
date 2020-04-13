@@ -1,0 +1,783 @@
+{% extends 'riddlechamp/hunterzDen_master.html' %}
+{% load static %}
+
+{% block title %}
+    <title>
+        Den - {{ den.name }}
+    </title>
+{% endblock %}
+
+
+{% block body %}
+    {% if user.is_authenticated %}
+
+    <!-- TOP LEFT HOME BUTTON -->
+    <div class="homeBtn">
+        <a href="/riddlechamp/index"><img id="homeBtn_img" src="{% static 'riddlechamp/img/home.png' %}" style="width:60px;" onmouseover="homeBtn_hover(this)" onmouseout="homeBtn_out(this)" title="Home" /></a>
+    </div>
+    <!-- TOP RIGHT LOGOUT BUTTON -->
+    <div class="logoutBtn">
+        <a href="/account/logout"><img id="logoutBtn_img" src="{% static 'riddlechamp/img/logout.png' %}" style="width:60px;"  onmouseover="logoutBtn_hover(this)" onmouseout="logoutBtn_out(this)" title="Logout" /></a>
+    </div>
+
+
+    <!-- DIV to hold data for Alert -->
+    {% if alertData == None %}
+    {% else %}
+    <div style="visibility:hidden" id="alertData_div" data-type="{{alertData.Type}}" data-title="{{alertData.title}}"
+        data-message="{{alertData.message}}">
+    </div>
+    {% endif %}
+
+    <div class="bg_color" style="width:100%; height:550px; position:absolute;">
+    </div>
+
+    <div class="jumbotron" style="background-color:white;">
+
+        <!-- DEN DETAILS STARTS -->
+        <div class="container">
+            <div class='row'>
+                <div class='col-sm-12 text-center mt-10' style='color:white'>
+                    <div>
+                        <p>
+                            <img src="{{den.avatar.url}}"
+                                style="border-radius: 50%; border: 7px solid #C0C0C0; width:150px;height:150px"
+                                title="{{den.name}}" />
+                        </p>
+                    </div>
+                    <p><a href="#" style="color:white; font-size:x-large;">{{den.name}}</a></p>
+                    <p style="color:white; font-size:medium;">{{userProfile.desc}}</p>
+
+                    <!-- WORK, LOCATION, JOINED -->
+                    <div width="100%" style="text-align: center;">
+                        <div class="row justify-content-md-center">
+                            <div class="col-md-auto mt-3" style="text-align: center;">
+                                <div class="row">
+                                    <div class="col mt-3" style="min-width:150px">
+                                        <img id="next_img" src="{% static 'riddlechamp/img/active.png' %}" style="width:48px;"
+                                            onmouseover="active_hover(this)" onmouseout="active_out(this)"
+                                            title="Next Riddle At" />
+                                        <br />
+                                        <h5>
+                                            {% if den.started_at == '' %}
+                                            Not Mentioned
+                                            {% else %}
+                                            {{den.started_at }}
+                                            {% endif %}
+                                        </h5>
+                                    </div>
+                                    <div class="col  mt-3" style="min-width:100px">
+                                        <img id="admin_img" src="{% static 'riddlechamp/img/admin.png' %}" style="width:52px;"
+                                            onmouseover="admin_hover(this)" onmouseout="admin_out(this)"
+                                            title="Den Admin" />
+                                        <br />
+                                        <h5>
+                                            {{den.admin}}
+                                        </h5>
+                                    </div>
+                                    <div class="col mt-3" style="min-width:100px">
+                                        <img id="invitationcode_img" src="{% static 'riddlechamp/img/invitationcode.png' %}"
+                                            style="width:50px;" onmouseover="invitationcode_hover(this)"
+                                            onmouseout="invitationcode_out(this)" title="Invitation Code" />
+                                        <br />
+                                        <h5>
+                                            {{den.uin_code}}
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STATISTICS -->
+                    <div class="mt-4" width="100%" style="text-align: center;">
+                        <div class="row justify-content-md-center">
+                        {% if request.user_agent.is_mobile %}
+                        <div class="col mx-1 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+                        {% else %}
+                        <div class="mx-2 my-2"
+                        style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+                        {% endif %}
+                            <div class="mx-2 my-2">
+                                <p style="font-size: 14px; color:#ddd; letter-spacing: 1px; ">MY RANK</p>
+                                <p style="font-size: 30px; color:#fff"><b>{{den.UserRank}}</b></p>
+                            </div>
+                        </div>
+                        {% if request.user_agent.is_mobile %}
+                        <div class="col mx-1 my-2"
+                        style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+                        {% else %}
+                        <div class="mx-2 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+                        {% endif %}
+                            <div class="mx-2 my-2">
+                                <p style="font-size: 14px; color:#ddd; letter-spacing: 1px;">MY SCORE</b>
+                                </p>
+                                <p style="font-size: 30px; color:#fff"><b>{{den.UserScore}}</b></p>
+                            </div>
+                        </div>
+                        {% if request.user_agent.is_mobile %}
+                        <div class="col mx-1 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+                        {% else %}
+                        <div class="mx-2 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+                        {% endif %}
+                            <div class="mx-2 my-2">
+                                <p style="font-size: 14px; color:#ddd; letter-spacing: 1px;"># HUNTERS
+                                </p>
+                                <p style="font-size: 30px; color:#fff"><b>{{den.TotalHunters}}</b></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- DEN DETAILS END  -->
+
+
+        <!-- SPACE DIV STARTS -->
+        <div class="container">
+            <div class='row mx-2 my-2 align-middle'>
+                <div class="col-sm-12 align-middle" style="height:50px">
+                    <p></p>
+                    <!-- <hr style="width:100%; border: 1px solid #222;" /> -->
+                </div>
+            </div>
+        </div>
+        <!-- SPACE DIV ENDS -->
+
+
+        <!-- DEN STATS START -->
+        <div class="container">
+            <div class='row my-2  align-middle'>
+
+                <!-- MEMBERS LIST WITH SCORE STARTS -->
+                <div class="col-lg-4 col-md-6 col-sm-12" style="min-height:440px">
+                    <!-- Nav tabs -->
+                    <div class="tm-home-box-1">
+                        <ul class="nav nav-tabs tm-yellow-bg" role="tablist" id="hotelCarTabs">
+                            <li role="presentation" class="active">
+                                <a href="#Hunter" aria-controls="Hunter" role="tab"
+                                    data-toggle="tab">Hunters</a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#invites" aria-controls="invites" role="tab"
+                                    data-toggle="tab">Invite
+                                    Friends</a>
+                            </li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <!-- Invites -->
+                            <div role="tabpanel" class="tab-pane fade in tm-white-bg" id="invites">
+                                <div class="tm-search-box effect2">
+                                    <form action="#" method="post" class="hotel-search-form">
+                                        {% csrf_token %}
+                                        <div class="tm-form-inner"
+                                            style="max-height:297px; min-height:297px; background-color:#eee">
+                                            <div class="form-group">
+                                                Enter email address of friends to invite them.
+                                            </div>
+                                            <div class="form-group">
+                                                <div class='input-group date' id='datetimepicker1'>
+                                                    <input type='email' id="email_1"
+                                                        class="form-control"
+                                                        placeholder="email address..." />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class='input-group date' id='datetimepicker1'>
+                                                    <input type='email' disabled id="email_2"
+                                                        class="form-control"
+                                                        placeholder="email address..." />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class='input-group date' id='datetimepicker1'>
+                                                    <input type='email' disabled id="email_3"
+                                                        class="form-control"
+                                                        placeholder="email address..." />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" id="den_id_div"
+                                                style="visibility:hidden" data-den="{{den.den_id}}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group tm-yellow-gradient-bg text-center">
+                                            <button type="submit" name="submit" id="sentInviteBtn"
+                                                class="tm-yellow-btn">Sent Invites</button>
+                                            <img id="ajax_gif" src="{% static 'riddlechamp/img/wait.gif' %}"
+                                                width="10%" style="visibility:hidden" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- Members -->
+                            <div role="tabpanel" class="tab-pane fade in active tm-white-bg"
+                                id="Hunter">
+                                <div class="tm-search-box effect2">
+                                    <div class="tm-form-inner"
+                                        style="max-height:297px; min-height:297px; background-color:#eee;">
+                                        <!-- Hunters List -->
+                                        <div class="hunter_div_outer">
+                                            <div class="hunter_div_inner">
+                                                <table class="table table-filter">
+                                                    {% for hunter in hunters %}
+                                                    <tr>
+                                                        <!-- Rank -->
+                                                        <td width="5%" style="font-size: larger;">
+                                                            <div class="ckbox"
+                                                                style="text-align: center; ">
+                                                                {% if hunter.rank == 1 %}
+                                                                <span class="badge badge-success"
+                                                                    style="background-color: #FFB404;">{{hunter.rank}}</span>
+                                                                {% elif hunter.rank == 2 %}
+                                                                <span class="badge badge-success"
+                                                                    style="background-color: silver;">{{hunter.rank}}</span>
+                                                                {% elif hunter.rank == 3 %}
+                                                                <span class="badge badge-success"
+                                                                    style="background-color:#cd7f32;">{{hunter.rank}}</span>
+                                                                {% else %}
+                                                                <span class="badge badge-success"
+                                                                    style="background-color: grey;">{{hunter.rank}}</span>
+                                                                {% endif %}
+                                                            </div>
+                                                        </td>
+                                                        <!-- Hunter -->
+                                                        <td width="95%">
+                                                            <div class="media" style="width:200px">
+                                                                <!-- image -->
+                                                                <a href="/riddlechamp/{{hunter.hunter.uin_code}}"
+                                                                    class="pull-left">
+                                                                    <img src="{{hunter.hunter.avatar.url}}"
+                                                                        class="media-photo"
+                                                                        alt="{{hunter.name}}" />
+                                                                </a>
+                                                                <!-- detail -->
+                                                                <div class="media-body">
+                                                                    <h4 class="title">
+                                                                        {{hunter.hunter.name}}
+                                                                    </h4>
+                                                                    <p class="summary">
+                                                                        {% if hunter.den_score > 0 %}
+                                                                        <span
+                                                                            class="positive">{{hunter.den_score}}
+                                                                            Kills</span>
+                                                                        {% elif hunter.den_score < 0 %}
+                                                                        <span
+                                                                            class="negaive">{{hunter.den_score}}
+                                                                            Kills</span>
+                                                                        {% else %}
+                                                                        <span
+                                                                            class="zero">{{hunter.den_score}}
+                                                                            Kills</span>
+                                                                        {% endif %}
+                                                                        <br />
+                                                                        Last Seen :
+                                                                        {{hunter.last_activity}}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group tm-yellow-gradient-bg text-center">
+                                        <button type="submit" name="submit" class="tm-yellow-btn"
+                                            disabled> Hunters in
+                                            Den </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TOP HUNTER LIST -->
+                <div class="col-lg-4 col-md-6 col-sm-12" style="min-height:440px">
+                    <div class="tm-home-box-1 tm-home-box-1-2 tm-home-box-1-center">
+                        <div class="hunter_div_outer"
+                            style="max-height:350px; min-height:350px; background-color:#e4fff2; vertical-align:middle; display: table;">
+                            <div class="hunter_div_inner"
+                                style=" display: table-cell; vertical-align: middle;">
+                                <img src="{{den.TopHunter.avatar.url}}" alt="{{den.TopHunter}}"
+                                    style="max-height: 350px; margin-left: auto; margin-right: auto; display: block;"
+                                    class="img-responsive">
+                            </div>
+                        </div>
+                        <div class="form-group tm-green-gradient-bg text-center">
+                            <button type="submit" name="submit" class="tm-green-btn" disabled>Best
+                                Hunter
+                                <strong>({{den.TopHunter}})</strong></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Best Ratio of Shots per Kill -->
+                <div class="col-lg-4 col-md-6 col-sm-12" style="min-height:440px">
+                    <div class="tm-home-box-1 tm-home-box-1-2 tm-home-box-1-center">
+                        <div class="hunter_div_outer"
+                            style="max-height:350px; min-height:350px; background-color:#ffe9e4; vertical-align:middle; display: table;">
+                            <div class="hunter_div_inner"
+                                style=" display: table-cell; text-align:center; vertical-align: middle;">
+                                <img src="{{den.Top_skRatio_avatar.url}}" alt="{{den.Top_skRatio_name}}"
+                                    class="img-responsive"
+                                    style="max-height: 350px; margin-left: auto; margin-right: auto; display: block;">
+                            </div>
+                        </div>
+                        <div class="form-group tm-red-gradient-bg text-center">
+                            <button type="submit" name="submit" class="tm-red-btn" disabled>Shots per
+                                Kill
+                                <strong>({{den.Top_skRatio_name}} -
+                                    {{den.Top_skRatio_score}})</strong></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- DEN STATS END -->
+
+        <!-- SPACE DIV STARTS -->
+        <div class="container">
+            <div class='row mx-2 my-2 align-middle'>
+                <div class="col-sm-12 align-middle" style="height:40px">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <!-- SPACE DIV ENDS -->
+
+        <!-- RIDDLES SECTION STARTS -->
+        <div class="container" name="repository">
+
+            <!-- RIDDLES HEADING STARTS -->
+            <div class="tm-section-header">
+                <div class="col-lg-4 col-md-2 col-sm-12">
+                    <hr>
+                </div>
+                <div class="col-lg-4 col-md-8 col-sm-12">
+                    <h2 class="tm-section-title" style="color:#23282E">RIDDLES</h2>
+                </div>
+                <div class="col-lg-4 col-md-2 col-sm-12">
+                    <hr>
+                </div>
+            </div>
+            <!-- RIDDLES HEADING ENDS -->
+
+            <!-- SPACE DIV STARTS -->
+            <div class="container">
+                <div class='row mx-2 my-2 align-middle'>
+                    <div class="col-sm-12 align-middle" style="height:25px">
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <!-- SPACE DIV ENDS -->
+
+            <!-- PUZZLES BLOCK STARTS -->
+            <div class="collapse show" name="SortBySize" id="SortBySize">
+                <div class="container">
+                    <div class="row">
+                        {% for den_riddle in den_riddles %}
+                        <!-- Coming soon puzzle -->
+                        <div class="col col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xxs-12"
+                            style="margin-bottom: 25px;">
+                            <div class="tm-home-box-2" style="min-width: 255px; max-width:255px; border:1px solid #D8D8D8">
+                                {% if den_riddle.is_pending %}
+                                <img src="{{den_riddle.den_riddle.riddle.media.url}}" alt="image" class="img-responsive" style="  -webkit-filter: blur(8px); /* Safari 6.0 - 9.0 */ filter: blur(8px);" />
+                                {% else %}
+                                <a href="/riddlechamp/den/riddle/{{den_riddle.uin_code}}">
+                                    <img src="{{den_riddle.den_riddle.riddle.media.url}}" alt="image" class="img-responsive riddle-image" style="pointer-events: none;" />
+                                </a>
+                                {% endif %}
+
+                                <!-- Riddle Header -->
+                                <div>
+                                    <a href="/riddlechamp/den/riddle/{{den_riddle.uin_code}}">
+                                        <h3><strong>Riddle #
+                                                {{den_riddle.den_riddle.riddle.riddle_id}}</strong></h3>
+                                    </a>
+                                    <p class="tm-date"
+                                        style="min-height:100px; max-height:100px; overflow: auto; font-size:95%; line-height:170%; color: #666">
+                                        <strong>Level</strong>:
+                                        {{den_riddle.den_riddle.riddle.riddle_level.name}}
+                                        &nbsp;|&nbsp;
+                                        <strong>Type</strong>:
+                                        {{den_riddle.den_riddle.riddle.type_riddle.name}}
+                                        <br />
+                                        Right answer => 
+                                        <strong style="color:yellowgreen">{{den_riddle.right_ans_score}}
+                                            Kills
+                                        </strong>
+                                        <br />
+                                        Wrong answer => 
+                                        <strong style="color:tomato   ">{{den_riddle.wrong_ans_score}}
+                                            Kills
+                                        </strong>
+                                    </p>
+                                </div>
+                                <!-- Riddle Score and all -->
+                                <div class="tm-home-box-2-container">
+                                    <a href="#" class="tm-home-box-2-link">
+                                        <i class="fa tm-home-box-2-icon border-right">
+                                            <span style="font-size:large">
+                                                {% if den_riddle.score_percent < 0 %}
+                                                💩
+                                                {% elif den_riddle.score_percent == 0 %}
+                                                😴
+                                                {% elif den_riddle.score_percent > 0 and den_riddle.score_percent < 0.25  %}
+                                                🤮
+                                                {% elif den_riddle.score_percent >= 0.25 and den_riddle.score_percent < 0.5 %}
+                                                😖
+                                                {% elif den_riddle.score_percent >= 0.5 and den_riddle.score_percent < 0.75 %}
+                                                🥺
+                                                {% elif den_riddle.score_percent >= 0.75 and den_riddle.score_percent < 0.9 %}
+                                                😎
+                                                {% elif den_riddle.score_percent >= 0.9 and den_riddle.score_percent < 1 %}
+                                                🤩
+                                                {% elif den_riddle.score_percent == 1 %}
+                                                🥳
+                                                {% elif den_riddle.score_percent > 1 %}
+                                                😇
+                                                {% endif %}
+                                            </span>
+                                        </i>
+                                    </a>
+                                    <a href="#" class="tm-home-box-2-link">
+                                        <span class="tm-home-box-2-description">
+                                            {{den_riddle.user_score_riddle}} /
+                                            {{den_riddle.right_ans_score}}
+                                        </span>
+                                    </a>
+                                    <a href="#" class="tm-home-box-2-link">
+                                        {% if den_riddle.riddle_solved %}
+                                        <i class="fa tm-home-box-2-icon border-left">
+                                            <img src="{% static 'riddlechamp/img/right.png' %}" style="width:20px" />
+                                        </i>
+                                        {% else %}
+                                        <i class="fa tm-home-box-2-icon border-left">
+                                            <img src="{% static 'riddlechamp/img/wrong.png' %}" style="width:20px" />
+                                        </i>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <!-- Riddle Fotter -->
+                                <div class="card-footer">
+                                    <small class="text-muted">
+                                        {% if den_riddle.is_active %}
+                                        <b><span style="color:green" class="status-riddle"
+                                                data-status="Active"
+                                                data-time="{{den_riddle.expiry}}">ACTIVE
+                                                RIDDLE</span></b>
+                                        {% elif den_riddle.is_pending %}
+                                        <b><span style="color:orange" class="status-riddle"
+                                                data-status="Pending"
+                                                data-time="{{den_riddle.starting_epoch}}">UPCOMING
+                                                RIDDLE</span></b>
+                                        {% elif den_riddle.has_expired %}
+                                        <b><span style="color:red" class="status-riddle"
+                                                data-status="Expired"
+                                                data-time="{{den_riddle.starting_epoch}}">EXPIRED
+                                                RIDDLE</span></b>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- PUZZLES BLOCK ENDS -->
+
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+    
+    <script>
+        // function for change cursor to wait on ajax call
+        $(document).ajaxStart(function () {
+            $(document.body).css({ 'cursor': 'wait' });
+        }).ajaxStop(function () {
+            $(document.body).css({ 'cursor': 'default' });
+        });
+
+        // function for alerts error codes
+        $("#alertData_div").ready(function () {
+            title = $("#alertData_div").attr('data-title')
+            message = $("#alertData_div").attr('data-message')
+            type = $("#alertData_div").attr('data-type')
+            if (!(title == undefined || message == undefined || type == undefined)) {
+                swal({
+                    title: title,
+                    text: message,
+                    icon: type,
+                    button: "Ok",
+                });
+            }
+        })
+
+        function countdown_calculator(epoch, status, element) {
+
+            // Update the count down every 1 second
+            var x = setInterval(function () {
+
+                //number of seconds till now since epoch
+                now = new Date()
+                now = Math.round(now.getTime() / 1000)
+
+                // Find the distance between now and the count down date
+                if (status == 'Pending') {
+                    var distance = epoch - now;
+                }
+                else if (status == 'Active') {
+                    var distance = epoch - now;
+                }
+                else {
+                    var distance = 0;
+                }
+
+
+                // Time calculations for days, hours, minutes and seconds
+                var days = Math.floor(distance / (60 * 60 * 24));
+                var hours = Math.floor((distance % (60 * 60 * 24)) / (60 * 60));
+                var minutes = Math.floor((distance % (60 * 60)) / (60));
+                var seconds = Math.floor((distance % 60));
+
+                countdown_start = "<strong>New Riddle in <br /><br />";
+                countdown_end = "</strong>";
+
+                countdown = now
+
+                //setting countdown text
+                if (days == 0) {
+                    if (hours == 0) {
+                        if (minutes == 0) {
+                            if (seconds == 0) {
+                                if ($("#TimeRemaining").attr('data-active') == 'Active') {
+                                    countdown = alert("Time for this Riddle is expired. Reloading Page......")
+                                }
+                                location.reload(true)
+                            }
+                            else {
+                                countdown = seconds + "s ";
+                            }
+                        }
+                        else {
+                            countdown = minutes + "m " + seconds + "s ";
+                        }
+                    }
+                    else {
+                        countdown = hours + "h " + minutes + "m " + seconds + "s ";
+                    }
+                }
+                else {
+                    countdown = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+                }
+                // Display the result in the element with id="demo"
+                if (status == 'Active') {
+                    element.html('RIDDLE ACTIVE for ' + countdown);
+                }
+                else {
+                    element.html('PENDING (Active in ' + countdown + ')');
+                }
+
+                // If the count down is finished, write some text
+                if (distance < 0) {
+                    clearInterval(x);
+                    if (status == 'Active') {
+                        element.html('EXPIRED');
+                    }
+                    else {
+                        element.html("Riddle Active. Pleaser Refresh");
+                    }
+
+                }
+            }, 1000);
+        };
+
+        // disable right click
+        $('.riddle-image').ready(function () {
+            $(this).bind("contextmenu", function (e) {
+                e.preventDefault();
+            });
+        })
+
+        $(document).ready(function () {
+            $('.status-riddle').each(function () {
+                var status = $(this).attr('data-status')
+                if (status == "Pending" || status == 'Active') {
+                    var time = $(this).attr('data-time')
+                    var time_remaining = parseInt(time)
+                    countdown_calculator(time_remaining, status, $(this))
+                }
+
+                //var quantity = $(this).find(".po-quantity").val();
+                //var price = $(this).find(".po-price").val();
+                //subtotal += quantity * price;
+            });
+        });
+
+        // Validating Email Address for invitees
+        $("input").focusout(function (e) {
+            email = $(this).val()
+            if (email.length > 0) {
+
+                let email_reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+                valid_email = email_reg.test(email)
+
+                if (valid_email) {
+                    $(this).attr('style', "border: 1px solid green")
+                }
+                else {
+                    $(this).attr('style', "border: 1px solid red")
+                    $(this).focus()
+
+                    swal({
+                        title: 'Invalid Email Address?',
+                        text: "C\'on, we both know that this isn\'t a valid email address buddy...",
+                        icon: "error",
+                        button: "Ok",
+                    });
+
+                }
+            }
+            else {
+                $(this).attr('style', "")
+            }
+        });
+
+        // Sending email to invitees
+        $("#sentInviteBtn").click(function (e) {
+            e.preventDefault()
+            email_list = []
+            den_id = $("#den_id_div").attr('data-den')
+
+            if (($("#email_1").val()) && !(email_list.includes($("#email_1").val()))) {
+                email_list.push($("#email_1").val())
+            }
+
+            if (($("#email_2").val()) && !(email_list.includes($("#email_2").val()))) {
+                email_list.push($("#email_2").val())
+            }
+
+            if (($("#email_3").val()) && !(email_list.includes($("#email_3").val()))) {
+                email_list.push($("#email_3").val())
+            }
+
+            if (email_list.length == 0) {
+                Swal.fire(
+                    'EMAIL ADDRESS?',
+                    "You need to enter your friend's email address to invite them.",
+                    'question'
+                )
+
+                alert("Please enter email")
+                $("#email_1").focus()
+            }
+            else {
+                data = { "email_list": email_list, "den_id": den_id }
+
+                $("#sentInviteBtn").attr("diabled")
+                $("#ajax_gif").attr("style", "")
+
+                $.ajax({
+                    type: "POST",
+                    url: "sent_den_invites",
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }, // for csrf token
+                    data: data,
+                    dataType: 'json',
+                    success: function (result) {
+
+                        $("#email_1").val() == ""
+                        $("#email_2").val() == ""
+                        $("#email_3").val() == ""
+                        $("#email_1").attr('style', "")
+                        $("#email_2").attr('style', "")
+                        $("#email_3").attr('style', "")
+
+                        if (result.success == true) {
+                            $("#ajax_gif").attr("style", "visibility:hidden")
+                            $("#sentInviteBtn").removeAttr("disabled")
+                            swal({
+                                title: 'EMAIL SENT',
+                                text: result.message,
+                                icon: "success",
+                                button: "Ok",
+                            });
+                        }
+                        else {
+                            $("#ajax_gif").attr("style", "visibility:hidden")
+                            $("#sentInviteBtn").removeAttr("disabled")
+                            if (result.error == 'Invalid Request') {
+                                window.location.href = '/riddlechamp/index/e/8be6'
+                            }
+                            if (result.error == 'Login Required') {
+                                window.location.href = '/account/login/e/7955'
+                            }
+                            swal({
+                                title: 'Failed',
+                                text: result.erorr,
+                                icon: "error",
+                                button: "Ok",
+                            });
+                        }
+                    },
+                    error: function () {
+                        $("#ajax_gif").attr("style", "visibility:hidden")
+                        $("#sentInviteBtn").removeAttr("disabled")
+                        swal({
+                            title: 'Failed',
+                            text: result.erorr,
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    }
+                });
+
+            }
+        });
+    </script>
+
+    <script>
+        function logoutBtn_hover(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/logout_hover.png' %}"
+        }
+        function logoutBtn_out(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/logout.png' %}"
+        }
+        function homeBtn_hover(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/home_hover.png' %}"
+        }
+        function homeBtn_out(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/home.png' %}"
+        }
+        function admin_hover(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/admin_hover.png' %}"
+        }
+        function admin_out(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/admin.png' %}"
+        }
+        function active_hover(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/active_hover.png' %}"
+        }
+        function active_out(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/active.png' %}"
+        }
+        function invitationcode_hover(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/invitationcode_hover.png' %}"
+        }
+        function invitationcode_out(element) {
+            document.getElementById(element.id).src = "{% static 'riddlechamp/img/invitationcode.png' %}"
+        }
+
+    </script>
+{% endblock %}

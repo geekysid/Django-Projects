@@ -1,0 +1,506 @@
+{% extends 'riddlechamp/hunterzDen_master.html' %}
+{% load static %}
+
+  {% block title %}
+  <title>
+    Hunter {% if user.is_authenticated %} - {{ userProfile.name }} {% endif %}
+  </title>
+  {% endblock %}
+
+
+  {% block body %}
+  {% if user.is_authenticated %}
+
+  <!-- DIV to hold data for Alert -->
+  {% if alertData == None %}
+  {% else %}
+  <div style="visibility:hidden" id="alertData_div" data-type="{{alertData.Type}}" data-title="{{alertData.title}}"
+    data-message="{{alertData.message}}">
+  </div>
+  {% endif %}
+
+  <!-- LOGOUT BUTTON -->
+  <div class="logout">
+    <a href="/account/logout"><img id="logoutBtn_img" src="{% static 'riddlechamp/img/logout.png' %}"
+        style="width:60px;" onmouseover="logoutBtn_hover(this)" onmouseout="logoutBtn_out(this)" title="Logout" /></a>
+  </div>
+
+  <!-- Black Background -->
+  <div class="bg_color" style="width:100%; height:684px; position:absolute;">
+  </div>
+
+  <!-- BODY -->
+  <div class="jumbotron">
+
+    <!-- PERSOANL DETAILS STARTS -->
+    <div class="container">
+      <div class='row'>
+        <div class='col-sm-12 text-center mt-10' style='color:white'>
+          <div>
+            <p>
+              <img src="{% if userProfile.avatar %}{{userProfile.avatar.url}}{% endif %}"
+                style="border-radius: 50%; border: 7px solid #c0c0c0; max-width:150px; max-height:150px;" title="{{userProfile.avatar}}" />
+            </p>
+          </div>
+          <p><a href="#" style="color:white; font-size:x-large;">{{userProfile.name}}</a></p>
+          <p style="color:white; font-size:medium;">{{userProfile.desc}}</p>
+          
+          <!-- Gender, LOCATION, Contact -->
+          <div width="100%" style="text-align: center;">
+            <div class="row justify-content-md-center">
+              <div class="col-md-auto mt-3" style="text-align: center;">
+                <div class="row">
+                <div class="col mt-3" style="min-width: 100px;">
+                  <img id="gender_img" src="{% static 'riddlechamp/img/gender.png' %}" style="width:50px;" onmouseover="gender_hover(this)" onmouseout="gender_out(this)" title="gender" />
+                  <br />
+                  <h5>{% if userProfile.gender == '' %} Not Mentioned {% else %} {{userProfile.gender }} {% endif %}</h5>
+                </div>
+                <div class="col mt-3" style="min-width: 100px;">
+                  <img id="location_img" src="{% static 'riddlechamp/img/location.png' %}" style="width:50px;" onmouseover="location_hover(this)" onmouseout="location_out(this)" title="location" />
+                  <br />
+                  <h5>{% if userProfile.city == '' %} Not Mentioned {% else %} {{userProfile.city}}, {{userProfile.country}}
+                  {% endif %}</h5>
+                </div>
+                <div class="col mt-3">
+                  <img id="contact_img" src="{% static 'riddlechamp/img/contact.png' %}" style="width:50px;" onmouseover="contact_hover(this)" onmouseout="contact_out(this)" title="contact" />
+                  <br />
+                  <h5>{% if userProfile.mobile == '' %} Not Mentioned {% else %} {{userProfile.mobile}} {% endif %}</h5>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUTTONS -->
+          <div width="100%" style="text-align: center;">
+            <div class="row justify-content-md-center">
+              <div class="col-sm-12 mt-3">
+                <a href="/account/profile">
+                  <button type="submit" name="submit" class="tm-yellow-btn">
+                    <strong>Edit Profile</strong>
+                  </button>
+                </a>&emsp;
+                <a href="/riddlechamp/den/join/">
+                  <button type="submit" name="submit" class="tm-blue-btn">
+                    <strong>Join Den</strong>
+                  </button>
+                </a>
+                </a>{% if not request.user_agent.is_mobile %}&emsp;{% endif %}
+                <a href="/riddlechamp/den/new/">
+                  <button type="submit" name="submit" class="tm-green-btn" disabled>
+                    <strong>Create Den</strong>
+                  </button>
+                  <a>&emsp;
+                    <button type="submit" name="submit" class="tm-red-btn" disabled>
+                      <strong>Invite Friends</strong>
+                    </button>
+                  </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- STATISTICS -->
+          <div class="mt-4" width="100%" style="text-align: center;">
+            <div class="row justify-content-md-center">
+            {% if request.user_agent.is_mobile %}
+            <div class="col mx-1 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+            {% else %}
+            <div class="mx-2 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+            {% endif %}
+              <div class="mx-2 my-2">
+                <p style="font-size: 14px; color:#ddd; letter-spacing: 1px; ">Total Den</p>
+                <p style="font-size: 30px; color:#fff"><b>{{userDen.count}}</b></p>
+              </div>
+            </div>
+            {% if request.user_agent.is_mobile %}
+            <div class="col mx-1 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+            {% else %}
+            <div class="mx-2 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+            {% endif %}
+              <div class="mx-2 my-2">
+                {% if request.user_agent.is_mobile %}
+                <span style="font-size: 13px; color:#ddd; letter-spacing: 1px;">Riddle Solved</span><br />
+                <span style="font-size: 30px; color:#fff"><b>{{userResponse.riddlesSovled}}</b></span>
+                {% else %}
+                <p style="font-size: 14px; color:#ddd; letter-spacing: 1px;">Riddle Solved</p>
+                <p style="font-size: 30px; color:#fff"><b>{{userResponse.riddlesSovled}}</b></p>
+                {% endif %}
+              </div>
+              </div>
+              {% if request.user_agent.is_mobile %}
+              <div class="col mx-1 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+              {% else %}
+              <div class="mx-2 my-2" style="border-radius:5px;height:90px; background-color:#23282E; width:120px;">
+              {% endif %}
+                <div class="mx-2 my-2">
+                  <p style="font-size: 14px; color:#ddd; letter-spacing: 1px;">Total Kills</p>
+                  <p style="font-size: 30px; color:#fff"><b>{{userResponse.totalScore}}</b></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- PERSOANL DETAILS END  -->
+
+
+    <!-- SPACINING STARTS -->
+    <div class="container">
+      <div class='row mx-2 my-2 align-middle'>
+        <div class="col-sm-12 align-middle" style="height:30px">
+          <p></p>
+          <!-- <hr style="width:100%; border: 1px solid #222;" /> -->
+        </div>
+      </div>
+    </div>
+    <!-- SPACINING ENDS -->
+
+
+    <!-- CHARTS START -->
+    <div class="container">
+      <div class='row my-2 align-middle'>
+        <div class='col-sm-4 my-2 align-middle'>
+          <div class="card" style="border-radius: 10px; border: 0px solid #F73E40;">
+            <div class="card-body">
+              <p class="card-text" style="text-align: center;">
+                <h4><span style="border-bottom: 3px dashed #23282E; padding-bottom: 3px">Top Languages</span></h4>
+              </p>
+              <canvas id="languageCount_Chart" width="33%" height="450"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class='col-sm-4 my-2 align-middle'>
+          <div class="card" style="border-radius: 10px; border: 0px solid #F73E40;">
+            <div class="card-body">
+              <p class="card-text" style="text-align: center;">
+                <h4><span style="border-bottom: 3px dashed #23282E; padding-bottom: 3px">Response TIme</span></h4>
+              </p>
+              <canvas id="scorePerDen_Chart" width="33%" height="450"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class='col-sm-4 my-2 align-middle'>
+          <div class="card" style="border-radius: 10px; border: 0px solid #F73E40;">
+            <div class="card-body">
+              <p class="card-text" style="text-align: center;">
+                <h4><span style="border-bottom: 3px dashed #23282E; padding-bottom: 3px">Scores Per Den</span></h4>
+              </p>
+              <canvas id="scorePerDen_Chart" width="33%" height="450"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CHARTS END -->
+
+
+    <!-- SPACINING STARTS -->
+    <div class="container">
+      <div class='row mx-2 my-2 align-middle'>
+        <div class="col-sm-12 align-middle" style="height:55px">
+          <p></p>
+          <!-- <hr style="width:100%; border: 1px solid #222;" /> -->
+        </div>
+      </div>
+    </div>
+    <!-- SPACINING ENDS -->
+
+
+    <!-- MY DEN -->
+    <div>
+      <div class="container" name="repository">
+
+        <!-- DEN - HEADING -->
+        <div class="col-lg-4">
+          <hr>
+        </div>
+        <div class="col-lg-4">
+          <h2 class="tm-section-title" style="color:#23282E">MY DEN</h2>
+        </div>
+        <div class="col-lg-4">
+          <hr>
+        </div>
+        <!-- DEN - HEADING ENDS -->
+
+
+        <!-- SPACINING STARTS -->
+        <div class="container">
+          <div class='row mx-2 my-2 align-middle'>
+            <div class="col-sm-12 align-middle" style="height:75px">
+              <p></p>
+              <!-- <hr style="width:100%; border: 1px solid #222;" /> -->
+            </div>
+          </div>
+        </div>
+        <!-- SPACINING ENDS -->
+
+
+        <!-- DEN DETAILS -->
+        <div class="collapse show" name="SortBySize" id="SortBySize">
+          <div class="container">
+            <div class='row'>
+
+              {% for den in userDenDetails %}
+              {% if request.user_agent.is_mobile %}
+              <div class='col-sm-12 my-2 text-center mt-10' style="color:white; min-width:360px;">
+              {% else %}
+              <div class='col-sm-4 my-2 text-center mt-10' style="color:white; min-width:360px">
+              {% endif %}
+                <div style="border-radius: 10px ; background-color:#fff; color:black">
+                  <div class="mx-2 my-2">
+                    <table style="font-size: 13px; height: 125px">
+                      <!-- header -->
+                      <tr>
+                        <td style="text-align:left; width: 100%; ">
+                          <div class="col mx-2">
+                          <img src="{% static 'riddlechamp/img/repository.png' %}" width="18px" />&nbsp;&nbsp;
+                          <a href="{{den.link}}"><strong style="color:#F73E40; font-size: 15px;">{{den.name}}</strong></a>
+                          ({{den.role}})
+                        </div>
+                        </td>
+                      </tr>
+                      <!-- desc -->
+                      <tr>
+                        <!-- <td width=5%></td> -->
+                        <td style="text-align:left; vertical-align:top; width: 100%;">
+                          <div class="col mx-2 my-3">
+                            {{den.desc}}
+                          </div>
+                        </td>
+                      </tr>
+                      <!-- footer -->
+                      <tr style="vertical-align:middle; text-align:center;">
+                        <td style="text-align:center; width: 100%;">
+                          {% if den.active_count > 0 %}
+                          <span class="badge badge-success" style="background-color:green; font-size:11px;">
+                            {{den.active_count}} Active
+                          </span>
+                          {% else %}
+                          <span class="badge badge-success" style="background-color:goldenrod; font-size:11px;">
+                            {{den.pending_count}} Pending
+                          </span>
+                          {% endif %}
+                          &emsp13;
+                          <span class="badge badge-success" style="background-color:#4D7EF9; font-size:11px;">
+                            Riddles: {{den.total_count}}
+                          </span>
+                          &emsp13;
+                          <span class="badge badge-success" style="background-color:#3bd57b; font-size:11px;">
+                            Solved: {{den.solved_count}}
+                          </span>
+                          &emsp13;
+                          <span class="badge badge-success" style="background-color: #ff8878; font-size:11px;">
+                            Score: {{den.total_score}}
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <!-- DEN ENDS -->
+
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endblock %}
+
+
+  {% block scripts %}
+  <script>
+    function logoutBtn_hover(element) {
+      document.getElementById(element.id).src = "{% static 'riddlechamp/img/logout_hover.png' %}"
+    }
+    function logoutBtn_out(element) {
+      document.getElementById(element.id).src = "{% static 'riddlechamp/img/logout.png' %}"
+    }
+    function gender_hover(element) {
+      document.getElementById(element.id).src = "{% static 'riddlechamp/img/gender_hover.png' %}"
+    }
+    function gender_out(element) {
+      document.getElementById(element.id).src = "{% static 'riddlechamp/img/gender.png' %}"
+    }
+    function location_hover(element) {
+      document.getElementById(element.id).src = "{% static 'riddlechamp/img/location_hover.png' %}"
+    }
+    function location_out(element) {
+      document.getElementById(element.id).src = "{% static 'riddlechamp/img/location.png' %}"
+    }
+    function contact_hover(element) {
+      document.getElementById(element.id).src = "{% static 'riddlechamp/img/contact_hover.png' %}"
+    }
+    function contact_out(element) {
+      document.getElementById(element.id).src = "{% static 'riddlechamp/img/contact.png' %}"
+    }  
+  </script>
+  
+  <!-- Charts -->
+  <script>
+
+    var colors = ['#e6194b', '#3cb44b', '#ffe119', '#f58231', '#911eb4', '#fabebe', '#008080', '#e6beff', '#fffac8', '#aaffc3', '#808000', '#ffd8b1'];
+    var colors_1 = colors.slice();
+    var colors_2 = colors.slice();
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max));
+    }
+
+    // Language Count Chart
+    var languageCount_data = '{{languageCount_data | safe}}';
+    if (languageCount_data == '') {
+      var languageCount_data_json = {};
+    }
+    else {
+      var languageCount_data_json = JSON.parse(languageCount_data);
+
+      var language_lc_list = [];
+      var repoCount_list = [];
+
+      for (item in languageCount_data_json) {
+        language_lc_list.push(item);
+        repoCount_list.push(languageCount_data_json[item]);
+      }
+
+      var color_languageCount_chart = [];
+      var i = 1;
+
+      while (i <= language_lc_list.length) {
+        var index = getRandomInt(colors_1.length);
+        var rand_color = colors_1[index];
+        color_languageCount_chart.push(rand_color);
+        colors_1.splice(index, 1);
+        i++;
+      }
+
+      new Chart(document.getElementById("languageCount_Chart"), {
+        type: 'polarArea',
+        data: {
+          labels: language_lc_list,
+          datasets: [
+            {
+              label: "Repository Count",
+              // backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+              backgroundColor: color_languageCount_chart,
+              data: repoCount_list
+            }
+          ]
+        },
+        options: {
+          title: {
+            display: true,
+            // text: 'Languages Used in Repository'
+          }
+        }
+      });
+    }
+    // Stars Per Language Count Chart
+    var starsPerLanguage_data = '{{starsPerLanguage_data | safe}}';
+    if (starsPerLanguage_data == '') {
+      var languageCount_data_json = {};
+    }
+    else {
+      var starsPerLanguage_json = JSON.parse(starsPerLanguage_data);
+
+      var language_strpl_list = [];
+      var starCount_strpl_list = [];
+
+      for (item in starsPerLanguage_json) {
+        language_strpl_list.push(item);
+        starCount_strpl_list.push(starsPerLanguage_json[item]);
+      }
+
+      new Chart(document.getElementById("scorePerDen_Chart"), {
+        type: 'pie',
+        data: {
+          labels: language_strpl_list,
+          datasets: [{
+            label: "Star Count",
+            backgroundColor: color_languageCount_chart,
+            data: starCount_strpl_list
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            // text: 'Stars Per Language Chart'
+          }
+        }
+      });
+    }
+
+    // Stars per Repository Chart
+    var starsPerRepo_data = '{{starsPerRepo_data | safe}}';
+    if (starsPerRepo_data == '') {
+      var starsPerRepo = {};
+    }
+    else {
+      var starsPerRepo = JSON.parse(starsPerRepo_data);
+
+      var repo_list = [];
+      var starCount_list = [];
+
+      for (item in starsPerRepo) {
+        repo_list.push(item);
+        starCount_list.push(starsPerRepo[item]);
+      }
+
+      var color_starsPerRepo_chart = [];
+      var i = 1;
+
+      console.log(colors_2)
+
+      while (i <= starsPerRepo_data.length) {
+        var index = getRandomInt(colors_2.length);
+        var rand_color = colors_2[index];
+        color_starsPerRepo_chart.push(rand_color);
+        colors_2.splice(index, 1);
+        i++;
+      }
+
+      new Chart(document.getElementById("starsPerRepo_Chart"), {
+        type: 'bar',
+        data: {
+          labels: repo_list,
+          datasets: [
+            {
+              //label: "Star Count",
+              backgroundColor: color_starsPerRepo_chart,
+              data: starCount_list
+            }
+          ]
+        },
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            // text: 'Star Per Repository Chart'
+          }
+        }
+      });
+    }
+  </script>
+
+  <!-- ALERT MESSAGE -->
+  <script>
+    $("#alertData_div").ready(function () {
+      title = $("#alertData_div").attr('data-title')
+      message = $("#alertData_div").attr('data-message')
+      type = $("#alertData_div").attr('data-type')
+      if (!(title == undefined || message == undefined || type == undefined)) {
+        swal({
+          title: title,
+          text: message,
+          icon: type,
+          button: "Ok",
+        });
+      }
+    })
+  </script>
+
+  {% endblock %}

@@ -1,0 +1,30 @@
+[
+    {
+        "301": "Invalid Credentials",
+        "message": "Username and Password do not match",
+        "palce": ["login"]
+    },
+    {
+        "401": "User Authenticated",
+        "message": "Already Signed In",
+        "place": ["login"],
+        "link": "/hunterz/index"
+    },
+    {
+        "402": "User Not Authenticated",
+        "message": "You are not logged in to access this page",
+        "palce": ["login"],
+        "link": "/account/login"
+    },
+    {
+        "901": "Exception",
+        "message": "Exception: Not a valid user",
+        "palce": ["login"],
+        "link": "/account/login"
+    },
+    {
+        "code": "501",
+        "crc32": "5379c8a0",
+        "message": "Invalid Request"
+    }
+]
