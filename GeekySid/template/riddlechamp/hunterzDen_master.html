@@ -1,0 +1,87 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link href="{% static 'riddlechamp/css/sid.css' %}" rel="stylesheet">
+
+  {% block title %}
+  {% endblock %}
+
+  {% block style %}
+  {% endblock %}
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,700' rel='stylesheet' type='text/css'>
+  <link href="{% static 'riddlechamp/css/font-awesome.min.css' %}" rel="stylesheet">
+  <link href="{% static 'riddlechamp/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'riddlechamp/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
+  <link href="{% static 'riddlechamp/css/flexslider.css' %}" rel="stylesheet">
+  <link href="{% static 'riddlechamp/css/templatemo-style.css' %}" rel="stylesheet">
+  <link href="{% static 'riddlechamp/css/sid.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+  
+
+  {% block body %}
+  {% endblock %}
+
+  <!-- Footer -->
+  <footer id="sticky-footer" class="fixed-bottom  text-white-50" style="background-color: #111;">
+    <div class='container' style="font-size:12px">
+      <div class='row  mt-3 align-middle'>
+        <div class='col-12 text-center'>
+          <ul class="list-inline">
+            <li class="list-inline-item">Built with</li>
+            <li class="list-inline-item" style="color:#E871B0">Python</li>
+            <li class="list-inline-item">.</li>
+            <li class="list-inline-item" style="color:#E871B0">Django</li>
+            <li class="list-inline-item">.</li>
+            <li class="list-inline-item" style="color:#E871B0">Chart.js</li>
+            <li class="list-inline-item">.</li>
+            <li class="list-inline-item" style="color:#E871B0">Python - Pandas</li>
+            <li class="list-inline-item">.</li>
+            <li class="list-inline-item">and more</li>!!
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Footer -->
+
+  <!-- jQuery files -->
+  <!-- chart.js files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  
+  <!-- ALERT SCRIPT -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous">
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous">
+  </script>
+	<script src="{% static 'Account/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+  
+  {% block scripts %}
+  {% endblock %}
+</body>
+
+</html>

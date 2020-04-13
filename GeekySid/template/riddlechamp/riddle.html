@@ -1,0 +1,602 @@
+{% extends 'riddlechamp/riddle_master.html' %}
+{% load static %}
+
+	{% block title %}
+	<title>Riddle Champ - Riddle</title>
+	{% endblock %}
+	
+
+	{% block body %}
+	<!-- TOP LEFT HOME BUTTON -->
+	<div class="homeBtn">
+		<a href="/riddlechamp/index">
+			<img id="homeBtn_img" src="{% static 'riddlechamp/img/home.png' %}" style="width:60px;" onmouseover="homeBtn_hover(this)" onmouseout="homeBtn_out(this)" title="Home" />
+		</a>
+	</div>
+
+	<!-- TOP RIGHT LOGOUT BUTTON -->
+	<div class="denBtn">
+		<a href="/riddlechamp/den/{{denRiddle.den.uin_code}}">
+			<img id="denBtn_img" src="{% static 'riddlechamp/img/den.png' %}" style="width:60px;" onmouseover="denBtn_hover(this)" onmouseout="denBtn_out(this)" title="Back To Den" />
+		</a>
+	</div>
+
+	<div class="limiter">
+		{% if IS_MOBILE %}
+		<div class="modal fade" id="riddleModalCenter" tabindex="-1" role="dialog"
+			aria-labelledby="riddleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Riddle # {{denRiddle.riddle.riddle_id}}</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						{% if denRiddle.is_pending %}
+						<h4>RIDDLE NOT ACTIVE YET</h4>
+						{% else %}
+						{{denRiddle.riddle.question}}
+						{% if not denRiddle.riddle.type_riddle.name == "Text" %}
+						<img src="{{denRiddle.riddle.media.url}}" class="riddle-image" style="width:100%; height:100%" />
+						{% endif %}
+						{% endif %}
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Ok, Let Me Answer</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+		<div class="container-login100">
+			<div class="login100-more" id="riddle_question" data-question="{{denRiddle.riddle.question}}">
+				{% if not IS_MOBILE %}
+				{% if denRiddle.is_pending %}
+				<div class="
+							{% if denRiddle.riddle.type_riddle.name == 'Text' %}
+								outer_div_typeWritter_text
+							{% else %}
+							outer_div_typeWritter_audio
+							{% endif %}">
+					<div class="inner_div_typeWritter" style="text-align: center;">
+						<h2>RIDDLE NOT ACTIVE YET</h2>
+					</div>
+				</div>
+				{% else %}
+				<div class="
+							{% if denRiddle.riddle.type_riddle.name == 'Text' %}
+								outer_div_typeWritter_text
+							{% else %}
+							outer_div_typeWritter_audio
+							{% endif %}">
+					<div class="inner_div_typeWritter">
+						<div id="typedtext" style="font-size:150%;" style="position:fixed">
+						</div>
+						{% if not denRiddle.riddle.type_riddle.name == "Text" %}
+						<div id="riddle_media" style="visibility:hidden;">
+							<img src="{{denRiddle.riddle.media.url}}" class="riddle-image" />
+						</div>
+						{% endif %}
+					</div>
+				</div>
+				{% endif %}
+				{% endif %}
+
+			</div>
+
+			<span id="denRiddle_span" data-dr="{{denRiddle.den_riddle_id}}"></span>
+
+			<div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+				{% if user.is_authenticated %}
+				<form class="login100-form validate-form" method=post enctype="multipart/form-data">
+					{% csrf_token %}
+
+					<!-- RIDDLE NUMBER  -->
+					<div class="flex-m w-full p-b-33">
+
+						<div class="col-sm-12">
+							<table width="100%">
+								<!-- Heading -->
+								<tr>
+									<td colspan=2>
+										<span class="login100-form-title p-b-59" style="text-align: center;">
+											<h3>RIDDLE # {{denRiddle.riddle.riddle_id}} -
+												{% if denRiddle.is_active %}
+												<span style="color:seagreen">Active</span>
+												{% elif denRiddle.is_pending %}
+												<span style="color:sandybrown">Pending</span>
+												{% elif denRiddle.has_expired %}
+												<span style="color:tomato">Expired</span>
+												{% endif %}
+												<!-- &emsp;	
+											<a class="txt2 hov1" href="/riddlechamp/den/{{denRiddle.den.uin_code}}">
+												Back to DEN
+											</a> -->
+											</h3>
+											{% if IS_MOBILE %}
+											<!-- Modal -->
+											<br />
+											<button type="button" class="btn btn-danger" data-toggle="modal"
+												data-target="#riddleModalCenter">
+												Launch Riddle
+											</button>
+											{% endif %}
+										</span>
+									</td>
+								</tr>
+
+								<!-- TIME -->
+								<tr>
+									<td colspan=2>
+										<span class="login100-form-title p-b-59">
+											{% if denRiddle.is_active %}
+											<h6>Time Remaining => <span id="TimeRemaining" data-active="Active"
+													data-time="{{ending_epoch}}"></span></h6>
+											{% elif denRiddle.is_pending %}
+											<h6>Active in => <span id="TimeRemaining" data-active="Pending"
+													data-time="{{starting_epoch}}"></span>
+												(<u>{{denRiddle.started_at}}</u> UTC)</h6>
+											{% elif denRiddle.has_expired %}
+											<h6>Expired on => <u>{{denRiddle.ending_at}}</u> UTC<span id="TimeRemaining"
+													data-active="{{Expired}}"></span></h6>
+											{% endif %}
+										</span>
+									</td>
+								</tr>
+
+								<!-- Level -->
+								<tr>
+									<td width="40%">
+										<span class="login100-form-title p-b-59">
+											<h6>Level => {{denRiddle.riddle.riddle_level.name}}</h6>
+										</span>
+									</td>
+									<td width="60%">
+										<span class="login100-form-title p-b-59">
+											<h6>My Score => {{score}} Killl</h6> <span id="time_remaning_div"></span>
+										</span>
+									</td>
+								</tr>
+
+								<!-- NUMBER OF ATTEMPS -->
+								<tr>
+									<td>
+										<span class="login100-form-title p-b-59">
+											{% if number_of_attempt > 0 %}
+											<h6>
+												Attempts:
+
+												<span style="text-decoration: underline; cursor: pointer;"
+													data-toggle="modal"
+													data-target="#exampleModalCenter">{{number_of_attempt}}</span>
+
+												<!-- Modal -->
+												<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+													role="dialog" aria-labelledby="exampleModalCenterTitle"
+													aria-hidden="true">
+													<div class="modal-dialog modal-dialog-centered modal-lg"
+														role="document">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title" id="exampleModalLongTitle">My
+																	Answers</h5>
+																<button type="button" class="close" data-dismiss="modal"
+																	aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<table class="table">
+																	<thead>
+																		<tr>
+																			<th scope="col"
+																				style="vertical-align: middle; text-align: center;width:30%">
+																				Time (UTC)</th>
+																			<!-- <th scope="col"
+																				style="vertical-align: middle; text-align: center;width:30%">
+																				Pic</th> -->
+																			<th scope="col"
+																				style="vertical-align: middle; text-align: center;width:30%">
+																				Answer</th>
+																			<th scope="col"
+																				style="vertical-align: middle; text-align: center;width:5%">
+																				Score</th>
+																			<th scope="col"
+																				style="vertical-align: middle; text-align: center;width:5%">
+																				Tick</th>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		{% for response in responses %}
+																		<tr>
+																			<th scope="row"
+																				style="vertical-align: middle; text-align: center;width:30%">
+																				{{response.response_at}}</th>
+																			<!-- <td
+																				style="vertical-align: middle; text-align: center;width:30%">
+																				{% if response.image %}
+																				<img src="{{response.image.url}}"
+																					width="100px" />
+																				{% endif %}
+
+																			</td> -->
+																			<td
+																				style="vertical-align: middle; text-align: center;width:30%">
+																				{{response.answer}}</td>
+																			<td
+																				style="vertical-align: middle; text-align: center;width:30%">
+																				{% if response.is_correct %}
+																				<span class="badge badge-success">
+																					{{response.score}}
+																				</span>
+																				{% else %}
+																				<span class="badge badge-danger">
+																					{{response.score}}
+																				</span>
+																				{% endif %}
+																			</td>
+																			<td
+																				style="vertical-align: middle; text-align: center;width:30%">
+																				{% if response.is_correct %}
+																				<img src="{% static 'riddlechamp/img/right.png' %}"
+																				width="20px" />
+																				{% else %}
+																				<img src="{% static 'riddlechamp/img/wrong.png' %}"
+																				width="20px" />
+																				{% endif %}
+																			</td>
+																		</tr>
+																		{% endfor %}
+																	</tbody>
+																</table>
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-secondary"
+																	data-dismiss="modal">Close</button>
+															</div>
+														</div>
+													</div>
+												</div>
+											</h6>
+											{% else %}
+											<h6>Attempts => {{number_of_attempt}}</h6>
+											{% endif %}
+										</span>
+									</td>
+									<td>
+										<span class="login100-form-title p-b-59">
+											<h6 onload="showPopup('SOLVED')">
+												Status:
+												{% if is_solved %}
+												<span id="status_of_riddle" title="SOLVED"
+													style="color:forestgreen; font-size:larger">SOLVED</span>
+												{% else %}
+												<span id="status_of_riddle" title="UNSOLVED"
+													style="color:tomato ; font-size:larger">UNSOLVED</span>
+												{% endif %}
+											</h6>
+										</span>
+									</td>
+								</tr>
+
+								<!-- POINST AND SCORE -->
+								<tr>
+									<td colspan=2>
+										<span class="login100-form-title p-b-59">
+											<span>
+												<h6 style="line-height:150%">
+													For every Right Answer => {{right_ans_score}} Kills <br />
+													For every Wrong Answer=> {{wrong_ans_score}} Kills
+												</h6>
+											</span>
+										</span>
+									</td>
+								</tr>
+
+								<!-- Messages to be displayed here -->
+								<tr id="display_message">
+									<td colspan=2>
+										<span id="message" class="txt1" style="font-size:larger">
+										</span>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+
+					<!-- ANSWER INPUT -->
+					<div class="wrap-input100 validate-input" data-validate="Answer is required"
+						{% if denRiddle.has_expired %}
+						onclick="popup('Time for this ridddle to try is over.', 'Expired Riddle')" {% endif %}
+						{% if denRiddle.is_pending %} onclick="popup('Riddle is not yet active.', 'Pending Riddle')"
+						{% endif %} {% if is_solved %}
+						onclick="popup('This riddle is already solved by you.', 'Solved Riddle')" {% endif %}>
+						<span class="label-input100">Your Answer</span>
+						<input class="input100" type="text" id="answer" name="answer" {% if denRiddle.has_expired %}
+							disabled {% endif %} {% if denRiddle.is_pending %} disabled {% endif %} {% if is_solved %}
+							disabled {% endif %} placeholder="{% if denRiddle.has_expired %} Expired 
+							{% elif denRiddle.is_pending %} Not Active Yet
+							{% else %} Your Answer... {% endif %}">
+						<span class="focus-input100"></span>
+					</div>
+					<!-- Image INPUT -->
+					<!-- <div class="wrap-input100 validate-input" data-validate="Upload Pic" {% if denRiddle.has_expired %}
+						onclick="popup('Time for this ridddle to try is over.', 'Expired Riddle')" {% endif %}
+						{% if denRiddle.is_pending %} onclick="popup('Riddle is not yet active.', 'Pending Riddle')"
+						{% endif %} {% if is_solved %}
+						onclick="popup('This riddle is already solved by you.', 'Solved Riddle')" {% endif %}>
+						<span class="label-input100">Your Pic</span>
+						<input class="input100" type="file" id="user_pic" name="user_pic"
+							onchange="validateFileType(this)" {% if denRiddle.has_expired %} disabled {% endif %}
+							{% if denRiddle.is_pending %} disabled {% endif %} {% if is_solved %} disabled {% endif %}
+							placeholder="Your Pic...">
+						<span class="focus-input100"></span>
+					</div> -->
+
+					<!-- ANSWER FORMAT -->
+					<div class="flex-m w-full p-b-33">
+						<div class="contact100-form-checkbox">
+							<a class="txt2 hov1">
+								Answer Format: {{denRiddle.riddle.answer_format}}
+							</a>
+						</div>
+					</div>
+
+					<!-- SUBMIT BUTTON -->
+					<div class="container-login100-form-btn" {% if denRiddle.has_expired %}
+						onclick="alert('Time for this ridddle to try is over.')" {% endif %}
+						{% if denRiddle.is_pending %} onclick="alert('Riddle is not yet active.')" {% endif %}>
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button id="btnClick" {% if denRiddle.has_expired %} disabled
+								{% elif denRiddle.is_pending %} disabled {% endif %} {% if is_solved %} disabled
+								{% endif %} class="login100-form-btn">
+								{% if denRiddle.has_expired %} Expired {% elif denRiddle.is_pending %} Not Yet Active
+								{% else %} Submit Answer {% endif %}
+							</button>
+						</div>
+					</div>
+				</form>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+	
+	{% block scripts %}
+	<!-- IMGE HOVER -->
+	<script>
+		function denBtn_hover(element) {
+			document.getElementById(element.id).src = "{% static 'riddlechamp/img/den_hover.png' %}"
+		}
+
+		function denBtn_out(element) {
+			document.getElementById(element.id).src = "{% static 'riddlechamp/img/den.png' %}"
+		}
+
+		function homeBtn_hover(element) {
+			document.getElementById(element.id).src = "{% static 'riddlechamp/img/home_hover.png' %}"
+		}
+
+		function homeBtn_out(element) {
+			document.getElementById(element.id).src = "{% static 'riddlechamp/img/home.png' %}"
+		}
+	</script>
+
+	<!-- COUNT DOWN -->
+	<script>
+		$(document).ready(function () {
+			$('#display_message').hide()
+		});
+
+		$("#TimeRemaining").ready(function () {
+			var status = $("#TimeRemaining").attr('data-active')
+			if (status == 'Active') {
+				var ending_at = $("#TimeRemaining").attr('data-time')
+				countdown_calculator(parseInt(ending_at), 'Active')
+			}
+			else if (status == 'Pending') {
+				var starting_at = $("#TimeRemaining").attr('data-time')
+				countdown_calculator(parseInt(starting_at), 'Active')
+			}
+		});
+
+		function countdown_calculator(epoch, status) {
+
+			// Update the count down every 1 second
+			var x = setInterval(function () {
+
+				//number of seconds till now since epoch
+				now = new Date()
+				now = Math.round(now.getTime() / 1000)
+
+				// Find the distance between now and the count down date
+				if (status == 'Pending') {
+					var distance = now - epoch;
+				}
+				else if (status == 'Active') {
+					var distance = epoch - now;
+				}
+				else {
+					var distance = 0;
+				}
+
+
+				// Time calculations for days, hours, minutes and seconds
+				var days = Math.floor(distance / (60 * 60 * 24));
+				var hours = Math.floor((distance % (60 * 60 * 24)) / (60 * 60));
+				var minutes = Math.floor((distance % (60 * 60)) / (60));
+				var seconds = Math.floor((distance % 60));
+
+				countdown_start = "<strong>New Riddle in <br /><br />";
+				countdown_end = "</strong>";
+
+				countdown = now
+
+				//setting countdown text
+				if (days == 0) {
+					if (hours == 0) {
+						if (minutes == 0) {
+							if (seconds == 0) {
+								if ($("#TimeRemaining").attr('data-active') == 'Active') {
+									countdown = alert("Time for this Riddle is expired. Reloading Page......")
+								}
+								location.reload(true)
+							}
+							else {
+								countdown = seconds + "s ";
+							}
+						}
+						else {
+							countdown = minutes + "m " + seconds + "s ";
+						}
+					}
+					else {
+						countdown = hours + "h " + minutes + "m " + seconds + "s ";
+					}
+				}
+				else {
+					countdown = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+				}
+				// Display the result in the element with id="demo"
+				document.getElementById("TimeRemaining").innerHTML = countdown;
+
+				// If the count down is finished, write some text
+				if (distance < 0) {
+					clearInterval(x);
+					document.getElementById("TimeRemaining").innerHTML = "EXPIRED";
+				}
+			}, 1000);
+		};
+
+		// photo validation
+		function validateFileType(input) {
+			var fileName = input.value,
+				idxDot = fileName.lastIndexOf(".") + 1,
+				extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+
+			if (["jpg", "jpeg", "png"].includes(extFile)) {
+				if (input.files[0].size / 1000 < 500) {
+					// TO DO
+				}
+				else {
+					alert("File size has to be less then 500 KB");
+					input.value = ""
+				}
+			} else {
+				alert("Only jpg/jpeg and png files are allowed!");
+				input.value = ""
+			}
+		}
+
+	</script>
+
+	<!-- SUCCESS/EERROR Message -->
+	<script>
+		// disable right click
+		$('.riddle-image').ready(function () {
+			$(this).bind("contextmenu", function (e) {
+				e.preventDefault();
+			});
+		})
+
+		$(document).ready(function () {
+			status = ($('#status_of_riddle').attr('title'))
+			showPopup(status)
+
+			$("body").attr('draggable', false)
+		});
+
+		function popup(message, title) {
+			swal({
+				title: title,
+				text: message,
+				icon: "error",
+				button: "Ohhkkkk",
+			});
+		}
+
+		function showPopup(status) {
+			var urlParams = new URLSearchParams(window.location.search);
+
+			success_list = ['Good Job!!!', 'Well Done!!!', 'BINGO!!!', 'Awww Yessss!!!']
+			praise_list = ['You deserve a salute dude...', 'You just hit the bullseyes dude....',
+				"Didn,t expect you to be so good... ", 'That was Good!!!']
+			failed_list = ['LOL!!!', 'SERIOUSLY???', 'GO Away!!!', 'Awwwwwwwwww!!!']
+			insult_list = ['You deserve a salute dude... LOL!!!', 'How can you be so wrong....',
+				"Go Away! This is not meant for you..", 'You are so bad in this!!!', 'You need a break..',
+				"This is not your cup of tea"]
+
+			function get_random_from_list(mylist) {
+				return mylist[Math.floor(Math.random() * mylist.length)]
+			}
+			if (urlParams.has('s') && (urlParams.get('s') == '301' && status == "SOLVED")) {
+				console.log(urlParams.get('s'))
+				swal({
+					title: get_random_from_list(success_list),
+					text: get_random_from_list(praise_list),
+					icon: "success",
+					button: "I Know I'm Good",
+				});
+
+			}
+			else if (urlParams.has('e') && (urlParams.get('e') == '901' && status == "UNSOLVED")) {
+				console.log(urlParams.get('e'))
+				swal({
+					title: get_random_from_list(failed_list),
+					text: get_random_from_list(insult_list),
+					icon: "error",
+					button: "I Know I'm JERK",
+				});
+			}
+		}
+	</script>
+
+	<!-- Typing Effect -->
+	<script>
+		// set up text to print, each item in array is new line
+		var aText = new Array(document.getElementById('riddle_question').getAttribute('data-question'))
+		var iSpeed = 75; // time delay of print out
+		var iIndex = 0; // start printing array at this posision
+		var iArrLength = aText[0].length; // the length of the text array
+		var iScrollAt = 20; // start scrolling up at this many lines
+
+		var iTextPos = 0; // initialise text position
+		var sContents = ''; // initialise contents variable
+		var iRow; // initialise current row
+
+		function typewriter() {
+			sContents = ' ';
+			iRow = Math.max(0, iIndex - iScrollAt);
+			var destination = document.getElementById("typedtext");
+
+			while (iRow < iIndex) {
+				sContents += aText[iRow++] + '<br />';
+			}
+			destination.innerHTML = sContents + aText[iIndex].substring(0, iTextPos) + "_";
+			if (iTextPos++ == iArrLength) {
+				iTextPos = 0;
+				iIndex++;
+				if (iIndex != aText.length) {
+					iArrLength = aText[iIndex].length;
+					setTimeout("typewriter()", 250);
+				}
+				else {
+					setTimeout("riddle_media_display()", 2000)
+				}
+			} else {
+				setTimeout("typewriter()", iSpeed);
+			}
+		}
+
+		typewriter()
+
+		function riddle_media_display() {
+			document.getElementById("riddle_media").setAttribute("style", "visibility:visible; width:100%; margin-top:50px")
+		}
+		//<img scr="/media/image/riddle/interesting-riddles-propensity-for-curiosity-21.jpg">
+		//<img src="/media/image/riddle/interesting-riddles-propensity-for-curiosity-21.jpg">
+	</script>
+	{% endblock %}

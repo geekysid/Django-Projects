@@ -1,0 +1,268 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="{% static 'home/css/alert_sid.css' %}" rel="stylesheet">
+
+    <title>
+        Instagram Hashtag Scraper - By Siddhant Shah
+    </title>
+
+    <style>
+          .vertical-center {
+            min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+            min-height: 100vh; /* These two lines are counted as one :-)       */
+          
+            display: flex;
+            align-items: center;
+          };
+
+            .instagramLink {
+              position:absolute;
+              top:0;
+              right:0;
+            }
+            .gekkySidLink {
+              position:absolute;
+              top:0;
+              left:0;
+            }
+
+            .btn-outline-primary2,
+            .btn-outline-primary2:active,
+            .btn-outline-primary2:visited{
+              border-color: #f05f3e !important;
+            }
+            .btn-outline-primary2:active,
+            .btn-outline-primary2:focus,
+            .btn-outline-primary2:hover {
+                background-color: #eeaa33 !important;
+                border-color: #f05f3e !important;
+            }
+
+
+            .btn-outline-primary,
+            .btn-outline-primary:active,
+            .btn-outline-primary:visited{
+              border-color: #9b39d9 !important;
+            }
+            .btn-outline-primary:active,
+            .btn-outline-primary:focus,
+            .btn-outline-primary:hover {
+                background-color: #8064A2 !important;
+                border-color: #9b39d9 !important;
+            }
+    </style>
+    
+    <!-- jQuery files -->
+    <script src="{% static 'home/js/jquery.min.js' %}"></script>
+    <script>
+      function gekkySidLink_hover(element){
+        document.getElementById(element.id).src = "{% static 'instagramscraper/images/geeky_sid_hover.png' %}"
+      }
+      function gekkySidLink_out(element){
+        document.getElementById(element.id).src = "{% static 'instagramscraper/images/geeky_sid.png' %}"
+      }
+      
+      function instaLink_hover(element){
+        document.getElementById(element.id).src = "{% static 'instagramscraper/images/insta_top_left_hover.png' %}"
+      }
+      function instaLink_out(element){
+        document.getElementById(element.id).src = "{% static 'instagramscraper/images/insta_top_left.png' %}"
+      }
+
+    </script>
+    
+  </head>
+  <body  style="background-color:#fbf7f5;">
+    
+   <!-- Display only for mobile and tablet device -->
+  {% if MOBILE_TABLET_FLAG == 'true' %}
+  <div class="alert_sid">
+    <span class="closebtn_sid" onclick="this.parentElement.style.display='none';">&times;</span> 
+    <strong>The UI might look out of place on mobile</strong>.... This App is best viewed on Desktop or Laptop.
+  </div>
+  {% endif %}
+
+    <!-- TOP LEFT BUTTON -->
+    <div class="gekkySidLink"> 
+      <a href="http://www.geekysid.com"><img id="gekkySid_img" src="{% static 'instagramscraper/images/geeky_sid.png' %}" style="width:90px;" 
+            onmouseover="gekkySidLink_hover(this)" onmouseout="gekkySidLink_out(this)" /></a>
+    </div>
+    
+    <!-- TOP RIGHT` BUTTON -->
+      <!-- <div class="instagramLink"> 
+        <a href="#"><img id="github_img" src="{% static 'instagramscraper/images/insta_top_left.png' %}" style="width:90px;" 
+              onmouseover="instaLink_hover(this)" onmouseout="instaLink_out(this)" /></a>
+      </div> -->
+      
+    <!-- HOMEPAGE STARTS -->
+    
+    <div class="jumbotron vertical-center" style="background-color:#fbf7f5;">
+
+      <div class="container">
+          <div class='row'>
+              <div class='col-sm-12 text-center align-middle'>
+                <img src="{% static 'instagramscraper/images/insta_logo.png' %}" width="20%">
+                <br /><br /><br />
+                <table style="width: 100%;">
+                  <tr>
+                    <td style="text-align: center;">
+                      <form action="" method="post">{% csrf_token %}
+                        <input type="text" name="insta_hashtag" placeholder="Instagram Hashtag"  id="insta_hashtag" title="Instagram Hashtag"
+                            style="border:0.75px solid #9b39d9; border-radius: 7.5px; background-color: #fbf7f5; max-width:200px; padding: 5px; min-width:150px; color:black; font-size:15px" />
+                        &emsp;
+                        <input type="text" name="max_post_count" placeholder="Number of Post to Fetch" id="max_post_count" title="Number of Post to Fetch"
+                            style="border:0.75px solid #9b39d9; border-radius: 7.5px; background-color: #fbf7f5; max-width:200px; padding: 5px; min-width:150px; color:black; font-size:15px" />
+                        &emsp;
+                          <button type="submit" class="btn btn-outline-primary btn-sm" id="fetch_hashtag_data_btn">
+                            &emsp; <span style="color: black;">Fetch Hashtag Data</span> &emsp;
+                          </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: center;">
+                      <div id="files_div">
+                        
+                      </form>
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td>
+                      {% if error != null %}
+                        <br />
+                        <span style="color:indianred">
+                          {{error}}
+                        </span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                </table>
+                
+                <br /><br /><br />
+              </div>
+          </div>
+      </div>
+    </div>
+    
+
+    <!-- Footer -->
+    <footer id="sticky-footer" class="fixed-bottom  text-black-50" style="background-color: #fbf7f5;">
+      <div class='container' style="font-size:12px">
+        <div class='row  mt-3 align-middle'>
+          <div class='col-12 text-center'>
+            <ul class="list-inline">
+              <li class="list-inline-item">Built with</li>
+              <li class="list-inline-item" style="color:#9b39d9">Python</li>
+                <li class="list-inline-item">.</li>
+                <li class="list-inline-item" style="color:#9b39d9">Python - Requests (API)</li>
+                <li class="list-inline-item">.</li>
+                <li class="list-inline-item" style="color:#9b39d9">Django</li>
+                <li class="list-inline-item">.</li>
+                <li class="list-inline-item" style="color:#9b39d9">InstagramAPI</li>
+                <li class="list-inline-item">and more</li>!!
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Footer -->
+
+    <script>
+      //$( document ).ready(function() {
+        //  document.getElementById("#files_div").hide;
+      //});
+      
+
+      $('#fetch_hashtag_data_btn').on('click',function(e){
+			
+        // preventing from reloading the page
+        e.preventDefault();
+  
+        if(!($('#insta_hashtag').val() == null || $('#insta_hashtag').val() == '')){
+          $("#insta_hashtag").attr("style", "border:0.75px solid #9b39d9; border-radius: 7.5px; background-color: #fbf7f5; max-width:200px; padding: 5px; min-width:150px; color:black; font-size:15px");
+  
+          if(!($('#max_post_count').val() == null || $('#max_post_count').val() == '') && ($.isNumeric($('#max_post_count').val()))){
+            
+              $("#max_post_count").attr("style", "border:0.75px solid #9b39d9; border-radius: 7.5px; background-color: #fbf7f5; max-width:200px; padding: 5px; min-width:150px; color:black; font-size:15px");
+
+              $("#fetch_hashtag_data_btn").html("Wait while We fetch Data");
+              $("#fetch_hashtag_data_btn").attr("disabled", true);
+  
+              $('html, body').css("cursor", "wait");
+  
+              $.ajax({
+                type : "POST",
+                url : 'fetch_data',
+                data : {
+                  insta_hashtag : $('#insta_hashtag').val(),
+                  max_post_count : $('#max_post_count').val(),
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                },
+                beforeSend: function() {
+                  message = '<p>Please note Fetching data takes time.... Sometimes it take minutess & sometime it takes hours...<br />'+
+                    'So go out and grab some coffee before till your data is fetched<br />'+
+                    'Make sure you dont close the window or refresh page or your system goes to sleep during fetching else fetching data may be intrupted.<br />'+
+                    '<p><div style="width:100%; align:center"><table style="width:25%;"><tr><th>Post Fetch</th><th>Estimated Time</th></tr>'+
+                      '<tr><td>100 Posts</td><td> 2 Mins</td></tr>'+
+                      '<tr><td>500 Posts</td><td> 10 Mins</td></tr>'+
+                      '<tr><td>1,000 Posts</td><td>25 Mins</td></tr>'+
+                      '<tr><td>2,000 Posts</td><td> 40 Mins</td></tr>'+
+                      '<tr><td>2,500 Posts</td><td>Over 60 Mins</td></tr>'+
+                    '</table></div>'
+                  $('#files_div').html('<p><br />'+message+'<br/>')
+                },
+                complete: function() {
+                  
+                },
+                success: function(data) {
+                    //$('#cform').fadeOut();
+                    $("#files_div").show()
+                    post_file = data['post_file']
+                    user_file = data['user_file']
+                    console.log(post_file )
+                    message = '<p>Total <strong>Posts</strong> Fetched: '+data['post_fetched_count']+'<br />'+
+                      'Total Unique <strong>Users</strong> Fetched: '+data['user_fetched_count']+'<br />'+
+                      'Total Execution <strong>Time</strong>: '+data['execution_time_hrs']+'<br />'+
+                      '<p>'
+
+                    post_btn = '<a class="btn btn-outline-primary2 btn-sm download_btn" href="save_file?file_name='+post_file+'" target="_balnk">&emsp; <span style="color: black;">Download Post Data File</span> &emsp;</a>'
+                    user_btn = '<a class="btn btn-outline-primary2 btn-sm download_btn" href="save_file?file_name='+user_file+'" target="_balnk">&emsp; <span style="color: black;">Download User Data File</span> &emsp;</a>'
+                    
+                    $('#files_div').html('<p><br />'+message+'<br/>'+post_btn+'&emsp;&emsp;'+user_btn+'<br /><span style="font-size:10px">*Please note these files will be deleted during next execution so please download them</span>')
+                      
+                    $('html, body').css("cursor", "auto");
+
+                    $("#fetch_hashtag_data_btn").html("&emsp;&emsp; <span style='color: black;'>Fetch Hashtag Data</span> &emsp;");
+                    $("#fetch_hashtag_data_btn").attr("disabled", false);
+                },
+                error: function(err){
+                  $('#files_div').html("<div class='name'><p>Error: "+err+"<p> There is an error while fetching data.<br />Please sent your Hashtag and Maximum number of post to be fetched to me<br />on siddhant.shah.86@gmail.com and i will sent you the csv files</p></div>"),
+                  $('html, body').css("cursor", "auto");
+                }
+              });
+          }
+          else{
+            $("#max_post_count").attr("style", "border:0.75px solid red; border-radius: 7.5px; background-color: #fbf7f5; max-width:200px; padding: 5px; min-width:150px; color:black; font-size:15px");
+          }
+        }
+        else{
+          $("#insta_hashtag").attr("style", "border:0.75px solid red; border-radius: 7.5px; background-color: #fbf7f5; max-width:200px; padding: 5px; min-width:150px; color:black; font-size:15px");
+        }
+      });
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

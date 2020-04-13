@@ -26,7 +26,10 @@ urlpatterns = [
     path('emailer', views.emailer, name='emailer'),
     path('bookstore/', include('bookstore.urls')),
     path('octaprofile/', include('octaprofile.urls')),
-    path('scorebuzz/', include('scorebuzz.urls'))
+    path('scorebuzz/', include('scorebuzz.urls')),
+    path('riddlechamp/', include('RiddleChamp.urls')),
+    path('account/', include('Account.urls')),
+    path('instagramscraper/', include('instagramscraper.urls'))
 ]
 
 url_static = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

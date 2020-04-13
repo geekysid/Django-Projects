@@ -1,0 +1,258 @@
+{% extends 'account/riddle_master.html' %}
+{% load static %}
+
+    {% block title %}
+    <title>Riddle Champ - Login</title>
+    {% endblock %}
+
+
+    {% block body %}
+    <!-- DIV to hold data for Alert -->
+    {% if alertData == None %}
+    {% else %}
+    <div style="visibility:hidden" id="alertData_div" data-type="{{alertData.Type}}" data-title="{{alertData.title}}"
+        data-message="{{alertData.message}}">
+    </div>
+    {% endif %}
+
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="login100-more" style="background-image: url('images/bg-01.jpg');"></div>
+
+            <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+
+                <div class="flex-m w-full p-b-33">
+                    <span id="message" class="txt1" style="font-size:larger">
+                        
+                    </span>
+                </div>
+
+                {% if user.is_authenticated %}
+                {% else %}
+                <form class="login100-form validate-form" method=post>
+                    {% csrf_token %}
+                    <span class="login100-form-title p-b-59">
+                        Sign In
+                    </span>
+
+                    <div id="username_div" class="wrap-input100 validate-input" data-validate="Username is required">
+                        <span class="label-input100">Username</span>
+                        <input class="input100" type="text" id="username" name="username" placeholder="Username...">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div id="password1_div" class="wrap-input100 validate-input" data-validate="Password is required">
+                        <span class="label-input100">Password</span>
+                        <input id="password" class="input100" type="password" name="pass" placeholder="*************">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="flex-m w-full p-b-33">
+                        <div class="contact100-form-checkbox">
+                            <span class="txt1">
+                                <a href="/account/forgotpassword" class="txt2 hov1">
+                                    Forgot Password
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <div class="wrap-login100-form-btn">
+                            <div class="login100-form-bgbtn"></div>
+                            <button id="btnClick" class="login100-form-btn">
+                                Sign In
+                            </button>
+                        </div>
+
+                        <a href="/account/register" class="dis-block txt3 hov1 p-r-30 p-t-10 p-b-10 p-l-30">
+                            Sign Up
+                            <i class="fa fa-long-arrow-right m-l-5"></i>
+                        </a>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+	{% endblock %}
+
+
+    {% block scripts %}
+    <!-- // Alert from Error codes -->
+    <script>
+        $("#alertData_div").ready(function () {
+            title = $("#alertData_div").attr('data-title')
+            message = $("#alertData_div").attr('data-message')
+            type = $("#alertData_div").attr('data-type')
+            if (!(title == undefined || message == undefined || type == undefined)) {
+                swal({
+                    title: title,
+                    text: message,
+                    icon: type,
+                    button: "Ok",
+                });
+            }
+        })
+    </script>
+    <script>
+        // function for change cursor to wait on ajax call
+		$(document).ajaxStart(function() {
+			$(document.body).css({'cursor' : 'wait'});
+		}).ajaxStop(function() {
+			$(document.body).css({'cursor' : 'default'});
+        });
+
+
+        // getting params
+        $(document).ready(function () {
+            url = window.location.href
+            params = url.split("/")[(url.split("/")).length - 1]
+
+            // Account Activated Successfully
+            if (params === "dbe3") {
+                $("#message").html('<span style="color:rosybrown; font-size:large">Congratulations</span>. Your account is now activated . Please sign in to start hunting<p> </p>')
+            }
+            // Account Already Activated
+            else if (params === "1b22") {
+                $("#message").html('The account is already activated. Please login to start hunting<p> </p>')
+            }
+            // Account Activation - Exception
+            else if (params === "1a62") {
+                $("#message").html('Unable to activate account.<br />Reason: Exception occurred. Please contact System Admin')
+            }
+            // Account Activation - Invalid Activation Code
+            else if (params === "18e2") {
+                $("#message").html('Unable to activate account.<br />Reason: Invalid Activation Code.')
+            }
+            // Account Activation - Invalid Activation Code
+            else if (params === "daa3") {
+                $("#message").html('Unable to activate account.<br />Reason: Invalid Token.')
+            }
+            // Account Activation - Invalid Activation Code
+            else if (params === "db25") {
+                $("#message").html('We have sent an activation mail on your email address. Please activate your account before signing in.Unable to activate account.<br />Reason: Invalid Activation Code.')
+            }
+        })
+
+        // RESEND ACTIVIATION LINK
+        $("#message").on('click', 'a', function (e) {
+            e.preventDefault();
+            $("#btnClick").attr('disabled', true)
+            data = {
+                'email': $("#resend_actLink").attr('data1'),
+                'act_link': $("#resend_actLink").attr('data2')
+            }
+            $.ajax({
+                type: "GET",
+                url: "/account/resent_activation_mail",
+                data: data,
+                dataType: 'json',
+                success: function (result) {
+                    if (result.successFlag == true) {
+                        swal({
+                            title: "Mail Sent",
+                            text: "Activation Mail Successfully sent. Please check your mailbox",
+                            icon: "success",
+                            button: "Ok",
+                        });
+                        document.getElementById("message").innerHTML = 'We have sent an activation mail on your email address, <span style="color:rosybrown">' + result.email + '</span>. Please activate your account before signing in.<p> </p>'
+                        $("#btnClick").removeAttr('disabled')
+                    }
+                    else {
+                        if (Flag.error == "Invalid Request") {
+                            swal({
+                                title: Flag.error,
+                                text: Flag.message,
+                                icon: "error",
+                                button: "Ok",
+                            });
+                            window.location.href = '/account/login/e/8be6'
+                        }
+                        else {
+                            if (Flag.error == "Data Missing") {
+                                document.getElementById("message").innerHTML = Flag.message
+                            }
+                            swal({
+                                title: Flag.error,
+                                text: Flag.message,
+                                icon: "error",
+                                button: "Ok",
+                            });
+                            $("#btnClick").removeAttr('disabled')
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    var err = JSON.parse(xhr.responseText)
+                    console.log(err.responseText)
+                    console.log("9")
+                    swal({
+                        title: "Unwanted Error",
+                        text: "There was an error that couldnt be handelled by server. Please contact System Admin",
+                        icon: "error",
+                        button: "Ok",
+                    });
+                    $("body").css("cursor", "default");
+                }
+            });
+        });
+
+        // ON LOG IN
+        $("#btnClick").click(function (e) {
+            if ($("#password").val().length > 0 && $("#username").val().length > 0) {
+                e.preventDefault();
+                $("#btnClick").attr('disabled', true)
+
+                data = {
+                    'username': $("#username").val().toLowerCase(),
+                    'password': md5($("#password").val())
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/account/user_login",
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }, // for csrf token
+                    data: data,
+                    dataType: 'json',
+                    success: function (Flag) {
+                        if (Flag.successFlag == true) {
+                            window.location.href = "/riddlechamp/index"
+                        }
+                        else {
+                            if (Flag.error == "Invalid Request") {
+                                swal({
+                                    title: Flag.error,
+                                    text: Flag.message,
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                                window.location.href = '/account/login/e/8be6'
+                            }
+                            else {
+                                if (Flag.error == "Inactive Account") {
+                                    document.getElementById("message").innerHTML = 'The account you are trying to access is inactive. Activation link is sent to tour email address, <span style="color:rosybrown">' + Flag.email + '</span>. Please activate your account before signing in or <a id="resend_actLink" data1="' + Flag.email + '" data2=' + Flag.ac_code + ' class="txt2 hov1" style="font-size: larger; color:salmon" href="#">click here</a>to resent the email.<p> </p>'
+                                }
+                                swal({
+                                    title: Flag.error,
+                                    text: Flag.message,
+                                    icon: "error",
+                                    button: "Ok",
+                                });
+                                $("#btnClick").removeAttr('disabled')
+                            }
+                        }
+                    },
+                    error: function () {
+                        swal({
+                            title: "Unwanted Error",
+                            text: "There was an error that couldnt be handelled by server. Please contact System Admin",
+                            icon: "error",
+                            button: "Ok",
+                        });
+                    }
+                });
+            }
+        })
+    </script>
+	{% endblock %}

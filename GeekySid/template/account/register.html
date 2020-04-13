@@ -1,0 +1,379 @@
+{% extends 'account/riddle_master.html' %}
+{% load static %}
+
+    {% block title %}
+	<title>Riddle Champ - User Registeration Form</title>
+    {% endblock %}
+
+
+    {% block body %}
+	<!-- DIV to hold data for Alert -->
+    {% if alertData == None %}
+    {% else %}
+    <div style="visibility:hidden" id="alertData_div" data-type="{{alertData.Type}}" data-title="{{alertData.title}}"
+		data-message="{{alertData.message}}">
+	</div>
+	{% endif %}
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="login100-more" style="background-image: url('images/bg-01.jpg');">
+			</div>
+			
+			<div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+				<div class="flex-m w-full p-b-33">
+					<span id="message" class="txt1" style="font-size:larger">
+                        {% if Flag == 'Invalid_Request' %}
+                            The account you are trying to access is inactive. Activation link is sent to tour email address, <span style="color:rosybrown">{{email}}</span>. Please activate your account before signing in or <a id="resend_actLink_a" data1="{{email}}" data2={{acc}} style="font-size: larger; color:salmon" href="#">click here </a>to resent the email.<p> </p>
+                        {% endif %}
+                        {% if Flag == 'Already_Activated' %}
+                            The account associated with email address, {{email}}, is already activated. Please login to start solving amazing puzzels<p> </p>
+                        {% endif %}
+                        {% if Flag == 'Activated' %}
+                        	<span style="color:rosybrown; font-size:large">Congratulations</span>. Your account associated with email address, {{email}}, is now activated . Please sign in to start solving amazing puzzels<p> </p>
+                        {% endif %}
+                        {% if Flag == 'Activation_Mail_Sent' %}
+                        	Account Activation mail is sentahain to your email address, <span style="color:rosybrown; font-size:large">{{email}}</span>. Kindly go you email and activate your account.<p> </p>
+						{% endif %}
+						{% if Flag == "Activation_Error" %}
+							<span style="font-size:larger">Unable to activate account.<br />Reason: <span style="color:red">{{error}}</span></span>
+						{% endif%}
+						
+						{% if user.is_authenticated %}
+							You are already logged in with email, {{user.email}}. Please <a id="resend_actLink_a" data1="{{email}}" data2={{acc}} class="txt2 hov1" style="font-size:large; color:salmon" href="logout">logout</a> to register with different user.
+						{% endif %}
+                    </span>
+				</div>
+
+				{% if user.is_authenticated %}
+				{% else %}
+					<form class="login100-form validate-form" method=post>
+						{% csrf_token %}
+						<span class="login100-form-title p-b-59">
+							Sign Up
+						</span>
+
+						<div class="flex-m w-full p-b-33">
+							<span id="message" class="txt1" style="color: red;">
+								
+							</span>
+						</div>
+						<div class="wrap-input100 validate-input" data-validate="Name is required">
+							<span class="label-input100">Full Name</span>
+							<input id="fullName" class="input100" type="text" name="name" placeholder="Name...">
+							<span class="focus-input100"></span>
+						</div>
+
+						<div id="email_div" class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+							<span class="label-input100">Email</span>
+							<input id="email" class="input100" type="text" name="email" placeholder="Email addess...">
+							<span class="focus-input100"></span>
+						</div>
+
+						<div id="username_div" class="wrap-input100 validate-input" data-validate="Username is required">
+							<span class="label-input100">Username</span>
+							<input class="input100" type="text" id="username" name="username" placeholder="Username...">
+							<span class="focus-input100"></span>
+						</div>
+
+						<div id="password1_div" class="wrap-input100 validate-input" data-validate = "Password is required">
+							<span class="label-input100">Password</span>
+							<input id="password" class="input100" type="password" name="pass" placeholder="*************">
+							<span class="focus-input100"></span>
+						</div>
+
+						<!-- <div id="password2_div" class="wrap-input100 validate-input" data-validate = "Repeat Password is required">
+							<span class="label-input100">Repeat Password</span>
+							<input id="password2" class="input100" type="password" name="repeat-pass" placeholder="*************">
+							<span class="focus-input100"></span>
+						</div> -->
+
+						<div class="flex-m w-full p-b-33">
+							<div class="contact100-form-checkbox">
+								<input id="terms" class="input-checkbox100" type="checkbox" checked disabled name="remember-me">
+								<label class="label-checkbox100" for="terms">
+									<span class="txt1">
+										I agree to the
+										<a href="#" class="txt2 hov1">
+											Terms of User
+										</a>
+									</span>
+								</label>
+							</div>
+						</div>
+
+						<div class="container-login100-form-btn">
+							<div class="wrap-login100-form-btn">
+								<div class="login100-form-bgbtn"></div>
+								<button id="btnClick" class="login100-form-btn">
+									Register Me
+								</button>
+							</div>
+
+							<a href="login" class="dis-block txt3 hov1 p-r-30 p-t-10 p-b-10 p-l-30">
+								Sign in
+								<i class="fa fa-long-arrow-right m-l-5"></i>
+							</a>
+						</div>
+					</form>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+
+
+    {% block scripts %}
+	<!-- // Alert from Error codes -->
+    <script>
+        $("#alertData_div").ready(function () {
+            title = $("#alertData_div").attr('data-title')
+            message = $("#alertData_div").attr('data-message')
+            type = $("#alertData_div").attr('data-type')
+            if (!(title == undefined || message == undefined || type == undefined)) {
+                swal({
+                    title: title,
+                    text: message,
+                    icon: type,
+                    button: "Ok",
+                });
+            }
+        })
+	</script>
+	
+	<script>
+
+		$(document).ajaxStart(function() {
+			$(document.body).css({'cursor' : 'wait'});
+		}).ajaxStop(function() {
+			$(document.body).css({'cursor' : 'default'});
+		});
+
+		var email_flag = false;
+		var username_flag = false;
+		var password_flag = false;
+		var terms_flag = false;
+		var validation_flag = false;
+
+		// EMAIL VALIDATION
+		$("#email").focusout(function(){
+			email = this.value
+
+			//validating email
+			let email_reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			valid_email = email_reg.test(email)
+
+			if(email == "" || valid_email == false){
+				document.getElementById("email_div").setAttribute("class", "wrap-input100 validate-input alert-validate");
+				document.getElementById("email_div").setAttribute("data-validate", "Email is required");
+				email_flag = false; 
+				$("#email").focus()
+				swal({
+					title:"Valid Email Is Required",
+					text: "Please enter a Valid Email",
+					icon: "error",
+					button: "Ok",
+				});
+			}
+			else{
+				$.ajax({
+					type: "POST",
+					url: "email_validity",
+					headers: {'X-CSRFToken': '{{ csrf_token }}'}, // for csrf token
+					data:{'email': email, },
+					dataType: 'json',
+					success: function(result) {
+						if(result.successFlag == true){
+							$("#email_div").attr("class", "wrap-input100 validate-input true-validate");
+							$("#email").attr("class", "input100 has-val");
+							
+							email_flag = true; 
+							username = document.getElementById('username').value;
+
+							if(username == undefined || username == null){
+								document.getElementById('username').setAttribute('value', email.split("@")[0]); 
+							}
+							else if (username == ""){
+								document.getElementById('username').value = email.split("@")[0]; }
+							}
+						else {
+							document.getElementById("email_div").setAttribute("class", "wrap-input100 validate-input alert-validate");
+							document.getElementById("email").setAttribute("data-validate", result.text);
+							$("#email_div").attr("data-validate", "Email already registered");
+							email_flag = false; }
+					},
+					error: function(){
+						email_flag = false
+					}
+				});
+			}
+		});
+		
+		// USERNAME VALIDATION
+		$("#username").focusout(function(){
+			username = this.value
+
+			if(username == "" || username == null){
+				document.getElementById("username_div").setAttribute("class", "wrap-input100 validate-input alert-validate");
+				document.getElementById('username').setAttribute('value', "")
+				document.getElementById("username_div").setAttribute("data-validate", "Username is required");
+				username_flag = false;
+				$("#username").focus()
+				swal({
+					title:"Username Required",
+					text: "Please enter a username",
+					icon: "error",
+					button: "Ok",
+				});
+			}
+			else{
+				$.ajax({
+					type: "POST",
+					url: "username_validity",
+					headers: {'X-CSRFToken': '{{ csrf_token }}'}, // for csrf token
+					data:{'username': username, },
+					dataType: 'json',
+					success: function(result) {
+						if(result.success == true){
+							document.getElementById("username_div").setAttribute("class", "wrap-input100 validate-input true-validate")
+							document.getElementById("username").setAttribute("class", "input100 has-val") 
+							username_flag = true;
+							$("#password").focus()
+						}
+						else{
+							document.getElementById("username_div").setAttribute("class", "wrap-input100 validate-input alert-validate");
+							document.getElementById("username_div").setAttribute("data-validate", result.text);
+							username_flag = false;
+							swal({
+								title:"Username Unavailable",
+								text: "This username is already taken",
+								icon: "error",
+								button: "Ok",
+							});
+						}
+					},
+					error: function(){
+						username_flag = false;
+						$("#username").focus()
+					}
+				});
+			}
+		});
+		
+		// PASSWORD VALIDATION
+		$("#password").focusout(function(){
+            regExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}$/
+            valid_pass = regExp.test($("#password").val())
+
+            if (valid_pass == false){
+				password_flag = false
+                $("#password").focus()
+                swal({
+                    title: "Invalid Password",
+                    text: "The string must contain at least 1 uppercase & 1 lowercaser alphabet, at least 1 number and should be more the 5 characters long",
+                    icon: "error",
+                    button: "Ok",
+                });
+            }
+            else{
+				password_flag = true
+                $("#btnClick").focus()
+            }
+		});
+
+		// ON SUBMIT FORM
+		$("#btnClick").click(function(e){
+			
+			$("#btnClick").html("Please Wait")
+			e.preventDefault();
+			if(username_flag){
+				if(email_flag){
+					if(password_flag){
+						if ($("#fullName").val().length > 0 ){
+							$("#btnClick").attr("disabled", true)
+							$("#btnClick").html("Please Wait")
+				
+							data = {
+								'name' : $("#fullName").val(),
+								'email' : $("#email").val().toLowerCase(),
+								'username' : $("#username").val().toLowerCase(),
+								'password' : md5($("#password").val())
+							}
+			
+							$.ajax({
+								type: "POST",
+								url: "user_registration",
+								headers: {'X-CSRFToken': '{{ csrf_token }}'}, // for csrf token
+								data: data,
+								dataType: 'json',
+								success: function(result) {
+									if(result.successFlag == true){
+										window.location.href = "/account/login/s/db25"
+									}
+									else {
+										$("#btnClick").removeAttr("disabled")
+										$("#btnClick").html("Register Me")
+										swal({
+											title:result.error,
+											text: result.message,
+											icon: "error",
+											button: "Ok",
+										});
+									}
+								},
+								error: function(){
+									swal({
+										title: "Unwanted Error",
+										text: "There was an error that couldnt be handelled by server. Please contact System Admin",
+										icon: "error",
+										button: "Ok",
+									});
+									$("#btnClick").removeAttr("disabled")
+									$("#btnClick").html("Register Me")
+								}
+							});
+							$("#btnClick").removeAttr("disabled")
+							$("#btnClick").html("Register Me")
+						}
+						else{
+							$("#name").focus()
+							swal({
+								title:"Invalid Name",
+								text: "Name is not valid",
+								icon: "error",
+								button: "Ok",
+							});
+						}
+					}
+					else{
+						$("#password").focus()
+						swal({
+							title:"Password is not valid",
+							text: "Password must contain at least 1 uppercase & 1 lowercaser alphabet, at least 1 number and should be more the 5 characters long",
+							icon: "error",
+							button: "Ok",
+						});
+					}
+				}
+				else{
+					$("#email").focus()
+					swal({
+						title:"Email Invalid",
+						text: "Either email is invalid or email is already in use. Please choose different email.",
+						icon: "error",
+						button: "Ok",
+					});
+				}
+			}
+			else{
+				$("#username").focus()
+				swal({
+					title:"Username is Invalid",
+					text: "Username is either invalid or in use. Please choose different username.",
+					icon: "error",
+					button: "Ok",
+				});
+			}
+		});
+	</script>
+	{% endblock %}

@@ -37,12 +37,61 @@ def sendMail(from_email, to_email, msg):
     smtp_address = settings.EMAIL_HOST
     smtp_port = settings.EMAIL_PORT
 
+    print(smtp_user, smtp_pass)
+
+    if from_email == '':
+        from_email = smtp_user
+
     with smtplib.SMTP_SSL(smtp_address, smtp_port) as smtp:
         smtp.login(smtp_user, smtp_pass)
         try:
             smtp.sendmail(from_email, to_email, msg)
         except Exception as e:
             print(str(e))
+
+
+# function that connects to smtp and send mail
+def sendMultiMediaMail(to_email, msg):
+    
+    # information fetcheed from settings.py to connect to smtp
+    smtp_user = settings.EMAIL_USER
+    smtp_pass = settings.EMAIL_PASS
+    smtp_address = settings.EMAIL_HOST
+    smtp_port = settings.EMAIL_PORT
+
+    print(smtp_user, smtp_pass)
+
+    print(smtp_user, smtp_pass)
+
+    with smtplib.SMTP_SSL(smtp_address, smtp_port) as smtp:
+        print("@@@@")
+        smtp.login(smtp_user, smtp_pass)
+        print("#@#@#$@#$@#")
+        try:
+            smtp.sendmail(smtp_user, to_email, msg.as_string())
+        except Exception as e:
+            print(str(e))
+
+
+# function use to sent mail. Returns True if mail sent successfully else returns False
+def mailer(subject, from_, to_, msg):
+
+    # information fetcheed from settings.py to connect to smtp
+    smtp_user = settings.EMAIL_USER
+    smtp_pass = settings.EMAIL_PASS
+    smtp_address = settings.EMAIL_HOST
+    smtp_port = settings.EMAIL_PORT
+
+    # message setting for self mail
+
+    with smtplib.SMTP_SSL(smtp_address, smtp_port) as smtp:
+        try:
+            smtp.login(smtp_user, smtp_pass)
+            smtp.sendmail(smtp_user, to_, msg.as_string())
+            return True
+        except Exception as e:
+            print(str(e))
+            return False
 
 
 # function that executes whne user fills form from contact page
@@ -119,7 +168,6 @@ def bookStore_checkout_mail(user_email, order_msg):
     
     # sending information to myself about this purchase
     bookstore_self_mail(user_email, order_msg)
-
 
 
 # function that executes whne user fills form from contact page

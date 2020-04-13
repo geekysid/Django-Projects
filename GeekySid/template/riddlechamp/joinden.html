@@ -1,0 +1,129 @@
+{% extends 'riddlechamp/riddle_master.html' %}
+{% load static %}
+
+    {% block title %}
+	<title>Riddle Champ -  Join Den</title>
+    {% endblock %}
+
+
+    {% block body %}
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="login100-more" style="background-image: url('images/bg-01.jpg');"></div>
+
+			<div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+				<form class="login100-form validate-form" method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					<span class="login100-form-title p-b-59">
+						Join Den
+					</span>
+
+					<div id="name_div" class="wrap-input100 validate-input" data-validate="Name is required">
+						<span class="label-input100">Den Code</span>
+						<input class="input100" type="text" id="denCode" name="denCode" placeholder="1234..." />
+					</div>
+
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button id="btnClick" class="login100-form-btn">
+								Add Me To Den
+							</button>
+						</div>
+
+						<a href="/riddlechamp/index" class="dis-block txt3 hov1 p-r-30 p-t-10 p-b-10 p-l-30">
+							Home
+							<i class="fa fa-long-arrow-right m-l-5"></i>
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+
+
+    {% block scripts %}
+	<script>
+
+        // function for change cursor to wait on ajax call
+		$(document).ajaxStart(function() {
+			$(document.body).css({'cursor' : 'wait'});
+		}).ajaxStop(function() {
+			$(document.body).css({'cursor' : 'default'});
+		});
+
+		// ON SUBMIT FORM
+		$("form").submit(function(e){
+			console.log("Clicked")
+			e.preventDefault();
+			$("#btnClick").attr('disabled', true)
+
+			if($("#denCode").val().length > 0){
+				var data = new FormData(this)
+				console.log("1")
+
+				$.ajax({
+					type: "POST",
+					url: "",
+					headers: {'X-CSRFToken': '{{ csrf_token }}'}, // for csrf token
+					data: data,
+					dataType: 'json',
+					processData: false,  // tell jQuery not to process the data
+					contentType: false,  // tell jQuery not to set contentType
+					success: function(result) {
+						console.log("DONE")
+						console.log(result)
+						if(result.successFlag == true){
+							console.log("4")
+
+							$("#btnClick").removeAttr('disabled')
+							swal({
+								title: result.success,
+								text: result.message,
+								icon: "success",
+								button: "Yaaayyyyyy",
+							});
+							//window.location.href = "/riddlechamp/index/s/8b23"
+						}
+						else{
+							console.log("false")
+                            if (result.error == "Invalid Request"){
+								console.log("3")
+                                //window.location.href = '/account/login/s/8be6'
+                            }
+							else {
+								console.log("2")
+                                $("#btnClick").removeAttr('disabled')
+								swal({
+									title: result.error,
+									text: result.message,
+									icon: "error",
+									button: "Ohh Noo....",
+								});
+							}
+						}
+					},
+					error: function(){
+						$("#btnClick").removeAttr('disabled')
+						swal({
+							title: 'Error Occurred',
+							text: 'We encountered an error while Updating your profile. Please try again or contact System administrator.',
+							icon: "error",
+							button: "This is sooo BAD....",
+						});
+					}
+				});
+			}
+			else{
+				$("#btnClick").removeAttr('disabled')
+				swal({
+					title: 'Form Invalid',
+					text: 'It seems not all fields are filled or some values are not correct. Please verify the form again.',
+					icon: "error",
+					button: "Sorry",
+				});
+			}
+		})
+	</script>
+	{% endblock %}

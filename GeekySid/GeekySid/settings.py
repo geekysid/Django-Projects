@@ -71,9 +71,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_user_agents',
-    'bookstore.apps.BookstoreConfig',
+    'bookstore',
     'octaprofile.apps.OctaprofileConfig',
-    'scorebuzz.apps.ScorebuzzConfig'
+    'scorebuzz.apps.ScorebuzzConfig',
+    'instagramscraper.apps.InstagramscraperConfig',
+    'Account',
+    'RiddleChamp'
 ]
 
 MIDDLEWARE = [
