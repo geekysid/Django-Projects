@@ -18,6 +18,7 @@ from geekysid import cvEmailer, settings
 __BASE_SCORE = 50
 # Base_url = 'http://127.0.0.1:8000/'
 Base_url = 'http://www.geekysid.com/'
+current_epoch = datetime.now().timestamp()
 
 # method that returns data to show alert depending on url like index/s/8768
 def get_AlertDataFromUrl(url):
@@ -248,7 +249,6 @@ def den(request):
 
         den_index = url_list.index('den')
         den_uin = url_list[den_index+1]
-        current_epoch = datetime.now().timestamp()
 
         den = Den.objects.filter(uin_code=den_uin)
         userProfile_obj = UserProfile.objects.get(user=user)
@@ -509,33 +509,30 @@ def denRiddle(request):
 
     if request.user.is_authenticated:
 
-        # when page is called
+        user = request.user
+        user_id = user.id
+
+        url_path = request.META.get('PATH_INFO')
+
+        den_riddle_uin_list = url_path.split('/')[len(url_path.split('/'))-1].split('?')
+        uin_code = den_riddle_uin_list[len(den_riddle_uin_list)-1]
+
+        den_riddle = DenRiddle.objects.filter(uin_code=uin_code)
+        
+        # WHEN PAGE IS REQUESTED
         if request.method=='GET':
 
             IS_MOBILE = False
-
             if request.user_agent.is_mobile:
                 IS_MOBILE = True
-                # print(IS_MOBILE)
 
             # print(request.user_agent.is_mobile) # returns True
             # print(request.user_agent.is_tablet) # returns False
             # print(request.user_agent.is_pc) # returns False
 
-            user = request.user
-            user_id = user.id
-            current_epoch = datetime.now().timestamp()
+            if len(den_riddle) == 1:
 
-            url_path = request.META.get('PATH_INFO')
-
-            den_riddle_uin_list = url_path.split('/')[len(url_path.split('/'))-1].split('?')
-            den_riddle_uin = den_riddle_uin_list[len(den_riddle_uin_list)-1]
-
-            den_riddle_obj = DenRiddle.objects.filter(uin_code=den_riddle_uin)
-
-            if len(den_riddle_obj) == 1:
-
-                den_riddle = den_riddle_obj[0]
+                den_riddle = den_riddle[0]
 
                 userPor_obj = UserProfile.objects.get(user=request.user)
                 hunter_den_map_obj = Hunter_Den_Mapping.objects.filter(den=den_riddle.den, hunter=userPor_obj, member_status=True)
@@ -597,7 +594,7 @@ def denRiddle(request):
                     # score for riddle right answer
                     wrong_answer_score = (den_riddle.riddle.riddle_level.kills*den_riddle.riddle.riddle_level.negetive_score_percent)/(den_riddle.riddle.max_calls-1)
 
-                    print(wrong_answer_score)
+                    # print(wrong_answer_score)
 
                     ending_epoch = (den_riddle.ending_at).timestamp()
                     starting_epoch = (den_riddle.started_at).timestamp()
@@ -607,7 +604,7 @@ def denRiddle(request):
                             'ending_epoch': ending_epoch, 
                             'starting_epoch': starting_epoch,
                             'number_of_attempt': number_of_attempt,
-                            'score': score,
+                            'score': f"{score:.2f}",
                             'is_solved': is_solved,
                             'solved_ans': solved_ans,
                             'responses': sorted(response, key = lambda i: i['response_at'],reverse=True),
@@ -625,79 +622,88 @@ def denRiddle(request):
                 # DEN RIDDLE DOESNOT EXIST
                 return redirect('/riddlechamp/index/e/da63')
 
-        #  when user sumits an answer
+        # WHEN USER POSTS ANS ANSWER
         # elif request.method=='POST' and request.FILES['user_pic']:
-        elif request.method=='POST':
-            user = request.user
-            user_id = user.id
-
-            url_path = request.META.get('PATH_INFO')
-
-            den_riddle_uin_list = url_path.split('/')[len(url_path.split('/'))-1].split('?')
-            uin_code = den_riddle_uin_list[len(den_riddle_uin_list)-1]
-
-            den_riddle = DenRiddle.objects.filter(uin_code=uin_code)
+        elif request.method=='POST' and request.is_ajax():
 
             if len(den_riddle) == 1:
-
+                
                 den_riddle = den_riddle[0]
-                answer = request.POST.get('answer', None).lower().strip().replace(" ", "")
 
-                # answer = 'Pencil lead'.lower()
-                if (
-                    den_riddle.riddle.answer_1.lower().strip().replace(" ", "") == answer or 
-                    den_riddle.riddle.answer_2.lower().strip().replace(" ", "") == answer or 
-                    den_riddle.riddle.answer_3.lower().strip().replace(" ", "") == answer or 
-                    den_riddle.riddle.answer_4.lower().strip().replace(" ", "") == answer or 
-                    den_riddle.riddle.answer_5.lower().strip().replace(" ", "") == answer or 
-                    den_riddle.riddle.answer_6.lower().strip().replace(" ", "") == answer or 
-                    den_riddle.riddle.answer_7.lower().strip().replace(" ", "") == answer or 
-                    den_riddle.riddle.answer_8.lower().strip().replace(" ", "") == answer or 
-                    den_riddle.riddle.answer_9.lower().strip().replace(" ", "") == answer
-                ):
-                    # score for riddle right answer
-                    score = round(den_riddle.riddle.riddle_level.kills*den_riddle.riddle.riddle_level.positive_score_percent, 2)
+                if len(Response.objects.filter(den_riddle=den_riddle, hunter=user, is_correct=True)) == 0:
 
-                    is_correct = True
-                    result = "?s=301"
+                    answer = request.POST['answer'].lower().strip().replace(" ", "")
+
+                    if (den_riddle.riddle.answer_1.lower().strip().replace(" ", "") == answer or 
+                        den_riddle.riddle.answer_2.lower().strip().replace(" ", "") == answer or 
+                        den_riddle.riddle.answer_3.lower().strip().replace(" ", "") == answer or 
+                        den_riddle.riddle.answer_4.lower().strip().replace(" ", "") == answer or 
+                        den_riddle.riddle.answer_5.lower().strip().replace(" ", "") == answer or 
+                        den_riddle.riddle.answer_6.lower().strip().replace(" ", "") == answer or 
+                        den_riddle.riddle.answer_7.lower().strip().replace(" ", "") == answer or 
+                        den_riddle.riddle.answer_8.lower().strip().replace(" ", "") == answer or 
+                        den_riddle.riddle.answer_9.lower().strip().replace(" ", "") == answer):
+                        # score for riddle right answer
+                        score = round(den_riddle.riddle.riddle_level.kills*den_riddle.riddle.riddle_level.positive_score_percent, 2)
+
+                        is_correct = True
+                        successFlag = True
+                        flagCode = 301
+                        # result = "?s=301"
+                    else:
+                        # score for riddle right answer
+                        score = round((den_riddle.riddle.riddle_level.kills*den_riddle.riddle.riddle_level.negetive_score_percent)/(den_riddle.riddle.max_calls-1), 2)
+                        is_correct = False
+                        successFlag = False
+                        flagCode = 901
+                        # result = "?e=901"
+
+                    current_time_epoch = int(datetime.now().strftime('%s'))
+                    activate_time_epoch = int(den_riddle.started_at.strftime('%s'))
+
+                    # # File Handeling
+                    # extenstion = (request.FILES['user_pic'].name).split('.')[len(request.FILES['user_pic'].name.split('.'))-1]
+                    # pic_name = str(user_id) + '_' + str(current_time_epoch) + '.' + extenstion
+                    # # fs = FileSystemStorage(location='media/image/response/')
+                    # fs = FileSystemStorage(location='home/siddhant/geekysid/media/image/response/')
+                    # filename = fs.save(pic_name, request.FILES['user_pic'])
+                    # fs.base_url = 'image/response/'
+                    # uploaded_file_url = fs.url(filename)
+
+                    response = Response.objects.create(
+                            den_riddle = den_riddle,
+                            hunter = request.user,
+                            answer = answer,
+                            # image = uploaded_file_url,
+                            is_correct = is_correct,
+                            score = score,
+                            response_at = datetime.now(),
+                            response_time = current_time_epoch - activate_time_epoch
+                    )
+
+                    response.save()
+
+                    # FEW ATTRIBUTES
+                    # Number of Attempts
+                    responses = Response.objects.filter(den_riddle=den_riddle, hunter=user).values()
+                    attempts = len(list(responses))   
+
+                    # Total Score
+                    resp_df = pd.DataFrame(list(responses))
+                    score = f"{resp_df['score'].sum():.2f}"
+
+                    # link = '/riddlechamp/den/riddle/'+uin_code+result
+                    # return redirect(link)
+                    
+                    return JsonResponse({"successFlag": successFlag, "flagCode": flagCode, "attempts": attempts, "score": score})
                 else:
-                    # score for riddle right answer
-                    score = round((den_riddle.riddle.riddle_level.kills*den_riddle.riddle.riddle_level.negetive_score_percent)/(den_riddle.riddle.max_calls-1), 2)
-                    is_correct = False
-                    result = "?e=901"
-
-                current_time_epoch = int(datetime.now().strftime('%s'))
-                activate_time_epoch = int(den_riddle.started_at.strftime('%s'))
-
-                # # File Handeling
-                # extenstion = (request.FILES['user_pic'].name).split('.')[len(request.FILES['user_pic'].name.split('.'))-1]
-                # pic_name = str(user_id) + '_' + str(current_time_epoch) + '.' + extenstion
-                # # fs = FileSystemStorage(location='media/image/response/')
-                # fs = FileSystemStorage(location='home/siddhant/geekysid/media/image/response/')
-                # filename = fs.save(pic_name, request.FILES['user_pic'])
-                # fs.base_url = 'image/response/'
-                # uploaded_file_url = fs.url(filename)
-
-                response = Response.objects.create(
-                        den_riddle = den_riddle,
-                        hunter = request.user,
-                        answer = answer,
-                        # image = uploaded_file_url,
-                        is_correct = is_correct,
-                        score = score,
-                        response_at = datetime.now(),
-                        response_time = current_time_epoch - activate_time_epoch
-                )
-
-                response.save()
-
-                link = '/riddlechamp/den/riddle/'+uin_code+result
-                return redirect(link)
-
+                    return JsonResponse({"successFlag": False, "flagCode": 902})
             else:
                 # INVALID REQUEST
-                return redirect('/riddlechamp/index/e/da63')
-            # den_riddle_obj = DenRiddle.objects.filter(uin_code=den_riddle_uin)
+                successFlag = False
+                flagCode = 'da63'
+                return JsonResponse({"successFlag": successFlag, "flagCode": flagCode})
+                # return redirect('/riddlechamp/index/e/da63')
         else:
             return redirect('/riddlechamp/index/e/8be6')
     else:
@@ -741,7 +747,6 @@ def denCreate(request):
                 pic_name = str(userProfile_obj.user.id) + '_' + str(current_time_epoch) + '.' + extenstion
                 # fs = FileSystemStorage(location='media/image/profile_photo/')
                 fs = FileSystemStorage(location='home/siddhant/geekysid/media/image/profile_photo/')
-
                 filename = fs.save(pic_name, request.FILES['avatar'])
                 fs.base_url = 'image/profile_photo/'
                 uploaded_file_url = fs.url(filename)

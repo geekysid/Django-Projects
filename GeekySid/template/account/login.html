@@ -233,6 +233,9 @@
                                 if (Flag.error == "Inactive Account") {
                                     document.getElementById("message").innerHTML = 'The account you are trying to access is inactive. Activation link is sent to tour email address, <span style="color:rosybrown">' + Flag.email + '</span>. Please activate your account before signing in or <a id="resend_actLink" data1="' + Flag.email + '" data2=' + Flag.ac_code + ' class="txt2 hov1" style="font-size: larger; color:salmon" href="#">click here</a>to resent the email.<p> </p>'
                                 }
+                                //if (Flag.user){
+                                //    console.log(Flag.user)
+                                //}
                                 swal({
                                     title: Flag.error,
                                     text: Flag.message,
@@ -243,7 +246,11 @@
                             }
                         }
                     },
-                    error: function () {
+                    error: function (xhr, textStatus, error) {
+                        //console.log(xhr.responseText);
+                        //console.log(xhr.statusText);
+                        //console.log(textStatus);
+                        //console.log(error);
                         swal({
                             title: "Unwanted Error",
                             text: "There was an error that couldnt be handelled by server. Please contact System Admin",

@@ -99,8 +99,10 @@ CMD FOR LOCAL MACHINE
         >> scp -r geekysid/statics/"SiddhantShah-Resume.pdf" siddhant@172.105.38.72:~/
         >> scp -r geekysid/statics/"SiddhantShah-Resume.pdf" siddhant@172.105.38.72:~/geekysid/statics
         >> scp -r geekysid/instagramscraper siddhant@172.105.38.72:~/geekysid
-        >> scp -r geekysid/template/riddlechamp/den2.html siddhant@172.105.38.72:~/geekysid/template/riddlechamp/
+        >> scp -r geekysid/template/riddlechamp/riddle.html siddhant@172.105.38.72:~/geekysid/template/riddlechamp/
+        >> scp -r geekysid/RiddleChamp/views.py siddhant@172.105.38.72:~/geekysid/RiddleChamp/
         >> scp -r geekysid/Account/views.py siddhant@172.105.38.72:~/geekysid/Account/
+        >> scp -r geekysid/template/account/login.html siddhant@172.105.38.72:~/geekysid/template/account/
 
         >> scp siddhant@172.105.38.72:~/geekysid/settings.py env
 

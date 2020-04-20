@@ -155,7 +155,7 @@
 									</td>
 									<td width="60%">
 										<span class="login100-form-title p-b-59">
-											<h6>My Score => {{score}} Killl</h6> <span id="time_remaning_div"></span>
+											<h6>My Score => <span id="user_score">{{score}}</span> Killl</h6>
 										</span>
 									</td>
 								</tr>
@@ -168,9 +168,7 @@
 											<h6>
 												Attempts:
 
-												<span style="text-decoration: underline; cursor: pointer;"
-													data-toggle="modal"
-													data-target="#exampleModalCenter">{{number_of_attempt}}</span>
+												<span id="number_of_attempts" style="text-decoration: underline; cursor: pointer;" data-toggle="modal" data-target="#exampleModalCenter">{{number_of_attempt}}</span>
 
 												<!-- Modal -->
 												<div class="modal fade" id="exampleModalCenter" tabindex="-1"
@@ -307,10 +305,11 @@
 					</div>
 
 					<!-- ANSWER INPUT -->
-					<div class="wrap-input100 validate-input" data-validate="Answer is required"
+					<div class="wrap-input100 validate-input" data-validate="Answer is required" id="answer_div"
 						{% if denRiddle.has_expired %}
 						onclick="popup('Time for this ridddle to try is over.', 'Expired Riddle')" {% endif %}
-						{% if denRiddle.is_pending %} onclick="popup('Riddle is not yet active.', 'Pending Riddle')"
+						{% if denRiddle.is_pending %} 
+						onclick="popup('Riddle is not yet active.', 'Pending Riddle')"
 						{% endif %} {% if is_solved %}
 						onclick="popup('This riddle is already solved by you.', 'Solved Riddle')" {% endif %}>
 						<span class="label-input100">Your Answer</span>
@@ -366,6 +365,133 @@
 	{% endblock %}
 	
 	{% block scripts %}
+
+	<!-- USER RESPONSE HANDLER -->
+	<script>
+		// function for change cursor to wait on ajax call
+		$(document).ajaxStart(function() {
+			$(document.body).css({'cursor' : 'wait'});
+			$("#btnClick").html("Wait!!!")
+			$("#btnClick").attr('disabled', true)
+		}).ajaxStop(function() {
+			$(document.body).css({'cursor' : 'default'});
+			$("#btnClick").html("Submit Answer")
+		});
+
+		// ON SUBMIT FORM
+		$("form").submit(function(e){
+			console.log("Clicked")
+			e.preventDefault();
+			$("#btnClick").attr('disabled', true)
+
+			var data = new FormData(this)
+			
+			if($("#answer").val().length > 0 ){
+				$.ajax({
+					type: "POST",
+					url: "",
+					headers: {'X-CSRFToken': '{{ csrf_token }}'}, // for csrf token
+					data: data,
+					dataType: 'json',
+					processData: false,  // tell jQuery not to process the data
+					contentType: false,  // tell jQuery not to set contentType
+					success: function(result) {
+						if(result.successFlag == true && result.flagCode == 301 ){
+							console.log("SUCCESS")
+							$("#user_score").text(result.score)
+							$("#number_of_attempts").text(result.attempts)
+							$("#status_of_riddle").text("Solved")
+							$("#status_of_riddle").attr("style", "color:forestgreen; font-size:larger")
+							$("#answer").attr("disabled")
+							$("#answer_div").attr("onclick", "popup('This riddle is already solved by you.', 'Solved Riddle')")
+							$("#answer").val("")
+
+							// greetings
+							success_list = ['Good Job!!!', 'Well Done!!!', 'BINGO!!!', 'Awww Yessss!!!']
+							praise_list = ['You deserve a salute dude...', 'You just hit the bullseyes dude....',
+								"Didn,t expect you to be so good... ", 'That was Good!!!']
+
+							// Greeting Popup
+							swal({
+								title: success_list[Math.floor(Math.random() * success_list.length)],
+								text: praise_list[Math.floor(Math.random() * praise_list.length)],
+								icon: "success",
+								button: "I Know I'm Good",
+							});
+						}
+						else{
+							$("#btnClick").removeAttr('disabled')
+							if (result.successFlag == false && result.flagCode == 901 ){
+								console.log("WRONG")
+								$("#user_score").text(result.score)
+								$("#number_of_attempts").text(result.attempts)
+								$("#status_of_riddle").text("Unsolved")
+								$("#status_of_riddle").attr("style", "color:tomato ; font-size:larger")
+								
+								// Insults
+								failed_list = ['LOL!!!', 'SERIOUSLY???', 'GO Away!!!', 'Awwwwwwwwww!!!']
+								insult_list = ['You deserve a salute dude... LOL!!!', 'How can you be so wrong....',
+									"Go Away! This is not meant for you..", 'You are so bad in this!!!', 'You need a break..',
+									"This is not your cup of tea"]
+								
+								// Insults Popup
+								swal({
+									title: failed_list[Math.floor(Math.random() * failed_list.length)],
+									text: insult_list[Math.floor(Math.random() * insult_list.length)],
+									icon: "error",
+									button: "SHUTUP... ",
+								});
+							}
+							else if (result.successFlag == false && result.flagCode == "da63" ){
+								swal({
+									title: 'Invalid Request',
+									text: 'This is not a valid request. Please try again later',
+									icon: "error",
+									button: "Sorry",
+								});
+							}
+							else if (result.successFlag == false && result.flagCode == 902 ){
+								swal({
+									title: 'Invalid Request',
+									text: 'Riddle is already solved by you.',
+									icon: "error",
+									button: "Sorry",
+								});
+							}
+							else {
+								swal({
+									title: 'Error Occurred',
+									text: 'En error occurred. Please try again later.',
+									icon: "error",
+									button: "Ohh Noo....",
+								});
+							}
+						}
+					},
+					error: function(){
+						$("#btnClick").removeAttr('disabled')
+						swal({
+							title: 'Error Occurred',
+							text: 'We encountered an error while verifying your answer. Please contact System administrator.',
+							icon: "error",
+							button: "This is sooo BAD....",
+						});
+					}
+				});
+			}
+			else{
+				// Missing Value
+				swal({
+					title: "Answer Not Valid",
+					text: "Please enter answer",
+					icon: "error",
+					button: "Ok",
+				});
+			}
+			
+		})
+	</script>
+
 	<!-- IMGE HOVER -->
 	<script>
 		function denBtn_hover(element) {
@@ -532,6 +658,7 @@
 			function get_random_from_list(mylist) {
 				return mylist[Math.floor(Math.random() * mylist.length)]
 			}
+
 			if (urlParams.has('s') && (urlParams.get('s') == '301' && status == "SOLVED")) {
 				console.log(urlParams.get('s'))
 				swal({

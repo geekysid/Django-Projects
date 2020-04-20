@@ -313,7 +313,7 @@ def user_login(request):
                 except Exception as e:
                     return JsonResponse({'successFlag': False, 'message': 'There was an exception raised while trying to log you in. Pleace contact System Admin. Exception => '+str(e), 'error': 'Exception'})
             else:
-                return JsonResponse({'successFlag': False, 'error': 'Invalid Credentials', 'message': 'No Account with this username found'})
+                return JsonResponse({'successFlag': False, 'error': 'Invalid Credentials', 'message': 'No Account with this username found', 'user': username})
         else:
             return JsonResponse({'successFlag': False, 'error': 'Invalid Data', 'message': 'Username or Password not provided' })
     else:
