@@ -95,6 +95,7 @@ CMD FOR LOCAL MACHINE
         >> scp -r geekysid/requirements.txt siddhant@172.105.38.72:~/geekysid/
         >> scp -r geekysid/geekysid/urls.py siddhant@172.105.38.72:~/geekysid/geekysid/
         >> scp -r geekysid/statics/home siddhant@172.105.38.72:~/geekysid/statics/
+        >> scp -r geekysid/media/audio/riddle/audio-icon.jpeg siddhant@172.105.38.72:~/geekysid/media/audio/riddle/
         >> scp -r geekysid/statics/"SiddhantShah-Resume.pdf" siddhant@172.105.38.72:~/etc
         >> scp -r geekysid/statics/"SiddhantShah-Resume.pdf" siddhant@172.105.38.72:~/
         >> scp -r geekysid/statics/"SiddhantShah-Resume.pdf" siddhant@172.105.38.72:~/geekysid/statics

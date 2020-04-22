@@ -11,14 +11,12 @@ from django.core.files.storage import FileSystemStorage
 from .forms import *
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import zlib, hashlib, time, os, smtplib, emoji,json
+import zlib, hashlib, time, os, smtplib, emoji, json
 from geekysid import cvEmailer, settings
 
 
-__BASE_SCORE = 50
 # Base_url = 'http://127.0.0.1:8000/'
 Base_url = 'http://www.geekysid.com/'
-current_epoch = datetime.now().timestamp()
 
 # method that returns data to show alert depending on url like index/s/8768
 def get_AlertDataFromUrl(url):
@@ -259,7 +257,6 @@ def den(request):
                 user_den_map = Hunter_Den_Mapping.objects.filter(hunter=userProfile_obj, den=den[0], member_status=True)
                 if len(user_den_map) == 1:
                     user_den_map = user_den_map[0]
-
                     den = den[0]
 
                     den_id = den.den_id
@@ -310,38 +307,49 @@ def den(request):
 
                         # making riddle active from pending
                         if riddle_den.is_pending:
-                            is_pending = True if (riddle_den.started_at).timestamp() > current_epoch else False
+                            is_pending = True if (riddle_den.started_at).timestamp() > datetime.now().timestamp() else False
                             if is_pending == False:
                                 # FUNCTION NEEDS TO BE ADDED FOR NEW RIDDLE
                                 new_riddle = den_riddle_active_update(riddle_den, riddle_den_s, den, riddle_added_date)
-                                den_riddle.append({
-                                    'den_riddle': new_riddle,           # object of den_riddle
-                                    'starting_epoch': (new_riddle.started_at).timestamp(),
-                                    'expiry': new_riddle.ending_at.timestamp(),
-                                    'riddle_attempt': 0,   # true if user have attempted this riddle
-                                    'riddle_solved': 0,     # true if user have solved this riddle
-                                    'user_score_riddle': 0,        # score of the score for this riddle
-                                    'is_pending': new_riddle.is_pending,
-                                    'is_active': new_riddle.is_active,
-                                    'has_expired': new_riddle.has_expired,
-                                    'uin_code' : new_riddle.uin_code,
-                                    'right_ans_score': new_riddle.riddle.riddle_level.positive_score_percent*__BASE_SCORE,
-                                    'score_percent': 0,
-                                    'wrong_ans_score': new_riddle.riddle.riddle_level.negetive_score_percent*__BASE_SCORE
+                                
+                                if not (new_riddle is None):
+
+                                    negative_score = (new_riddle.riddle.riddle_level.kills*riddle_den.riddle.riddle_level.negetive_score_percent)/(riddle_den.riddle.max_calls-1)
+
+                                    positive_score = (new_riddle.riddle.riddle_level.kills*riddle_den.riddle.riddle_level.positive_score_percent)
+                                
+                                    den_riddle.append({
+                                        'den_riddle': new_riddle,           # object of den_riddle
+                                        'starting_epoch': (new_riddle.started_at).timestamp(),
+                                        'expiry': new_riddle.ending_at.timestamp(),
+                                        'riddle_attempt': 0,   # true if user have attempted this riddle
+                                        'riddle_solved': 0,     # true if user have solved this riddle
+                                        'user_score_riddle': 0,        # score of the score for this riddle
+                                        'is_pending': new_riddle.is_pending,
+                                        'is_active': new_riddle.is_active,
+                                        'has_expired': new_riddle.has_expired,
+                                        'uin_code' : new_riddle.uin_code,
+                                        'right_ans_score': f"{positive_score:.2f}",
+                                        'score_percent': 0,
+                                        'wrong_ans_score': f"{negative_score:.2f}"
                                     })
 
                         # making riddle expire from pending
                         if riddle_den.is_active:
-                            is_active = True if (riddle_den.ending_at).timestamp() > current_epoch else False
+                            is_active = True if (riddle_den.ending_at).timestamp() > datetime.now().timestamp() else False
                             if not is_active:
                                 den_riddle_expiry_update(riddle_den)
 
                         # adding dfeault image if not available
                         if riddle_den.riddle.media == None or riddle_den.riddle.media == '':
-                            riddle_den.riddle.media = 'image/riddle/text-icon.jpg'
+                            if riddle_den.riddle.type_riddle.name == 'Audio':
+                                riddle_den.riddle.media = 'image/riddle/audio_icon.jpeg'
+                            else:
+                                riddle_den.riddle.media = 'image/riddle/text-icon.jpg'
+
 
                         # checking if riddle is expired
-                        if (riddle_den.ending_at).timestamp() < current_epoch:
+                        if (riddle_den.ending_at).timestamp() < datetime.now().timestamp():
                             is_active = False
 
                         riddle_den_dict = {
@@ -357,10 +365,11 @@ def den(request):
                             'uin_code' : riddle_den.uin_code,
                             'right_ans_score': f"{right_answer_score:.2f}",
                             'wrong_ans_score': f"{wrong_answer_score:.2f}",
-                            'score_percent': (user_score_riddle*100)/(riddle_den.riddle.riddle_level.positive_score_percent*__BASE_SCORE)
+                            'x': (user_score_riddle*100)/(riddle_den.riddle.riddle_level.positive_score_percent*riddle_den.riddle.riddle_level.kills)
                         }
                         den_riddle.append(riddle_den_dict)
 
+                    print("="*10, "1241", "="*10)
                     den_riddle = sorted(den_riddle, key = lambda i: i['starting_epoch'],reverse=True) 
 
                     # HUNTERS in this den
@@ -368,6 +377,7 @@ def den(request):
                     hunters = []
                     top_hunter = None
 
+                    print("="*10, "1242", "="*10)
                     if df_response.empty:
                         top_hunter_id = None
                         user_rank = '-'
@@ -384,6 +394,7 @@ def den(request):
                         df_hunters_rank['Rank'] = df_hunters_rank['score'].rank(ascending=False)
                         user_rank = None
 
+                    print("="*10, "1243", "="*10)
                     Top_skRatio_score = 0
                     Top_skRatio_hunter = userProfile_obj.name
                     Top_skRatio_avatar = userProfile_obj.avatar
@@ -459,6 +470,7 @@ def den(request):
                         }
                         hunters.append(h)
 
+                    print("=="*10, "1244", "=="*10)
                     # sorting hunters list on rank
                     hunters = sorted(hunters, key = lambda i: i['den_score'],reverse=True)
                     # print(hunters)
@@ -482,10 +494,10 @@ def den(request):
                         "TopHunter" : top_hunter,
                         "Top_skRatio_hunter": Top_skRatio_hunter,
                         "Top_skRatio_score": Top_skRatio_score,
-                        "Top_skRatio_avatar": Top_skRatio_avatar,
-                        "BASE_SCORE": __BASE_SCORE
+                        "Top_skRatio_avatar": Top_skRatio_avatar
                     }
 
+                    print("=="*10, "1245", "=="*10)
                     params = {'den': den_details, 'hunters': hunters, 'den_riddles': den_riddle, "alertData": alertData}
 
                     return render(request, 'riddlechamp/den2.html', params)
@@ -493,7 +505,8 @@ def den(request):
                 else:
                     # NOT A MEMBER OF DEN OR MEMBERSHIP NOT APPROVED
                     return redirect('/riddlechamp/index/e/49a7')
-            except:
+            except Exception as e:
+                print(str(e))
                 return redirect('/riddlechamp/index/e/8966')
         else:
             # DEN NOT FOUND
@@ -539,7 +552,7 @@ def denRiddle(request):
 
                 if len(hunter_den_map_obj) == 1:
                     # if an active riddle is opened for 1st time and current time has crossed expiry time then mark riddle as expired
-                    if den_riddle.is_active and (den_riddle.ending_at.timestamp() < current_epoch):
+                    if den_riddle.is_active and (den_riddle.ending_at.timestamp() < datetime.now().timestamp()):
                         den_riddle.is_pending = False
                         den_riddle.is_active = False
                         den_riddle.has_expired = True
@@ -547,7 +560,7 @@ def denRiddle(request):
                         # print('='*15, 'Active Riddle Marked as Expired Riddle')
 
                     # if a pending riddle is opened for 1st time and current time fas crossed expiry time then mark riddle as expired 
-                    if den_riddle.is_pending and (den_riddle.ending_at.timestamp() < current_epoch):
+                    if den_riddle.is_pending and (den_riddle.ending_at.timestamp() < datetime.now().timestamp()):
                         den_riddle.is_pending = False
                         den_riddle.is_active = False
                         den_riddle.has_expired = True
@@ -555,7 +568,7 @@ def denRiddle(request):
                         # print('='*15, 'Pending Riddle Marked as Expired Riddle')
 
                     # if a pending riddle is opened for 1st time and current time has crossed activation time then mark riddle as active 
-                    if den_riddle.is_pending and (den_riddle.started_at.timestamp() < current_epoch):
+                    if den_riddle.is_pending and (den_riddle.started_at.timestamp() < datetime.now().timestamp()):
                         den_riddle.is_pending = False
                         den_riddle.is_active = True
                         den_riddle.has_expired = False
@@ -593,8 +606,6 @@ def denRiddle(request):
 
                     # score for riddle right answer
                     wrong_answer_score = (den_riddle.riddle.riddle_level.kills*den_riddle.riddle.riddle_level.negetive_score_percent)/(den_riddle.riddle.max_calls-1)
-
-                    # print(wrong_answer_score)
 
                     ending_epoch = (den_riddle.ending_at).timestamp()
                     starting_epoch = (den_riddle.started_at).timestamp()
@@ -904,6 +915,7 @@ def user_response_handler(request):
 
 # function to make an object of Den_Riddle Model as active 
 def den_riddle_active_update(dr, den_riddle, den, riddle_added_date):
+    
     if dr.is_active == False and dr.has_expired == False:
         dr.is_pending = False
         dr.has_expired = False
@@ -915,75 +927,136 @@ def den_riddle_active_update(dr, den_riddle, den, riddle_added_date):
 
         # creating new riddle for current den
         new_riddle = create_den_riddle(den_riddle, den, riddle_added_date)
+
+        # RIDDLE ACTIVE NOTIFICATION VIA MAIL
+        if(dr.ending_at.timestamp() > datetime.now().timestamp()):
+            riddle_active_notification(dr)
+            # riddle_active_notification(new_riddle)
+
         return new_riddle
+
+
+# RIDDLE ACTIVE NOTIFICATION VIA MAIL
+def riddle_active_notification(den_riddle):
+    den_link = Base_url+'riddlechamp/den/'+den_riddle.den.uin_code
+    active_riddle_link = Base_url+'riddlechamp/den/riddle/'+den_riddle.uin_code
+
+    # list of all hunters in den
+    hunter_list_obj = Hunter_Den_Mapping.objects.filter(den=den_riddle.den, member_status=True)
+    
+    # list of all emails of hunter in den
+    email_list = []
+    for hunter_list in hunter_list_obj:
+        email_list.append(hunter_list.hunter.email)
+    
+    try:
+        msg = MIMEMultipart()
+        msg['Subject'] = f"New riddle (Riddle # {den_riddle.riddle.riddle_id}) Activated " + emoji.emojize(":sign_of_the_horns:")
+        # activate_Time = '7PM Today (IST)'
+        # msg['Subject'] = f"Next riddle (Riddle # {den_riddle.riddle.riddle_id}) @ {activate_Time} " + emoji.emojize(":sign_of_the_horns:")
+
+        body = f"Hello,<br/>\
+                A new riddle, Riddle # {den_riddle.riddle.riddle_id}, is <i>activated</i> in your den, {den_riddle.den.name}. It will only be active till {den_riddle.ending_at} UTC (Add 5 hrs 30 mins to this time for IST). \
+                <h4>Riddle Link</h4>{active_riddle_link}\
+                <h4>Den Link</h4>{den_link}\
+                </p><p><br />--<br />{settings.EMAIL_SIGNATURE}"
+
+        # body = f"Hello,<br/>\
+        #         Due to some system upgradation, riddle @ 4PM for den, {den_riddle.den.name}, was not scheduled. Now that everything is up and running, <i>next riddle, Riddle # {den_riddle.riddle.riddle_id}, will be active @ {activate_Time}</i>. Don't forget to solve the same and compete with everyone. It will only be active till {den_riddle.ending_at} UTC (Add 5 hrs 30 mins to this time for IST). \
+        #         <h4>Riddle Link</h4>{active_riddle_link}\
+        #         <h4>Den Link</h4>{den_link}\
+        #         </p><p><br />--<br />{settings.EMAIL_SIGNATURE}"
+
+        msg.attach(MIMEText(body, 'html'))
+    except Exception as e:
+        print(str(e))
+
+    try:
+        cvEmailer.multiple_mail(email_list, msg)
+    except Exception as e:
+        print(str(e))
 
 
 # function to make an object of Den_Riddle Model as active
 def den_riddle_expiry_update(dr):
+    print("="*10, "A", "="*10)
     if dr.is_pending == False and dr.has_expired == False:
+        print("="*10, "B", "="*10)
         dr.is_pending = False
         dr.is_active = False
         dr.has_expired = True
+        print("="*10, "C", "="*10)
         dr.save()
+        print("="*10, "D", "="*10)
+    print("="*10, "E", "="*10)
 
 
 # creating new riddle for current den
 def create_den_riddle(den_riddle, den, riddle_added_date):
+
     riddle_in_den = []
 
     for dr in den_riddle:
         riddle_in_den.append(dr.riddle.riddle_id)
 
+
+
     # fetching new randome riddles not in den so far
-    new_riddle = choice(list(Riddle.objects.filter(~Q(riddle_id__in=riddle_in_den))))
+    riddle_obj = Riddle.objects.filter(~Q(riddle_id__in=riddle_in_den))
+    
+    if len(riddle_obj) > 0:
+    
+        new_riddle = choice(list(riddle_obj))
 
-    riddles_per_day = den.riddles_per_day
-    riddle_start_time = den.riddle_start_time
-    new_riddle_activate_time = None
+        riddles_per_day = den.riddles_per_day
+        riddle_start_time = den.riddle_start_time
+        new_riddle_activate_time = None
 
-    current_time_epoch = int(datetime.now().strftime('%s'))
-    uniqueString = f"{den.den_id}-{new_riddle.riddle_id}-{current_time_epoch}"
-    uin_code = str(zlib.adler32(str(hashlib.sha256(str(uniqueString).encode())).encode()))
+        current_time_epoch = int(datetime.now().strftime('%s'))
+        uniqueString = f"{den.den_id}-{new_riddle.riddle_id}-{current_time_epoch}"
+        uin_code = str(zlib.adler32(str(hashlib.sha256(str(uniqueString).encode())).encode()))
 
-    # datetime of activavtion of 1st riddle - 2020-04-01 00:05:09.714263
-    riddle_activate_time = datetime.combine(date.today(), den.riddle_start_time)
+        # datetime of activavtion of 1st riddle - 2020-04-01 00:05:09.714263
+        riddle_activate_time = datetime.combine(date.today(), den.riddle_start_time)
 
-    number_riddle_today = riddle_added_date.count(datetime.now().strftime("%Y/%m/%d"))
+        number_riddle_today = riddle_added_date.count(datetime.now().strftime("%Y/%m/%d"))
 
-    # if riddles added today is less then number of riddles allowed per day.
-    if number_riddle_today < riddles_per_day:
-        # if no rows are added today
-        if number_riddle_today == 0:
+        # if riddles added today is less then number of riddles allowed per day.
+        if number_riddle_today < riddles_per_day:
+            # if no rows are added today
+            if number_riddle_today == 0:
 
-            # if current time is more then the time of 1st riddle of the day
-            if riddle_activate_time < datetime.now():
-                new_riddle_activate_time = new_riddle_activation(den)
+                # if current time is more then the time of 1st riddle of the day
+                if riddle_activate_time < datetime.now():
+                    new_riddle_activate_time = new_riddle_activation(den)
+                else:
+                    new_riddle_activate_time = datetime.combine(date.today(), riddle_start_time)
+
+                # print(new_riddle_activate_time)
             else:
-                new_riddle_activate_time = datetime.combine(date.today(), riddle_start_time)
+                last_added_at = datetime.time(datetime.now() - timedelta(days=1))
+                for dr in den_riddle:
+                    if last_added_at < datetime.time(dr.added_at) and datetime.date(dr.added_at) == datetime.date(datetime.now()):
+                        last_added_at = datetime.time(dr.added_at)
 
-            # print(new_riddle_activate_time)
+                new_riddle_activate_time = new_riddle_activation(den)
+                # print(new_riddle_activate_time)
+                pass
         else:
-            last_added_at = datetime.time(datetime.now() - timedelta(days=1))
-            for dr in den_riddle:
-                if last_added_at < datetime.time(dr.added_at) and datetime.date(dr.added_at) == datetime.date(datetime.now()):
-                    last_added_at = datetime.time(dr.added_at)
+            new_riddle_activate_time = riddle_for_next_day(riddle_start_time)
 
-            new_riddle_activate_time = new_riddle_activation(den)
-            # print(new_riddle_activate_time)
-            pass
+        ending_at = new_riddle_activate_time+timedelta(minutes=new_riddle.riddle_level.time)
+
+
+        den_riddle_obj = DenRiddle.objects.create(
+            den = den, riddle = new_riddle, added_at = datetime.now(), started_at = new_riddle_activate_time, ending_at = ending_at, is_pending = True, is_active = False, uin_code = uin_code, has_expired = False
+        )
+
+        den_riddle_obj.save()
+
+        return den_riddle_obj
     else:
-        new_riddle_activate_time = riddle_for_next_day(riddle_start_time)
-
-    ending_at = new_riddle_activate_time+timedelta(minutes=new_riddle.riddle_level.time)
-
-
-    den_riddle_obj = DenRiddle.objects.create(
-        den = den, riddle = new_riddle, added_at = datetime.now(), started_at = new_riddle_activate_time, ending_at = ending_at, is_pending = True, is_active = False, uin_code = uin_code, has_expired = False
-    )
-
-    den_riddle_obj.save()
-
-    return den_riddle_obj
+        return None
 
 
 # Function to add riddle to den when den is created
@@ -1196,4 +1269,3 @@ def accept_den_invite(request):
             return redirect("/riddlechamp/index/e/8be6")
     else:
             return redirect("/account/login/e/7955")
-

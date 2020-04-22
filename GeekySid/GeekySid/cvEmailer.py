@@ -94,6 +94,24 @@ def mailer(subject, from_, to_, msg):
             return False
 
 
+# function use to sent multiple mails. Returns True if mail sent successfully else returns False
+def multiple_mail(to_list, msg):
+    smtp_user = settings.EMAIL_USER
+
+    with smtplib.SMTP_SSL(settings.EMAIL_HOST, settings.EMAIL_PORT) as smtp:
+        try:
+            smtp.login(smtp_user, settings.EMAIL_PASS)
+            for email in to_list:
+                try:
+                    smtp.sendmail(smtp_user, email, msg.as_string())
+                except Exception as e:
+                    print(str(e))
+            return True
+        except Exception as e:
+            print(str(e))
+            return False
+
+
 # function that executes whne user fills form from contact page
 def contactPage_mail(user_name, user_email, user_msg):
 

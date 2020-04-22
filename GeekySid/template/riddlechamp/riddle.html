@@ -33,13 +33,20 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body">
+					<div class="modal-body" style="word-wrap: break-word;">
 						{% if denRiddle.is_pending %}
 						<h4>RIDDLE NOT ACTIVE YET</h4>
 						{% else %}
-						{{denRiddle.riddle.question}}
-						{% if not denRiddle.riddle.type_riddle.name == "Text" %}
+						{% if denRiddle.riddle.type_riddle.name == "Audio" %}
+						<audio controls>
+							<source src="{{denRiddle.riddle.audio.url}}" preload="audio/mpeg" >
+						</audio>
+						{{denRiddle.riddle.question|linebreaks}}
+						{% else %}
+						{{denRiddle.riddle.question|linebreaks}}
+						{% if denRiddle.riddle.type_riddle.name == "Photo" %}
 						<img src="{{denRiddle.riddle.media.url}}" class="riddle-image" style="width:100%; height:100%" />
+						{% endif %}
 						{% endif %}
 						{% endif %}
 					</div>
@@ -64,7 +71,7 @@
 						<h2>RIDDLE NOT ACTIVE YET</h2>
 					</div>
 				</div>
-				{% else %}
+				{% elif denRiddle.riddle.type_riddle.name == "Text" %}
 				<div class="
 							{% if denRiddle.riddle.type_riddle.name == 'Text' %}
 								outer_div_typeWritter_text
@@ -74,16 +81,35 @@
 					<div class="inner_div_typeWritter">
 						<div id="typedtext" style="font-size:150%;" style="position:fixed">
 						</div>
-						{% if not denRiddle.riddle.type_riddle.name == "Text" %}
+					</div>
+				</div>
+				{% elif denRiddle.riddle.type_riddle.name == "Photo" %}
+				<div class="
+							{% if denRiddle.riddle.type_riddle.name == 'Text' %}
+								outer_div_typeWritter_text
+							{% else %}
+							outer_div_typeWritter_audio
+							{% endif %}">
+					<div class="inner_div_typeWritter">
+						<div id="typedtext" style="font-size:150%;" style="position:fixed">
+						</div>
 						<div id="riddle_media" style="visibility:hidden;">
 							<img src="{{denRiddle.riddle.media.url}}" class="riddle-image" />
 						</div>
-						{% endif %}
+					</div>
+				</div>
+				{% elif denRiddle.riddle.type_riddle.name == "Audio" %}
+				<div class="inner_div_typeWritter">
+					<div id="typedtext" style="font-size:150%;" style="position:fixed">
+					</div>
+					<div id="riddle_media" style=" position: absolute; left: 0px; top: 0px; z-index: 1000;">
+						<audio controls>
+							<source src="{{denRiddle.riddle.audio.url}}" preload="audio/mpeg" >
+						</audio>
 					</div>
 				</div>
 				{% endif %}
 				{% endif %}
-
 			</div>
 
 			<span id="denRiddle_span" data-dr="{{denRiddle.den_riddle_id}}"></span>
@@ -303,7 +329,18 @@
 							</table>
 						</div>
 					</div>
+					
+					
+					<!-- {% if denRiddle.riddle.type_riddle.name == "Audio" %}
+					<div id="riddle_media">
+						<audio controls>
+							<source src="{{denRiddle.riddle.audio.url}}" preload="audio/mpeg" >
+						  </audio>
+					</div> -->
 
+
+
+					{% endif %}
 					<!-- ANSWER INPUT -->
 					<div class="wrap-input100 validate-input" data-validate="Answer is required" id="answer_div"
 						{% if denRiddle.has_expired %}

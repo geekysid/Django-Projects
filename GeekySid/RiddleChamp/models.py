@@ -51,7 +51,8 @@ class Riddle(models.Model):
     riddle_level = models.ForeignKey(RiddleLevel, on_delete=models.CASCADE)
     type_riddle = models.ForeignKey(RiddleType, on_delete=models.CASCADE)
     media = models.ImageField(upload_to="image/riddle/", blank=True)
-    question = models.CharField(max_length=1000)
+    audio = models.FileField(upload_to="audio/riddle/", blank=True)
+    question = models.TextField()
     max_calls = models.IntegerField(editable=True, default=10)
     answer_1 = models.CharField(max_length=1000)
     answer_2 = models.CharField(max_length=200, blank=True)
@@ -63,8 +64,8 @@ class Riddle(models.Model):
     answer_8 = models.CharField(max_length=200, blank=True)
     answer_9 = models.CharField(max_length=200, blank=True)
     point = models.FloatField(default=100, blank=True)
-    hint = models.CharField(max_length=500, blank=True)
-    answer_format = models.CharField(max_length=50, blank=True)
+    hint = models.CharField(max_length=1000, blank=True)
+    answer_format = models.CharField(max_length=100, blank=True)
     uin_code = models.CharField(max_length=10, editable=True, blank=True)
 
     def __str__(self):
@@ -115,7 +116,6 @@ class DenInvitee(models.Model):
 
     def __str__(self):
         return f"{self.invitee.name} - {self.den.name} - {self.email_to}"
-
 
 
 # Den_Riddle Model -  Holds mapping of riddles to each den
